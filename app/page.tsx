@@ -1,103 +1,128 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { ModeToggle } from "@/components/mode-toggle";
+
+export default function Login() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [remember, setRemember] = useState(false);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    <main className="min-h-screen flex flex-col md:flex-row-reverse">
+      <ModeToggle />
+      <div className="flex flex-col justify-center items-center flex-1 p-8 bg-white shadow-lg dark:bg-black">
+        <h1 className="text-3xl font-bold mb-6">Welcome Back</h1>
+        <form className="w-full max-w-sm space-y-6">
+          <div>
+            <label htmlFor="email" className="block mb-2 font-normal text-sm">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="email@gmail.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 text-sm "
+              required
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+
+          <div className="relative">
+            <label
+              htmlFor="password"
+              className="block mb-2 font-normal text-sm"
+            >
+              Password
+            </label>
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              placeholder="Enter Password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 text-sm "
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9.5 text-gray-500 hover:text-gray-700"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.083.183-2.127.52-3.105M3 3l18 18"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+
+          <div className="flex justify-between">
+            <div className="flex items-center space-x-2">
+              <input
+                id="remember"
+                type="checkbox"
+                checked={remember}
+                onChange={() => setRemember(!remember)}
+                className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-700"
+              />
+              <label htmlFor="remember" className="text-sm select-none">
+                Remember me 
+              </label>
+            </div>
+            <a
+              href="#"
+              className="text-sm font-normal text-blue-800 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
+            >
+              Forgot your password?
+            </a>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-[#15548D] text-white py-2 rounded-md hover:bg-indigo-700 transition"
           >
-            Read our docs
-          </a>
+            Log In
+          </button>
+        </form>
+      </div>
+
+      <div className="hidden md:flex flex-1 bg-indigo-600 items-center justify-center p-8">
+        <div className="text-white max-w-md">
+          <h2 className="text-4xl font-bold mb-4">Young Generation Academy</h2>
+          <p className="text-lg">
+            Empowering the youth through innovative learning and technology.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </main>
   );
 }
