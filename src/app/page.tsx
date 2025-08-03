@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Boxes } from "@/components/ui/background-boxes";
 
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -130,7 +131,7 @@ export default function Login() {
             Young Generation <br /> Academy
           </h2>
         </div>
-        <Boxes />
+        <Boxes/>
       </div>
     </main>
   );
