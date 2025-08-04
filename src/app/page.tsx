@@ -3,15 +3,24 @@
 import React, { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Boxes } from "@/components/ui/background-boxes";
+import { useForm } from "react-hook-form";
+import { useAuth } from "@/context/AuthContext";
+import { User } from "@/types/Login";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+const { register, setValue,handleSubmit } = useForm<User>();
+   const { login } = useAuth();
 
+<<<<<<< HEAD:app/page.tsx
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -38,6 +47,19 @@ export default function Login() {
     }
   };
 
+=======
+const onSubmit = async (data: User) => {
+  try {
+    console.log("Login data:", data);
+    const { email, password } = data;
+    await login({ email, password });   
+    toast.success("Login successful!");
+  } catch (error) {
+    // @ts-ignore
+    toast.error(error.response?.data?.message);
+  }
+};
+>>>>>>> a412f6340a0c9b333a85906f7a9bdfd97bd154d4:src/app/page.tsx
   return (
     <main className="min-h-screen flex flex-col md:flex-row-reverse">
       <ModeToggle />
@@ -47,16 +69,15 @@ export default function Login() {
           <p className="mb-6">to continue to the dashboard</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm space-y-6">
           <div>
             <label htmlFor="email" className="block mb-2 font-normal text-sm">
               Email
             </label>
             <input
               type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+            
+            {...register("email", { required: true })}
               placeholder="email@gmail.com"
               className="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 text-sm"
               required
@@ -69,9 +90,7 @@ export default function Login() {
             </label>
             <input
               type={showPassword ? "text" : "password"}
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+             {...register("password", { required: true })}
               placeholder="Enter Password"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 text-sm"
               required
@@ -110,10 +129,7 @@ export default function Login() {
               Forgot your password?
             </a>
           </div>
-
-          {error && (
-            <div className="text-red-600 text-sm">{error}</div>
-          )}
+ 
 
           <button
             type="submit"
@@ -133,7 +149,7 @@ export default function Login() {
             Young Generation <br /> Academy
           </h2>
         </div>
-        <Boxes />
+        <Boxes/>
       </div>
     </main>
   );
