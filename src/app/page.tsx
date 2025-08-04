@@ -19,35 +19,6 @@ export default function Login() {
   
 const { register, setValue,handleSubmit } = useForm<User>();
    const { login } = useAuth();
-
-<<<<<<< HEAD:app/page.tsx
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await fakeLogin({ email, password });
-
-      if (!result.success) {
-        throw new Error(result.message);
-      }
-
-      console.log("Login successful");
-
-      window.location.href = "/admin/dashboard";
-
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-      setTimeout(() => {
-        setError(null);
-      }, 3000);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-=======
 const onSubmit = async (data: User) => {
   try {
     console.log("Login data:", data);
@@ -59,7 +30,7 @@ const onSubmit = async (data: User) => {
     toast.error(error.response?.data?.message);
   }
 };
->>>>>>> a412f6340a0c9b333a85906f7a9bdfd97bd154d4:src/app/page.tsx
+
   return (
     <main className="min-h-screen flex flex-col md:flex-row-reverse">
       <ModeToggle />
