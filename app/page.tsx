@@ -25,6 +25,9 @@ export default function Login() {
       }
 
       console.log("Login successful");
+
+      window.location.href = "/admin/dashboard";
+
     } catch (err: any) {
       setError(err.message || "Something went wrong");
       setTimeout(() => {
