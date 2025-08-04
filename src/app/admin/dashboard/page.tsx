@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { ModeToggle } from "@/components/mode-toggle";
+import { Navbar } from "@/components/navbar";
 
 export default function Dashboard() {
   return (
-    <SidebarProvider style={{ height: "100vh" , width: "100%", padding: "1rem"}}>
+    <SidebarProvider style={{ height: "100vh", width: "100%" }}>
       <AppSidebar />
-      <main>
-        <SidebarTrigger />
-        <ModeToggle />
-        <h1>Welcome to the Dashboard</h1>
+      <main className="w-full h-auto">
+        <Navbar />
       </main>
     </SidebarProvider>
   );

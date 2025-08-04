@@ -56,6 +56,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log("Login response:", response);
 
       localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+
       setAuthState({
         user: response.user,
         token: response.token,
@@ -70,7 +72,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logoutUser = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("token"); 
+    localStorage.removeItem("token");
     setAuthState({ user: null, token: null, loading: false });
   };
 
