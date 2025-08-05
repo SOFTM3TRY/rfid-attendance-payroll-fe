@@ -1,13 +1,12 @@
 "use client";
 
-import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { login } from "@/services/User_service"; // your API login function
-import { User } from "@/types/Login";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
+import { login } from "@/services/User_service";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface AuthContextType {
-  user: User | null;
-  token: string | null;
-  loading: boolean;
+  user: string | null;
   login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => void;
 }
@@ -19,39 +18,9 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [authState, setAuthState] = useState<{
-    user: User | null;
-    token: string | null;
-    loading: boolean;
-  }>({
-    user: null,
-    token: null,
-    loading: true,
-  });
-
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      const storedToken = localStorage.getItem("token");
-
-      if (storedUser && storedToken && storedUser !== "undefined") {
-        const parsedUser = JSON.parse(storedUser);
-        setAuthState({
-          user: parsedUser,
-          token: storedToken,
-          loading: false,
-        });
-      } else {
-        setAuthState({ user: null, token: null, loading: false });
-      }
-    } catch (error) {
-      console.error("Failed to load user from localStorage:", error);
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      setAuthState({ user: null, token: null, loading: false });
-    }
-  }, []);
-
+  const [user, setUser] = useState<string | null>(null);
+  const router = useRouter();
+ 
   const loginUser = async ({
     email,
     password,
@@ -59,37 +28,33 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     email: string;
     password: string;
   }) => {
-    setAuthState((prev) => ({ ...prev, loading: true }));
-
     try {
       const response = await login({ email, password });
-
       localStorage.setItem("token", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
-
-      setAuthState({
-        user: response.user,
-        token: response.token,
-        loading: false,
-      });
+      setUser( response);
+      console.log("User logged in:", response);
+        toast.success(
+        `Login successful as ${response?.role_id === 1 ? "Admin" : "Teacher"}`
+      );
+      if (response.role_id === 1) {   
+        router.push("/admin/dashboard");
+      } else if (response.role_id === 2) {
+        router.push("/teacher/dashboard");
+      }
     } catch (error) {
-      setAuthState((prev) => ({ ...prev, loading: false }));
       throw error;
     }
   };
 
   const logoutUser = () => {
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
-    setAuthState({ user: null, token: null, loading: false });
+ 
   };
 
   return (
     <AuthContext.Provider
       value={{
-        user: authState.user,
-        token: authState.token,
-        loading: authState.loading,
+        user,
         login: loginUser,
         logout: logoutUser,
       }}

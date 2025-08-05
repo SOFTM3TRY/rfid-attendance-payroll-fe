@@ -18,19 +18,12 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
 
   const { register, setValue, handleSubmit } = useForm<User>();
-  const { login, user } = useAuth();
+  const { login, role,user } = useAuth();
   const onSubmit = async (data: User) => {
     setLoading(true);
     try {
       const { email, password } = data;
-      await login({ email, password });
-
-      toast.success(
-        `Login successful as ${user?.role === 1 ? "Teacher" : "Admin"}`
-      );
-
-      window.location.href =
-        user?.role === 1 ? "/teacher/dashboard" : "/admin/dashboard";
+      await login({ email, password });   
     } catch (error) {
       // @ts-ignore
       toast.error(error.response?.data?.message || "Login failed");
