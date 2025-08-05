@@ -9,13 +9,13 @@ import toast from "react-hot-toast";
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  useEffect(() => {
-    const token = getCookie("token");
-    if (!token) {
-      router.push("/");  
-      toast.error("You must be logged in to access this page.");
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   const token = getCookie("token");
+  //   if (!token) {
+  //     router.push("/");  
+  //     toast.error("You must be logged in to access this page.");
+  //   }
+  // }, [router]);
 
   return <>{children}</>;
 }

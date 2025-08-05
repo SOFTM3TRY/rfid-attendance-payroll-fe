@@ -32,18 +32,18 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await login({ email, password });
       setCookie("token", response.token, {
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 60 * 60 * 24 * 7,
         secure: true,
         sameSite: "lax",
       });
       setUser( response);
       console.log("User logged in:", response);
         toast.success(
-        `Login successful as ${response?.role_id === 1 ? "Admin" : "Teacher"}`
+        `Login successful as ${response?.role_id !== 1 ? "Admin" : "Teacher"}`
       );
-      if (response.role_id === 1) {   
+      if (response.role_id === 2) {   
         router.push("/admin/dashboard");
-      } else if (response.role_id === 2) {
+      } else if (response.role_id === 1) {
         router.push("/teacher/dashboard");
       }
     } catch (error) {
