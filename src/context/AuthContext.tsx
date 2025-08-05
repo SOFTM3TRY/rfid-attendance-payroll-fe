@@ -1,5 +1,7 @@
+"use client";
+
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { login } from "@/services/User_service";
+import { login } from "@/services/User_service"; // your API login function
 import { User } from "@/types/Login";
 
 interface AuthContextType {
@@ -28,15 +30,24 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
-    if (storedUser && storedToken) {
-      setAuthState({
-        user: JSON.parse(storedUser),
-        token: storedToken,
-        loading: false,
-      });
-    } else {
+    try {
+      const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("token");
+
+      if (storedUser && storedToken && storedUser !== "undefined") {
+        const parsedUser = JSON.parse(storedUser);
+        setAuthState({
+          user: parsedUser,
+          token: storedToken,
+          loading: false,
+        });
+      } else {
+        setAuthState({ user: null, token: null, loading: false });
+      }
+    } catch (error) {
+      console.error("Failed to load user from localStorage:", error);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
       setAuthState({ user: null, token: null, loading: false });
     }
   }, []);
@@ -48,12 +59,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     email: string;
     password: string;
   }) => {
-    setAuthState({ ...authState, loading: true });
+    setAuthState((prev) => ({ ...prev, loading: true }));
 
     try {
       const response = await login({ email, password });
-
-      console.log("Login response:", response);
 
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(response.user));
@@ -64,8 +73,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         loading: false,
       });
     } catch (error) {
-      console.error("Login failed:", error);
-      setAuthState({ ...authState, loading: false });
+      setAuthState((prev) => ({ ...prev, loading: false }));
       throw error;
     }
   };

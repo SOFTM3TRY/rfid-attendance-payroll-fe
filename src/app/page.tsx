@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Boxes } from "@/components/ui/background-boxes";
 import { useForm } from "react-hook-form";
