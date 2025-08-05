@@ -4,6 +4,7 @@ import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { login } from "@/services/User_service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { getCookie, setCookie } from "cookies-next";
 
 interface AuthContextType {
   user: string | null;
@@ -30,7 +31,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }) => {
     try {
       const response = await login({ email, password });
-      localStorage.setItem("token", response.token);
+      setCookie("token", response.token, {
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        secure: true,
+        sameSite: "lax",
+      });
       setUser( response);
       console.log("User logged in:", response);
         toast.success(

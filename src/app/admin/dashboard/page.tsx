@@ -26,9 +26,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function Dashboard() {
   return (
+    <ProtectedRoute>
     <SidebarProvider style={{ height: "100vh", width: "100%" }}>
       <AppSidebar />
       <main className="w-full h-auto">
@@ -184,5 +186,6 @@ export default function Dashboard() {
         </div>
       </main>
     </SidebarProvider>
+  </ProtectedRoute>
   );
 }
