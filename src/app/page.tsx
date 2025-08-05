@@ -18,7 +18,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
 
   const { register, setValue, handleSubmit } = useForm<User>();
-  const { login, role,user } = useAuth();
+  const { login,user } = useAuth();
   const onSubmit = async (data: User) => {
     setLoading(true);
     try {
