@@ -39,11 +39,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser( response);
       console.log("User logged in:", response);
         toast.success(
-        `Login successful as ${response?.role_id !== 1 ? "Admin" : "Teacher"}`
+        `Login successful as ${response?.role_id === 1 ? "Admin" : "Teacher"}`
       );
-      if (response.role_id === 2) {   
+      if (response.role_id === 1) {   
         router.push("/admin/dashboard");
-      } else if (response.role_id === 1) {
+      } else if (response.role_id === 2) {
         router.push("/teacher/dashboard");
       }
     } catch (error) {
