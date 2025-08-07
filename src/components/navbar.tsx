@@ -58,7 +58,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="p-3 flex justify-between bg-white dark:bg-black dark:border-gray-800 w-full">
+    <nav className="p-3 flex justify-between bg-white dark:bg-background dark:border-gray-800 w-full sticky top-0">
       <SidebarTrigger />
 
       <div className="flex items-center justify-center gap-1 mr-12">

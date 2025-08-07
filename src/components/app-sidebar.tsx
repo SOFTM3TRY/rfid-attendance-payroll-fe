@@ -30,7 +30,7 @@ import {
 
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: Home },
-  { title: "Inbox", url: "#", icon: Inbox },
+  { title: "Email", url: "/admin/email", icon: Inbox },
   { title: "Calendar", url: "#", icon: Calendar },
   { title: "Manage Student", url: "#", icon: SquareUser },
   { title: "Manage Employee", url: "#", icon: IdCardLanyard },
