@@ -32,10 +32,10 @@ const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: Home },
   { title: "Email", url: "/admin/email", icon: Inbox },
   { title: "Calendar", url: "/admin/calendar", icon: Calendar },
-  { title: "Manage Student", url: "#", icon: SquareUser },
-  { title: "Manage Employee", url: "#", icon: IdCardLanyard },
-  { title: "Manage Account", url: "#", icon: Users },
-  { title: "Settings", url: "#", icon: Settings },
+  { title: "Manage Student", url: "/admin/manage-student", icon: SquareUser },
+  { title: "Manage Employee", url: "/admin/manage-employee", icon: IdCardLanyard },
+  { title: "Manage Account", url: "/admin/manage-account", icon: Users },
+  { title: "System Settings", url: "/admin/system-settings", icon: Settings },
 ];
 
 export function AppSidebar() {

@@ -33,6 +33,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import Link from "next/link";
+
 export function Navbar() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -168,12 +170,14 @@ export function Navbar() {
 
             <ul className="flex flex-col mt-2">
               <li>
-                <Button
-                  variant="outline"
-                  className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
-                >
-                  Profile
-                </Button>
+                <Link href="/admin/profile">
+                  <Button
+                    variant="outline"
+                    className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
+                  >
+                    Profile
+                  </Button>
+                </Link>
               </li>
               <li>
                 <Button
@@ -192,3 +196,4 @@ export function Navbar() {
     </nav>
   );
 }
+
