@@ -10,6 +10,7 @@ interface AuthContextType {
   user: string | null;
   login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => void;
+  token: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +21,7 @@ interface AuthProviderProps {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
+  const token = getCookie("token") as string | null;
   const router = useRouter();
  
   const loginUser = async ({
@@ -62,6 +64,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         user,
         login: loginUser,
         logout: logoutUser,
+        token: token || null,
       }}
     >
       {children}

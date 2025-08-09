@@ -1,3 +1,4 @@
+"use client";
 import {
   Calendar,
   Home,
@@ -27,6 +28,9 @@ import {
   SidebarFooter,
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/context/AuthContext";
+// @ts-ignore
+import { useUserDetails } from "@/hooks/useUserDetails";
 
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: Home },
@@ -41,6 +45,13 @@ const items = [
 export function AppSidebar() {
   const pathname = usePathname();
 
+const { token } = useAuth();  
+
+const {data: userDetails, isLoading} = useUserDetails(token as string);
+ if (userDetails) {
+  console.log('User Details:', userDetails); // logs only once when data is ready
+}
+ 
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
