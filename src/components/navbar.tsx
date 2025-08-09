@@ -12,9 +12,6 @@ import {
 } from "@/components/ui/popover";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
 import {
   Sheet,
   SheetContent,
@@ -37,13 +34,27 @@ import Link from "next/link";
 import { useUserDetails } from "@/hooks/useUserDetails";
 import { useClientOnly } from "@/hooks/useClientOnly";
 import { useAuth } from "@/context/AuthContext";
+import { logout } from "@/services/User_service";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { token } = useAuth();  
-    const isClient = useClientOnly();
- const {data: userDetails, isLoading: isLoadingUserDetails} = useUserDetails(token as string);
- 
+  const { token } = useAuth();
+  const isClient = useClientOnly();
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
+    token as string
+  );
+  const router = useRouter();
+  const handlelogout = async () => {
+    try {
+      const response = await logout(token as string);
+      toast.success("Logged out successfully");
+      router.push("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(document.fullscreenElement !== null);
@@ -64,10 +75,10 @@ export function Navbar() {
       element.requestFullscreen();
     }
   };
- 
-if (!isClient || isLoadingUserDetails) {
-  return<div>GAWA KA LOADING COMPONENT TAPOS IMPORT MO...</div>;
-}
+
+  if (!isClient || isLoadingUserDetails) {
+    return <div>GAWA KA LOADING COMPONENT TAPOS IMPORT MO...</div>;
+  }
   return (
     <nav className="p-3 flex z-50 justify-between bg-white dark:bg-background dark:border-gray-800 w-full sticky top-0">
       <SidebarTrigger />
@@ -161,8 +172,19 @@ if (!isClient || isLoadingUserDetails) {
               </Avatar>
 
               <div className="flex flex-col text-start leading-2 text-white">
-                <p className="text-xs">  { userDetails?.data.first_name + " " + userDetails?.data.last_name}</p>
-                <small className="text-[10px]">{userDetails?.data.role_id === 1 ? "Admin" : userDetails?.data.role_id === 2 ? "Teacher" : ""}</small>
+                <p className="text-xs">
+                  {" "}
+                  {userDetails?.data.first_name +
+                    " " +
+                    userDetails?.data.last_name}
+                </p>
+                <small className="text-[10px]">
+                  {userDetails?.data.role_id === 1
+                    ? "Admin"
+                    : userDetails?.data.role_id === 2
+                    ? "Teacher"
+                    : ""}
+                </small>
               </div>
             </div>
           </PopoverTrigger>
@@ -191,6 +213,7 @@ if (!isClient || isLoadingUserDetails) {
               <li>
                 <Button
                   variant="outline"
+                  onClick={handlelogout}
                   className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
                 >
                   Logout
@@ -205,4 +228,3 @@ if (!isClient || isLoadingUserDetails) {
     </nav>
   );
 }
-
