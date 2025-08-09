@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import {
   Calendar,
   Home,
@@ -31,6 +31,8 @@ import {
 import { useAuth } from "@/context/AuthContext";
 // @ts-ignore
 import { useUserDetails } from "@/hooks/useUserDetails";
+import { useEffect, useState } from "react";
+import { useClientOnly } from "@/hooks/useClientOnly";
 
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: Home },
@@ -41,17 +43,19 @@ const items = [
   { title: "Manage Account", url: "/admin/manage-account", icon: Users },
   { title: "System Settings", url: "/admin/system-settings", icon: Settings },
 ];
-
+ 
+ 
 export function AppSidebar() {
   const pathname = usePathname();
 
 const { token } = useAuth();  
-
-const {data: userDetails, isLoading} = useUserDetails(token as string);
- if (userDetails) {
-  console.log('User Details:', userDetails); // logs only once when data is ready
-}
+   const isClient = useClientOnly();
  
+const {data: userDetails, isLoading: isLoadingUserDetails} = useUserDetails(token as string);
+ 
+if (!isClient || isLoadingUserDetails) {
+  return<div>GAWA KA LOADING COMPONENT TAPOS IMPORT MO...</div>;
+}
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -112,12 +116,12 @@ const {data: userDetails, isLoading} = useUserDetails(token as string);
 
           <div className="px-2 py-2 block group-data-[collapsible=icon]:hidden">
             <p className="font-semibold">
-              Sample User{" "}
+            { userDetails?.data.first_name + " " + userDetails?.data.last_name}
               <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
-                Role
+                {userDetails?.data.role_id === 1 ? "Admin" : userDetails?.data.role_id === 2 ? "Teacher" : ""}
               </span>
             </p>
-            <p className="text-xs">sampleuser@gmail.com</p>
+            <p className="text-xs">{userDetails?.data.email}</p>
           </div>
         </div>
       </SidebarFooter>

@@ -34,10 +34,16 @@ import {
 } from "@/components/ui/dialog";
 
 import Link from "next/link";
+import { useUserDetails } from "@/hooks/useUserDetails";
+import { useClientOnly } from "@/hooks/useClientOnly";
+import { useAuth } from "@/context/AuthContext";
 
 export function Navbar() {
   const [isFullscreen, setIsFullscreen] = useState(false);
-
+  const { token } = useAuth();  
+    const isClient = useClientOnly();
+ const {data: userDetails, isLoading: isLoadingUserDetails} = useUserDetails(token as string);
+ 
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(document.fullscreenElement !== null);
@@ -58,7 +64,10 @@ export function Navbar() {
       element.requestFullscreen();
     }
   };
-
+ 
+if (!isClient || isLoadingUserDetails) {
+  return<div>GAWA KA LOADING COMPONENT TAPOS IMPORT MO...</div>;
+}
   return (
     <nav className="p-3 flex z-50 justify-between bg-white dark:bg-background dark:border-gray-800 w-full sticky top-0">
       <SidebarTrigger />
@@ -152,8 +161,8 @@ export function Navbar() {
               </Avatar>
 
               <div className="flex flex-col text-start leading-2 text-white">
-                <p className="text-xs">Sample User</p>
-                <small className="text-[10px]">Role</small>
+                <p className="text-xs">  { userDetails?.data.first_name + " " + userDetails?.data.last_name}</p>
+                <small className="text-[10px]">{userDetails?.data.role_id === 1 ? "Admin" : userDetails?.data.role_id === 2 ? "Teacher" : ""}</small>
               </div>
             </div>
           </PopoverTrigger>
