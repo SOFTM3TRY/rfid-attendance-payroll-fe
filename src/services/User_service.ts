@@ -53,3 +53,23 @@ export const logout = async (token: string) => {
     throw error;
   }
 };
+
+export const checkToken = async (token: string) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/check-token`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Token validation failed:', error);
+    throw error;
+  }
+};
+
+ 
