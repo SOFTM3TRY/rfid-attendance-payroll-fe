@@ -191,12 +191,14 @@ export function Navbar() {
           <PopoverContent className="w-48 h-auto py-0 px-0 text-sm">
             <div className="px-2 py-2">
               <p className="font-semibold">
-                Sample User{" "}
+               {userDetails?.data.first_name +
+                    " " +
+                    userDetails?.data.last_name}
                 <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
                   Role
                 </span>
               </p>
-              <p className="text-xs">sampleuser@gmail.com</p>
+              <p className="text-xs">{userDetails?.data.email}</p>
             </div>
 
             <ul className="flex flex-col mt-2">
