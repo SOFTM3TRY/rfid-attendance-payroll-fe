@@ -34,6 +34,8 @@ import { useUserDetails } from "@/hooks/useUserDetails";
 import { useEffect, useState } from "react";
 import { useClientOnly } from "@/hooks/useClientOnly";
 
+import Loader from "@/components/Loader";
+
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: Home },
   { title: "Email", url: "/admin/email", icon: Inbox },
@@ -54,7 +56,7 @@ const { token } = useAuth();
 const {data: userDetails, isLoading: isLoadingUserDetails} = useUserDetails(token as string);
  
 if (!isClient || isLoadingUserDetails) {
-  return<div>GAWA KA LOADING COMPONENT TAPOS IMPORT MO...</div>;
+  return <Loader />
 }
   return (
     <Sidebar collapsible="icon">
