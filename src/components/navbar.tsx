@@ -76,9 +76,6 @@ export function Navbar() {
     }
   };
 
-  if (!isClient || isLoadingUserDetails) {
-    return <div>GAWA KA LOADING COMPONENT TAPOS IMPORT MO...</div>;
-  }
   return (
     <nav className="p-3 flex z-50 justify-between bg-white dark:bg-background dark:border-gray-800 w-full sticky top-0">
       <SidebarTrigger />

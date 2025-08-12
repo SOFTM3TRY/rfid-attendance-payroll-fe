@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Navbar } from "@/components/navbar";
@@ -36,7 +37,25 @@ import { TeacherChart } from "@/components/admin/teacher-chart";
 
 import { Footer } from "@/components/footer";
 
+import { useAuth } from "@/context/AuthContext";
+// @ts-ignore
+import { useUserDetails } from "@/hooks/useUserDetails";
+import { useClientOnly } from "@/hooks/useClientOnly";
+
+import Loader from "@/components/Loader";
+
 export default function Dashboard() {
+  const { token } = useAuth();
+  const isClient = useClientOnly();
+
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
+    token as string
+  );
+
+  if (!isClient || isLoadingUserDetails) {
+    return <Loader />;
+  }
+
   return (
     <ProtectedRoute role="1">
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>

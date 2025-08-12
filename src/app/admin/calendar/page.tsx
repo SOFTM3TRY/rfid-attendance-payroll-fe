@@ -18,8 +18,25 @@ import {
 } from "@/components/ui/breadcrumb";
 
 import Calendar from "@/components/Calendar";
+import { useAuth } from "@/context/AuthContext";
+// @ts-ignore
+import { useUserDetails } from "@/hooks/useUserDetails";
+import { useClientOnly } from "@/hooks/useClientOnly";
+
+import Loader from "@/components/Loader";
 
 export default function CalendarPage() {
+  const { token } = useAuth();
+  const isClient = useClientOnly();
+
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
+    token as string
+  );
+
+  if (!isClient || isLoadingUserDetails) {
+    return <Loader />;
+  }
+  
   return (
     <ProtectedRoute>
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>

@@ -10,6 +10,12 @@ import { Footer } from "@/components/footer";
 
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { EmailTable } from "@/components/admin/email/email-table";
+import { useAuth } from "@/context/AuthContext";
+// @ts-ignore
+import { useUserDetails } from "@/hooks/useUserDetails";
+import { useClientOnly } from "@/hooks/useClientOnly";
+
+import Loader from "@/components/Loader";
 
 const allEmails = Array.from({ length: 50 }).map((_, i) => ({
   id: String(i + 1),
@@ -41,6 +47,18 @@ export default function Inbox() {
     const start = (page - 1) * pageSize;
     return filteredEmails.slice(start, start + pageSize);
   }, [filteredEmails, page]);
+
+  const { token } = useAuth();
+  const isClient = useClientOnly();
+
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
+    token as string
+  );
+
+  if (!isClient || isLoadingUserDetails) {
+    return <Loader />;
+  }
+  
 
   return (
     <ProtectedRoute>

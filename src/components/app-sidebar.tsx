@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import {
   Calendar,
   Home,
@@ -41,23 +41,25 @@ const items = [
   { title: "Email", url: "/admin/email", icon: Inbox },
   { title: "Calendar", url: "/admin/calendar", icon: Calendar },
   { title: "Manage Student", url: "/admin/manage-student", icon: SquareUser },
-  { title: "Manage Employee", url: "/admin/manage-employee", icon: IdCardLanyard },
+  {
+    title: "Manage Employee",
+    url: "/admin/manage-employee",
+    icon: IdCardLanyard,
+  },
   { title: "Manage Account", url: "/admin/manage-account", icon: Users },
   { title: "System Settings", url: "/admin/system-settings", icon: Settings },
 ];
- 
- 
+
 export function AppSidebar() {
   const pathname = usePathname();
 
-const { token } = useAuth();  
-   const isClient = useClientOnly();
- 
-const {data: userDetails, isLoading: isLoadingUserDetails} = useUserDetails(token as string);
- 
-if (!isClient || isLoadingUserDetails) {
-  return <Loader />
-}
+  const { token } = useAuth();
+  const isClient = useClientOnly();
+
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
+    token as string
+  );
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -118,9 +120,13 @@ if (!isClient || isLoadingUserDetails) {
 
           <div className="px-2 py-2 block group-data-[collapsible=icon]:hidden">
             <p className="font-semibold">
-            { userDetails?.data.first_name + " " + userDetails?.data.last_name}
+              {userDetails?.data.first_name + " " + userDetails?.data.last_name}
               <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
-                {userDetails?.data.role_id === 1 ? "Admin" : userDetails?.data.role_id === 2 ? "Teacher" : ""}
+                {userDetails?.data.role_id === 1
+                  ? "Admin"
+                  : userDetails?.data.role_id === 2
+                  ? "Teacher"
+                  : ""}
               </span>
             </p>
             <p className="text-xs">{userDetails?.data.email}</p>
