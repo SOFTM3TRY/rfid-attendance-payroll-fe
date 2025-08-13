@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface Props<TData> {
   columns: ColumnDef<TData>[];
@@ -32,6 +33,14 @@ export function GradeTable<TData>({ columns, data }: Props<TData>) {
 
   return (
     <div className="rounded-md border">
+      <Input
+        placeholder="Filter LRN..."
+        value={(table.getColumn("lrn")?.getFilterValue() as string) ?? ""}
+        onChange={(event) =>
+          table.getColumn("lrn")?.setFilterValue(event.target.value)
+        }
+        className="max-w-sm"
+      />
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
