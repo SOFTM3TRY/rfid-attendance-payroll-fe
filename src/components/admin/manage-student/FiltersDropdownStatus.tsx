@@ -7,21 +7,21 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { TableIcon, ChevronDownIcon } from "lucide-react";
+import { TableIcon, ChevronDownIcon, CircleUser, UserCheck, UserX } from "lucide-react";
 
-const sectionTypes = ["1", "2", "3", "4"];
+const statusTypes = ["Active", "Inactive"];
 
 interface Props {
   selectedFilters: string[];
   setSelectedFilters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export function FiltersDropdown({ selectedFilters, setSelectedFilters }: Props) {
-  const toggleFilter = (section: string) => {
+export function FiltersDropdownStatus({ selectedFilters, setSelectedFilters }: Props) {
+  const toggleFilter = (status: string) => {
     setSelectedFilters((prev) =>
-      prev.includes(section)
-        ? prev.filter((t) => t !== section)
-        : [...prev, section]
+      prev.includes(status)
+        ? prev.filter((t) => t !== status)
+        : [...prev, status]
     );
   };
 
@@ -29,22 +29,24 @@ export function FiltersDropdown({ selectedFilters, setSelectedFilters }: Props) 
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2">
-          <TableIcon className="w-4 h-4" />
-          Filters Section
+          <CircleUser className="w-4 h-4" />
+          Status
           <ChevronDownIcon className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {sectionTypes.map((section) => (
+        {statusTypes.map((status) => (
           <DropdownMenuCheckboxItem
-            key={section}
-            checked={selectedFilters.includes(section)}
-            onCheckedChange={() => toggleFilter(section)}
+            key={status}
+            checked={selectedFilters.includes(status)}
+            onCheckedChange={() => toggleFilter(status)}
+            className="capitalize hover:bg-zinc-300 dark:hover:bg-zinc-800"
           >
-            {section}
+            {status === "Active" ? <UserCheck /> : <UserX />} {status}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+

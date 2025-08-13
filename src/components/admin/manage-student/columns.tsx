@@ -1,27 +1,36 @@
-'use client';
+"use client";
 
-import { ColumnDef } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
+import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
-import { Eye, SquarePen, TableProperties, User, ShieldUser, GraduationCap, BookAudio, UserCog } from "lucide-react";
+import {
+  Eye,
+  SquarePen,
+  TableProperties,
+  User,
+  ShieldUser,
+  GraduationCap,
+  BookAudio,
+  UserCog,
+} from "lucide-react";
 
 export type Section = {
   LRN: string;
   FullName: string;
   Grade: string;
   Section: number;
-  status: 'Active' | 'Inactive';
+  status: "Active" | "Inactive";
 };
 
 export const columns: ColumnDef<Section>[] = [
   {
-    accessorKey: 'LRN',
+    accessorKey: "LRN",
     header: () => (
       <Button variant="ghost" size="sm">
         <ShieldUser /> LRN
@@ -29,7 +38,7 @@ export const columns: ColumnDef<Section>[] = [
     ),
   },
   {
-    accessorKey: 'FullName',
+    accessorKey: "FullName",
     header: () => {
       return (
         <Button variant="ghost" size="sm">
@@ -39,7 +48,7 @@ export const columns: ColumnDef<Section>[] = [
     },
   },
   {
-    accessorKey: 'Grade',
+    accessorKey: "Grade",
     header: () => (
       <Button variant="ghost" size="sm">
         <GraduationCap /> Grade
@@ -47,7 +56,7 @@ export const columns: ColumnDef<Section>[] = [
     ),
   },
   {
-    accessorKey: 'Section',
+    accessorKey: "Section",
     header: () => (
       <Button variant="ghost" size="sm">
         <BookAudio /> Section
@@ -55,7 +64,7 @@ export const columns: ColumnDef<Section>[] = [
     ),
   },
   {
-    accessorKey: 'status',
+    accessorKey: "status",
     header: () => (
       <Button variant="ghost" size="sm">
         <UserCog /> Status
@@ -65,30 +74,46 @@ export const columns: ColumnDef<Section>[] = [
       const status = row.original.status;
       return (
         <span
-          className={`text-xs px-2 py-1 rounded ${
-            status === 'Active' ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800'
-          }`}
+          className={`text-xs w-20 h-6 flex items-center justify-center rounded-full ${
+            status === "Active"
+              ? "bg-green-200 text-green-900"
+              : "bg-red-200 text-red-900"
+          } `}
         >
+          <span
+            className={`h-1.5 w-1.5 rounded-full mr-1 ${
+              status === "Active" ? "bg-green-900" : "bg-red-900"
+            }`}
+          />
+
           {status}
         </span>
       );
     },
   },
   {
-    accessorKey: 'Actions',
-    id: 'actions',
+    accessorKey: "Actions",
+    id: "actions",
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost">⋮</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem><Eye/>View {row.original.LRN} Profile</DropdownMenuItem>
-          <DropdownMenuItem><SquarePen/>Edit {row.original.LRN} Information</DropdownMenuItem>
-          <DropdownMenuItem><TableProperties/>View {row.original.LRN} Attendance History</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Eye />
+            View Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <SquarePen />
+            Edit Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <TableProperties />
+            Attendance History
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
   },
 ];
-
