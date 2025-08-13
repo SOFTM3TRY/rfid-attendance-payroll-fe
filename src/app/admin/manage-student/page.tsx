@@ -1,7 +1,7 @@
 "use client";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
 
 import {
@@ -24,7 +24,7 @@ import { useClientOnly } from "@/hooks/useClientOnly";
 
 import Loader from "@/components/Loader";
 
-import GradeTabsPage from "@/components/admin/GradeTabsPage";
+import GradeTabsPage from "@/components/admin/manage-student/GradeTabsPage";
 
 
 export default function ManageStudent() {

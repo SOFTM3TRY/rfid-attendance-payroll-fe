@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FiltersDropdown } from "@/components/admin/FiltersDropdown";
+import { FiltersDropdown } from "@/components/admin/manage-student/FiltersDropdown";
 import { Button } from "@/components/ui/button";
-import { GradeTable } from "@/components/admin/GradeTable";
-import { columns, Section } from "@/components/admin/columns";
+import { GradeTable } from "@/components/admin/manage-student/GradeTable";
+import { columns, Section } from "@/components/admin/manage-student/columns";
 import { PlusIcon, GraduationCap  } from "lucide-react";
 
 const grades = [

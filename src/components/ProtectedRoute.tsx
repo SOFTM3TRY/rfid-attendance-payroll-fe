@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import toast from "react-hot-toast";
 import { checkToken } from "@/services/User_service";
-import { useUserDetails } from "@/hooks/useUserDetails";  
+import { useUserDetails } from "@/hooks/useUserDetails";
 import { User } from "lucide-react";
 export default function ProtectedRoute({
   children,
@@ -16,45 +16,46 @@ export default function ProtectedRoute({
   role?: string;
 }) {
   const router = useRouter();
-  const {data: userDetails, isLoading: isLoadingUserDetails} = useUserDetails(getCookie("token") as string);   
-  
-    // Check user role and redirect if unauthorized
-//  useEffect(() => {
-//     if (!isLoadingUserDetails && userDetails) {
-//       const userRole = userDetails?.data.role_id;  
-//         console.log("User role:", userRole);
-//       if (role && userRole !== parseInt(role)) {
-//         toast.error("You do not have access to this page.");
-//         router.push("/unauthorized");
-//       }
-//     }
-//   }, [isLoadingUserDetails, userDetails, role, router]);
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
+    getCookie("token") as string
+  );
 
-//   // Validate token on initial load
-//   useEffect(() => {
-//     const validateToken = async () => {
-//       const token = getCookie("token");
-//       console.log("Token from cookies:", token);
+  // Check user role and redirect if unauthorized
+  useEffect(() => {
+    if (!isLoadingUserDetails && userDetails) {
+      const userRole = userDetails?.data.role_id;
+      console.log("User role:", userRole);
+      if (role && userRole !== parseInt(role)) {
+        toast.error("You do not have access to this page.");
+        router.push("/unauthorized");
+      }
+    }
+  }, [isLoadingUserDetails, userDetails, role, router]);
 
-//       try {
-//         await checkToken(token as string);
-//       } catch (error) {
-//         toast.error("Your token is invalid or expired. Please log in again.");
-//         router.push("/");
-//       }
-//     };
+  // Validate token on initial load
+  useEffect(() => {
+    const validateToken = async () => {
+      const token = getCookie("token");
+      console.log("Token from cookies:", token);
 
-//     validateToken();
-//   }, []);
+      try {
+        await checkToken(token as string);
+      } catch (error) {
+        toast.error("Your token is invalid or expired. Please log in again.");
+        router.push("/");
+      }
+    };
 
-  
-//   useEffect(() => {
-//     const token = getCookie("token");
-//     if (!token) {
-//       router.push("/");
-//       toast.error("You must be logged in to access this page.");
-//     }
-//   }, [router]);
+    validateToken();
+  }, []);
+
+  useEffect(() => {
+    const token = getCookie("token");
+    if (!token) {
+      router.push("/");
+      toast.error("You must be logged in to access this page.");
+    }
+  }, [router]);
 
   return <>{children}</>;
 }

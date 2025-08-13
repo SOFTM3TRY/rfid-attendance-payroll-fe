@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
 
 import { SquareArrowOutUpRight, Users, Sheet } from "lucide-react";
@@ -28,12 +28,12 @@ import {
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 //Table
-import { StudentTable } from "@/components/admin/dashboard-student-table";
-import { TeacherTable } from "@/components/admin/dashboard-teacher-table";
+import { StudentTable } from "@/components/admin/dashboard/dashboard-student-table";
+import { TeacherTable } from "@/components/admin/dashboard/dashboard-teacher-table";
 
 //Chart
-import { ChartAreaInteractive } from "@/components/admin/student-chart";
-import { TeacherChart } from "@/components/admin/teacher-chart";
+import { ChartAreaInteractive } from "@/components/admin/dashboard/student-chart";
+import { TeacherChart } from "@/components/admin/dashboard/teacher-chart";
 
 import { Footer } from "@/components/footer";
 
