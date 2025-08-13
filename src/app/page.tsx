@@ -111,6 +111,8 @@ export default function Login() {
             {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
+
+        <img src="https://avatars.githubusercontent.com/u/221351242?s=200&v=4" alt="Avatar" className="absolute bottom-4 right-4 w-8 h-8 rounded-full"/>
       </div>
 
       <div className="hidden md:flex relative flex-1 overflow-hidden bg-cyan-900 dark:bg-black items-center justify-center p-8">
