@@ -21,6 +21,8 @@ import { FiltersDropdownStatus } from "@/components/admin/manage-student/Filters
 
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useStudentDetails } from "@/hooks/useStudentDetails";
+import { useAuth } from "@/context/AuthContext";
 
 const grades = [
   "Grade One",
@@ -44,6 +46,10 @@ export default function GradeTabsPage() {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+   const { token } = useAuth();
+  const {data: studentDetails, isLoading: isLoadingStudentDetails} = useStudentDetails(token);
+
+  console.log("Student Details:", studentDetails);
 
   // Pagination state here (shared with FilterTable and table components)
   const [pagination, setPagination] = React.useState({
