@@ -18,6 +18,8 @@ import {
   GraduationCap,
   BookAudio,
   UserCog,
+  UserCheck,
+  UserX,
 } from "lucide-react";
 
 export type Section = {
@@ -33,7 +35,7 @@ export const columns: ColumnDef<Section>[] = [
     accessorKey: "LRN",
     header: () => (
       <Button variant="ghost" size="sm">
-        <ShieldUser /> LRN
+        <ShieldUser className="text-blue-500"/> LRN
       </Button>
     ),
   },
@@ -42,7 +44,7 @@ export const columns: ColumnDef<Section>[] = [
     header: () => {
       return (
         <Button variant="ghost" size="sm">
-          <User /> Full Name
+          <User className="text-yellow-500"/> Full Name
         </Button>
       );
     },
@@ -51,7 +53,7 @@ export const columns: ColumnDef<Section>[] = [
     accessorKey: "Grade",
     header: () => (
       <Button variant="ghost" size="sm">
-        <GraduationCap /> Grade
+        <GraduationCap  className="text-green-500"/> Grade
       </Button>
     ),
   },
@@ -59,34 +61,32 @@ export const columns: ColumnDef<Section>[] = [
     accessorKey: "Section",
     header: () => (
       <Button variant="ghost" size="sm">
-        <BookAudio /> Section
+        <BookAudio className="text-violet-500"/> Section
       </Button>
     ),
+    cell: ({ row }) => <span className="flex justify-center items-center w-22 h-6">{row.original.Section}</span>,
   },
   {
     accessorKey: "status",
     header: () => (
       <Button variant="ghost" size="sm">
-        <UserCog /> Status
+        <UserCog className="text-teal-500"/> Status
       </Button>
     ),
     cell: ({ row }) => {
       const status = row.original.status;
       return (
-        <span
-          className={`text-xs w-20 h-6 flex items-center justify-center rounded-full ${
-            status === "Active"
-              ? "bg-green-200 text-green-900"
-              : "bg-red-200 text-red-900"
-          } `}
-        >
-          <span
-            className={`h-1.5 w-1.5 rounded-full mr-1 ${
-              status === "Active" ? "bg-green-900" : "bg-red-900"
-            }`}
-          />
-
+        <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
+          
           {status}
+
+          <span
+            className={`ml-1 ${
+              status === "Active" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {status === "Active" ? <UserCheck className="w-4 h-4"/> : <UserX className="w-4 h-4"/>}
+          </span>
         </span>
       );
     },
@@ -117,3 +117,4 @@ export const columns: ColumnDef<Section>[] = [
     ),
   },
 ];
+

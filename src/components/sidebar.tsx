@@ -70,7 +70,7 @@ export function AppSidebar() {
               alt="logo"
               className="w-8 h-8 me-2 group-data-[collapsible=icon]:block"
             />
-            <span className="text-[12px] font-bold uppercase block group-data-[collapsible=icon]:hidden text-teal-700 dark:text-teal-500">
+            <span className="text-xs font-semibold uppercase block group-data-[collapsible=icon]:hidden text-teal-700 dark:text-teal-500">
               Young Generation Academy
             </span>
           </div>
@@ -119,7 +119,7 @@ export function AppSidebar() {
           </Avatar>
 
           <div className="px-2 py-2 block group-data-[collapsible=icon]:hidden">
-            <p className="font-semibold">
+            <p className="font-semibold text-xs">
               {userDetails?.data.first_name + " " + userDetails?.data.last_name}
               <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
                 {userDetails?.data.role_id === 1

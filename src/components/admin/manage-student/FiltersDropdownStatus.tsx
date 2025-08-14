@@ -29,7 +29,7 @@ export function FiltersDropdownStatus({ selectedFilters, setSelectedFilters }: P
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2">
-          <CircleUser className="w-4 h-4" />
+          <CircleUser className="w-4 h-4 text-teal-500" />
           Status
           <ChevronDownIcon className="w-4 h-4" />
         </Button>
@@ -40,9 +40,9 @@ export function FiltersDropdownStatus({ selectedFilters, setSelectedFilters }: P
             key={status}
             checked={selectedFilters.includes(status)}
             onCheckedChange={() => toggleFilter(status)}
-            className="capitalize hover:bg-zinc-300 dark:hover:bg-zinc-800"
+            className="text-xs"
           >
-            {status === "Active" ? <UserCheck /> : <UserX />} {status}
+            {status} {status === "Active" ? <UserCheck className="text-green-500 mr-1 w-2 h-2 px-0"/> : <UserX className="text-red-500 mr-1 w-2 h-2"/>} 
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

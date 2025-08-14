@@ -26,6 +26,7 @@ import Loader from "@/components/Loader";
 
 import GradeTabsPage from "@/components/admin/manage-student/GradeTabsPage";
 
+import { Users } from "lucide-react";
 
 export default function ManageStudent() {
   const { token } = useAuth();
@@ -48,7 +49,7 @@ export default function ManageStudent() {
 
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl">Manage Student</h1>
+              <h1 className="text-lg font-medium flex"><Users  className="mr-2 w-6 h-6 text-teal-500"/> Manage Students</h1>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -64,7 +65,7 @@ export default function ManageStudent() {
               </Breadcrumb>
             </div>
 
-            <div className="p-0 h-full mt-10 z-1">
+            <div className="p-2 h-full mt-15 z-1">
               <GradeTabsPage />
             </div>
           </div>

@@ -88,7 +88,12 @@ export function GradeFourTable<TData>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length}>No data found.</TableCell>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-16 text-center text-red-500 dark:text-red-800"
+                >
+                  No data found.
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
@@ -99,10 +104,11 @@ export function GradeFourTable<TData>({
             Showing {start} to {end} of {totalRows} entries
           </div>
 
+          <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
+            Page {pagination.pageIndex + 1} of {totalPages}
+          </div>
+
           <div className="flex items-center gap-2">
-            <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
-              Page {pagination.pageIndex + 1} of {totalPages}
-            </div>
             <Button
               variant="outline"
               size="icon"
@@ -110,9 +116,9 @@ export function GradeFourTable<TData>({
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }))
               }
               disabled={pagination.pageIndex === 0}
-              className="w-8 h-8"
+              className="w-24 h-8 font-normal text-xs"
             >
-              <ChevronsLeft className="h-4 w-4" />
+              <ChevronsLeft className="h-4 w-4" /> First page
             </Button>
 
             <Button
@@ -125,9 +131,9 @@ export function GradeFourTable<TData>({
                 }))
               }
               disabled={pagination.pageIndex === 0}
-              className="w-8 h-8"
+              className="w-24 h-8 font-normal text-xs"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" /> Previous
             </Button>
 
             <Button
@@ -140,9 +146,9 @@ export function GradeFourTable<TData>({
                 }))
               }
               disabled={pagination.pageIndex >= totalPages - 1}
-              className="w-8 h-8"
+              className="w-24 h-8 font-normal text-xs"
             >
-              <ChevronRight className="h-4 w-4" />
+              Next <ChevronRight className="h-4 w-4" />
             </Button>
 
             <Button
@@ -155,8 +161,9 @@ export function GradeFourTable<TData>({
                 }))
               }
               disabled={pagination.pageIndex >= totalPages - 1}
-              className="w-8 h-8"
+              className="w-24 h-8 font-normal text-xs"
             >
+              Last Page
               <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>

@@ -5,7 +5,7 @@ import * as React from "react";
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, GraduationCap } from "lucide-react";
+import { PlusIcon, GraduationCap, Search } from "lucide-react";
 
 import { GradeOneTable } from "@/components/admin/manage-student/GradeOneTable";
 import { GradeTwoTable } from "@/components/admin/manage-student/GradeTwoTable";
@@ -20,7 +20,8 @@ import { FilterTable } from "@/components/admin/manage-student/Filtertable";
 import { FiltersDropdownStatus } from "@/components/admin/manage-student/FiltersDropdownStatus";
 
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+
+import { AddStudent } from "@/components/admin/manage-student/add-student";
 
 const grades = [
   "Grade One",
@@ -60,7 +61,8 @@ export default function GradeTabsPage() {
           selectedFilters.includes(String(row.Section))) &&
         (selectedStatus.length === 0 || selectedStatus.includes(row.status)) &&
         (search === "" ||
-          row.FullName.toLowerCase().includes(search.toLowerCase()))
+          row.FullName.toLowerCase().includes(search.toLowerCase()) ||
+          row.LRN.includes(search))
     );
 
   const gradeComponents: Record<string, React.ElementType> = {
@@ -87,19 +89,36 @@ export default function GradeTabsPage() {
         }}
       >
         <div className="flex justify-between mb-3">
-          <TabsList className="flex-wrap gap-3">
-            {grades.map((grade) => (
-              <TabsTrigger key={grade} value={grade}>
-                <GraduationCap className="mr-1 h-4 w-4" />
+          <TabsList className="flex-wrap gap-3 bg-zinc-100 dark:bg-zinc-900">
+            {grades.map((grade, i) => (
+              <TabsTrigger
+                key={grade}
+                value={grade}
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
+              >
+                <GraduationCap
+                  className={`mr-1 h-4 w-4 ${
+                    grade === "Grade One"
+                      ? "text-green-500 dark:text-green-300"
+                      : grade === "Grade Two"
+                      ? "text-orange-500 dark:text-orange-300"
+                      : grade === "Grade Three"
+                      ? "text-indigo-500 dark:text-indigo-300"
+                      : grade === "Grade Four"
+                      ? "text-blue-500 dark:text-blue-300"
+                      : grade === "Grade Five"
+                      ? "text-red-500 dark:text-red-300"
+                      : grade === "Grade Six"
+                      ? "text-yellow-500 dark:text-yellow-300"
+                      : ""
+                  }`}
+                />
                 {grade}
               </TabsTrigger>
             ))}
           </TabsList>
 
-          <Button variant="outline" className="flex items-center gap-2">
-            <PlusIcon className="w-4 h-4" />
-            Add Student
-          </Button>
+          <AddStudent />
         </div>
 
         {/* Header Actions */}
@@ -110,7 +129,7 @@ export default function GradeTabsPage() {
           <div className="relative max-w-md w-80">
             <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
             <Input
-              placeholder="Filter by Full Name..."
+              placeholder="Search Full Name or LRN..."
               value={search}
               onChange={handleFilterChange}
             />
@@ -156,4 +175,3 @@ export default function GradeTabsPage() {
     </main>
   );
 }
-

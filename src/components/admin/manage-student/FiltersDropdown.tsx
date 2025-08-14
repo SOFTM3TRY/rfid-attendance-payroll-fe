@@ -29,7 +29,7 @@ export function FiltersDropdown({ selectedFilters, setSelectedFilters }: Props) 
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2">
-          <TableIcon className="w-4 h-4" />
+          <TableIcon className="w-4 h-4 text-teal-500" />
           Filters Section
           <ChevronDownIcon className="w-4 h-4" />
         </Button>
