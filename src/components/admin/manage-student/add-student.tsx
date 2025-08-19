@@ -93,15 +93,17 @@ export function AddStudent() {
     ],
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "grade" && { section: "" }), // reset section when grade changes
     }));
 
-    // Clear error on change
     setErrors((prev) => {
       const newErrors = { ...prev };
       delete newErrors[name];
@@ -147,24 +149,120 @@ export function AddStudent() {
     setLoading(false);
   };
 
-  const renderField = (id: string, label: string) => (
-    <div className="grid gap-3">
-      <Label htmlFor={id}>
-        <span className="text-red-500 mr-[-0.3rem]">*</span>
-        {label}
-      </Label>
-      <Input
-        id={id}
-        name={id}
-        placeholder={`Enter ${label.toLowerCase()}`}
-        value={formData[id as keyof typeof formData]}
-        onChange={handleChange}
-        className={errors[id] ? "border border-red-500" : ""}
-        disabled={loading}
-      />
-      {errors[id] && <span className="text-sm text-red-500">{errors[id]}</span>}
-    </div>
-  );
+  const renderField = (id: string, label: string) => {
+    const isDropdown = ["grade", "section", "school_year"].includes(id);
+
+    // Generate school year options
+    const generateSchoolYears = () => {
+      const currentYear = new Date().getFullYear();
+      const startYear = 2024;
+      const years = [];
+      for (let i = startYear; i <= currentYear + 5; i++) {
+        years.push(`${i}-${i + 1}`);
+      }
+      return years;
+    };
+
+    // Grade options
+    const gradeOptions = [
+      "Grade 1",
+      "Grade 2",
+      "Grade 3",
+      "Grade 4",
+      "Grade 5",
+      "Grade 6",
+    ];
+
+    // Section options depend on grade
+    const generateSections = () => {
+      const grade = formData.grade;
+      if (!grade) return [];
+      return ["A", "B", "C"];
+    };
+
+    return (
+      <div className="grid gap-3">
+        <Label htmlFor={id}>
+          <span className="text-red-500 mr-[-0.3rem]">*</span>
+          {label}
+        </Label>
+
+        {id === "lrn" ? (
+          <Input
+            id={id}
+            name={id}
+            type="text"
+            inputMode="numeric"
+            pattern="\d{12}"
+            placeholder="Enter 12-digit LRN"
+            maxLength={12}
+            value={formData.lrn}
+            onChange={(e) => {
+              const onlyNumbers = e.target.value.replace(/\D/g, "");
+              if (onlyNumbers.length <= 12) {
+                setFormData((prev) => ({
+                  ...prev,
+                  lrn: onlyNumbers,
+                }));
+                setErrors((prev) => {
+                  const newErrors = { ...prev };
+                  delete newErrors.lrn;
+                  return newErrors;
+                });
+              }
+            }}
+            className={errors[id] ? "border border-red-500" : ""}
+            disabled={loading}
+          />
+        ) : isDropdown ? (
+          <select
+            id={id}
+            name={id}
+            value={formData[id as keyof typeof formData]}
+            onChange={handleChange}
+            className={`border rounded px-3 py-2 dark:bg-zinc-900 ${
+              errors[id] ? "border-red-500" : ""
+            }`}
+            disabled={loading}
+          >
+            <option value="">Select {label}</option>
+            {id === "grade" &&
+              gradeOptions.map((grade) => (
+                <option key={grade} value={grade}>
+                  {grade}
+                </option>
+              ))}
+            {id === "section" &&
+              generateSections().map((section) => (
+                <option key={section} value={section}>
+                  Section {section}
+                </option>
+              ))}
+            {id === "school_year" &&
+              generateSchoolYears().map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+          </select>
+        ) : (
+          <Input
+            id={id}
+            name={id}
+            placeholder={`Enter ${label.toLowerCase()}`}
+            value={formData[id as keyof typeof formData]}
+            onChange={handleChange}
+            className={errors[id] ? "border border-red-500" : ""}
+            disabled={loading}
+          />
+        )}
+
+        {errors[id] && (
+          <span className="text-sm text-red-500">{errors[id]}</span>
+        )}
+      </div>
+    );
+  };
 
   const renderStepFields = (fields: string[]) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
