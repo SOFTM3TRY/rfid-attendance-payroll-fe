@@ -1,4 +1,12 @@
 import { useEffect, useState } from "react";
+
+import {
+  fetchRegions,
+  fetchProvinces,
+  fetchCities,
+  fetchBarangays,
+} from "@/lib/psgc";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,13 +39,63 @@ import {
   Send,
 } from "lucide-react";
 
+// interface LocationOption {
+//   code: string;
+//   name: string;
+// }
+
+// const [regions, setRegions] = useState<LocationOption[]>([]);
+// const [provinces, setProvinces] = useState<LocationOption[]>([]);
+// const [cities, setCities] = useState<LocationOption[]>([]);
+// const [barangays, setBarangays] = useState<LocationOption[]>([]);
+
+// // Fetch regions on mount
+// useEffect(() => {
+//   fetchRegions().then(setRegions).catch(console.error);
+// }, []);
+
+// // Fetch provinces when region changes
+// useEffect(() => {
+//   const code = FormData.region;
+//   if (code === "130000000") {
+//     // NCR special case: Metro Manila as "province"
+//     setProvinces([{ code: "Metro Manila", name: "Metro Manila" }]);
+//     fetchCities(code).then(setCities).catch(console.error);
+//   } else if (code) {
+//     fetchProvinces(code).then(setProvinces).catch(console.error);
+//     fetchCities(code).then(setCities).catch(console.error);
+//   } else {
+//     setProvinces([]);
+//     setCities([]);
+//     setBarangays([]);
+//   }
+// }, [FormData.region]);
+
+// // Fetch cities when province changes (optional override)
+// useEffect(() => {
+//   const code = FormData.province;
+//   if (FormData.region !== "130000000" && code) {
+//     fetchCities(code).then(setCities).catch(console.error);
+//   }
+// }, [FormData.province]);
+
+// // Fetch barangays when city changes
+// useEffect(() => {
+//   const code = FormData.city;
+//   if (code) {
+//     fetchBarangays(code).then(setBarangays).catch(console.error);
+//   } else {
+//     setBarangays([]);
+//   }
+// }, [FormData.city]);
+
 export function AddStudent() {
   const [step, setStep] = useState(1);
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [FormData, setFormData] = useState({
     lrn: "",
     grade: "",
     section: "",
@@ -46,7 +104,7 @@ export function AddStudent() {
     middle_name: "",
     last_name: "",
     suffix: "",
-    role: "",
+    role: "studnet",
     gender: "",
     address: "",
     student_status: "",
@@ -63,7 +121,7 @@ export function AddStudent() {
     guardian_email: "",
   });
 
-  const allFields = Object.keys(formData);
+  const allFields = Object.keys(FormData);
 
   // Steps definition
   const stepFieldsMap: Record<number, string[]> = {
@@ -77,13 +135,14 @@ export function AddStudent() {
       "gender",
       "address",
       "student_status",
+      "last_school_attend",
     ],
     3: [
-      "last_school_attend",
-      "street",
-      "barangay",
-      "city",
+      "region",
       "province",
+      "city",
+      "barangay",
+      "street",
       "guardian_first_name",
       "guardian_middle_name",
       "guardian_last_name",
@@ -116,7 +175,12 @@ export function AddStudent() {
     const newErrors: Record<string, string> = {};
 
     requiredFields.forEach((field) => {
-      if (!formData[field as keyof typeof formData]?.trim()) {
+      if (
+        !FormData[field as keyof typeof FormData]?.trim() &&
+        !["middle_name", "suffix", "role", "guardian_middle_name"].includes(
+          field
+        )
+      ) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }
     });
@@ -137,7 +201,7 @@ export function AddStudent() {
   const handleSubmit = async () => {
     setLoading(true);
     const isValid = allFields.every((field) =>
-      formData[field as keyof typeof formData]?.trim()
+      FormData[field as keyof typeof FormData]?.trim()
     );
     if (!isValid) {
       alert("Please fill out all fields.");
@@ -145,12 +209,19 @@ export function AddStudent() {
       return;
     }
 
-    console.log("Form submitted:", formData);
+    console.log("Form submitted:", FormData);
     setLoading(false);
   };
 
   const renderField = (id: string, label: string) => {
-    const isDropdown = ["grade", "section", "school_year"].includes(id);
+    const isDropdown = [
+      "grade",
+      "section",
+      "school_year",
+      "suffix",
+      "gender",
+      "student_status",
+    ].includes(id);
 
     // Generate school year options
     const generateSchoolYears = () => {
@@ -162,6 +233,15 @@ export function AddStudent() {
       }
       return years;
     };
+
+    // Suffix options
+    const suffixOptions = ["Jr.", "Sr.", "I", "II", "III", "IV", "V"];
+
+    // Gender options
+    const genderOptions = ["Male", "Female", "Other"] as const;
+
+    // Student Status options
+    const studentStatusOptions = ["active", "inactive"] as const;
 
     // Grade options
     const gradeOptions = [
@@ -175,17 +255,30 @@ export function AddStudent() {
 
     // Section options depend on grade
     const generateSections = () => {
-      const grade = formData.grade;
+      const grade = FormData.grade;
       if (!grade) return [];
       return ["A", "B", "C"];
     };
 
     return (
-      <div className="grid gap-3">
-        <Label htmlFor={id}>
-          <span className="text-red-500 mr-[-0.3rem]">*</span>
-          {label}
-        </Label>
+      <div className={id === "role" ? "hidden" : "grid gap-2"}>
+        {id !== "role" && (
+          <Label htmlFor={id}>
+            {id === "middle_name" ||
+            id === "suffix" ||
+            id === "guardian_middle_name" ? (
+              <span>
+                {label}
+                <small> (Optional) </small>
+              </span>
+            ) : (
+              <>
+                <span className="text-red-500 mr-[-0.3rem]">*</span>
+                {label}
+              </>
+            )}
+          </Label>
+        )}
 
         {id === "lrn" ? (
           <Input
@@ -196,7 +289,7 @@ export function AddStudent() {
             pattern="\d{12}"
             placeholder="Enter 12-digit LRN"
             maxLength={12}
-            value={formData.lrn}
+            value={FormData.lrn.replace(/\D/g, "")}
             onChange={(e) => {
               const onlyNumbers = e.target.value.replace(/\D/g, "");
               if (onlyNumbers.length <= 12) {
@@ -214,16 +307,87 @@ export function AddStudent() {
             className={errors[id] ? "border border-red-500" : ""}
             disabled={loading}
           />
+        ) : id === "guardian_contact" ? (
+          <Input
+            id={id}
+            name={id}
+            type="text"
+            inputMode="tel"
+            pattern="\+\d{13}"
+            placeholder="+639123456789"
+            maxLength={13}
+            value={
+              FormData.guardian_contact === ""
+                ? "+639"
+                : FormData.guardian_contact
+            }
+            onChange={(e) => {
+              const onlyNumbers = e.target.value.replace(/\D/g, "");
+              const startWithPlus639 = onlyNumbers.startsWith("639");
+              if (onlyNumbers.length <= 13 && startWithPlus639) {
+                setFormData((prev) => ({
+                  ...prev,
+                  guardian_contact: `+639${onlyNumbers.slice(3)}`,
+                }));
+                setErrors((prev) => {
+                  const newErrors = { ...prev };
+                  delete newErrors.guardian_contact;
+                  return newErrors;
+                });
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "e" || e.key === "+" || e.key === "-") {
+                e.preventDefault();
+              }
+            }}
+            className={
+              errors[id]
+                ? "border border-red-500"
+                : id === "guardian_contact" &&
+                  FormData.guardian_contact === "+639"
+                ? "border border-red-500"
+                : ""
+            }
+            disabled={loading}
+          />
+        ) : id === "middle_name" || id === "role" ? (
+          <Input
+            id={id}
+            name={id}
+            type={id === "role" ? "hidden" : "text"}
+            placeholder="Enter middle name (optional)"
+            value={id === "role" ? "student" : FormData.middle_name}
+            onChange={handleChange}
+            className={
+              !(
+                id === "middle_name" ||
+                id === "role" ||
+                id === "guardian_middle_name"
+              )
+                ? errors[id]
+                  ? "border border-red-500"
+                  : ""
+                : ""
+            }
+            disabled={loading}
+            required={false}
+          />
         ) : isDropdown ? (
           <select
             id={id}
             name={id}
-            value={formData[id as keyof typeof formData]}
+            value={FormData[id as keyof typeof FormData]}
             onChange={handleChange}
-            className={`border rounded px-3 py-2 dark:bg-zinc-900 ${
-              errors[id] ? "border-red-500" : ""
-            }`}
+            className={
+              id === "suffix"
+                ? "border bg-zinc-900 py-1 px-3 rounded-sm"
+                : errors[id]
+                ? "border-red-500 border bg-zinc-900 py-1 px-3 rounded-sm"
+                : "border bg-zinc-900 py-1 px-3 rounded-sm"
+            }
             disabled={loading}
+            required={id !== "suffix"}
           >
             <option value="">Select {label}</option>
             {id === "grade" &&
@@ -244,22 +408,55 @@ export function AddStudent() {
                   {year}
                 </option>
               ))}
+            {id === "suffix" &&
+              suffixOptions.map((suffix) => (
+                <option key={suffix} value={suffix}>
+                  {suffix}
+                </option>
+              ))}
+            {id === "gender" &&
+              genderOptions.map((gender) => (
+                <option key={gender} value={gender}>
+                  {gender}
+                </option>
+              ))}
+            {id === "student_status" &&
+              studentStatusOptions.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
           </select>
         ) : (
           <Input
             id={id}
             name={id}
             placeholder={`Enter ${label.toLowerCase()}`}
-            value={formData[id as keyof typeof formData]}
+            value={FormData[id as keyof typeof FormData]}
             onChange={handleChange}
-            className={errors[id] ? "border border-red-500" : ""}
+            className={
+              !(
+                id === "middle_name" ||
+                id === "suffix" ||
+                id === "role" ||
+                id === "guardian_middle_name"
+              )
+                ? errors[id]
+                  ? "border border-red-500"
+                  : ""
+                : ""
+            }
             disabled={loading}
           />
         )}
 
-        {errors[id] && (
-          <span className="text-sm text-red-500">{errors[id]}</span>
-        )}
+        {id !== "middle_name" &&
+          id !== "suffix" &&
+          id !== "role" &&
+          id !== "guardian_middle_name" &&
+          errors[id] && (
+            <span className="text-sm text-red-500">{errors[id]}</span>
+          )}
       </div>
     );
   };
@@ -278,7 +475,7 @@ export function AddStudent() {
   const renderReview = () => (
     <div className=" p-4 rounded-md text-sm overflow-auto max-h-auto">
       <pre className="whitespace-pre-wrap hidden">
-        {JSON.stringify(formData, null, 2)}
+        {JSON.stringify(FormData, null, 2)}
       </pre>
 
       <div className="flex flex-col gap-2 bg-zinc-100 dark:bg-zinc-900/50 rounded-md p-5 mb-10">
@@ -289,19 +486,19 @@ export function AddStudent() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">LRN : </span>
-            <span className="text-sm font-light">{formData.lrn}</span>
+            <span className="text-sm font-light">{FormData.lrn}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Grade : </span>
-            <span className="text-sm font-light">{formData.grade}</span>
+            <span className="text-sm font-light">{FormData.grade}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Section : </span>
-            <span className="text-sm font-light">{formData.section}</span>
+            <span className="text-sm font-light">{FormData.section}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">School Year : </span>
-            <span className="text-sm font-light">{formData.school_year}</span>
+            <span className="text-sm font-light">{FormData.school_year}</span>
           </div>
         </div>
       </div>
@@ -313,36 +510,36 @@ export function AddStudent() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">First Name : </span>
-            <span className="text-sm font-light">{formData.first_name}</span>
+            <span className="text-sm font-light">{FormData.first_name}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Middle Name : </span>
-            <span className="text-sm font-light">{formData.middle_name}</span>
+            <span className="text-sm font-light">{FormData.middle_name}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Last Name : </span>
-            <span className="text-sm font-light">{formData.last_name}</span>
+            <span className="text-sm font-light">{FormData.last_name}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Suffix : </span>
-            <span className="text-sm font-light">{formData.suffix}</span>
+            <span className="text-sm font-light">{FormData.suffix}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Role : </span>
-            <span className="text-sm font-light">{formData.role}</span>
+            <span className="text-sm font-light">{FormData.role}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Gender : </span>
-            <span className="text-sm font-light">{formData.gender}</span>
+            <span className="text-sm font-light">{FormData.gender}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Address : </span>
-            <span className="text-sm font-light">{formData.address}</span>
+            <span className="text-sm font-light">{FormData.address}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Student Status : </span>
             <span className="text-sm font-light">
-              {formData.student_status}
+              {FormData.student_status}
             </span>
           </div>
         </div>
@@ -358,29 +555,29 @@ export function AddStudent() {
               Last School Attended:{" "}
             </span>
             <span className="text-sm font-light">
-              {formData.last_school_attend}
+              {FormData.last_school_attend}
             </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Street: </span>
-            <span className="text-sm font-light">{formData.street}</span>
+            <span className="text-sm font-light">{FormData.street}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Barangay: </span>
-            <span className="text-sm font-light">{formData.barangay}</span>
+            <span className="text-sm font-light">{FormData.barangay}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">City: </span>
-            <span className="text-sm font-light">{formData.city}</span>
+            <span className="text-sm font-light">{FormData.city}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Province: </span>
-            <span className="text-sm font-light">{formData.province}</span>
+            <span className="text-sm font-light">{FormData.province}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Guardian First Name: </span>
             <span className="text-sm font-light">
-              {formData.guardian_first_name}
+              {FormData.guardian_first_name}
             </span>
           </div>
           <div className="flex flex-col gap-1">
@@ -388,31 +585,31 @@ export function AddStudent() {
               Guardian Middle Name:{" "}
             </span>
             <span className="text-sm font-light">
-              {formData.guardian_middle_name}
+              {FormData.guardian_middle_name}
             </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Guardian Last Name: </span>
             <span className="text-sm font-light">
-              {formData.guardian_last_name}
+              {FormData.guardian_last_name}
             </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Guardian Employment: </span>
             <span className="text-sm font-light">
-              {formData.guardian_employment}
+              {FormData.guardian_employment}
             </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Guardian Contact: </span>
             <span className="text-sm font-light">
-              {formData.guardian_contact}
+              {FormData.guardian_contact}
             </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Guardian Email: </span>
             <span className="text-sm font-light">
-              {formData.guardian_email}
+              {FormData.guardian_email}
             </span>
           </div>
         </div>
