@@ -27,14 +27,18 @@ import {
 export type Section = {
   LRN: string;
   FullName: string;
-  Grade: string;
-  Section: number;
+  grade: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  suffix: string;
+  section: number;
   status: "Active" | "Inactive";
 };
 
 export const columns: ColumnDef<Section>[] = [
   {
-    accessorKey: "LRN",
+    accessorKey: "lrn",
     header: () => (
       <Button variant="ghost" size="sm">
         <ShieldUser className="text-blue-500" /> LRN
@@ -48,9 +52,12 @@ export const columns: ColumnDef<Section>[] = [
         <User className="text-yellow-500" /> Full Name
       </Button>
     ),
+    cell: ({ row }) => (
+      <span>{`${row.original.last_name} ${row.original.first_name} ${row.original.middle_name || ""}  ${row.original.suffix || ""}`}</span>
+    ),
   },
   {
-    accessorKey: "Grade",
+    accessorKey: "grade",
     header: () => (
       <Button variant="ghost" size="sm">
         <GraduationCap className="text-green-500" /> Grade
@@ -58,7 +65,7 @@ export const columns: ColumnDef<Section>[] = [
     ),
   },
   {
-    accessorKey: "Section",
+    accessorKey: "section",
     header: () => (
       <Button variant="ghost" size="sm">
         <BookAudio className="text-violet-500" /> Section
@@ -66,7 +73,7 @@ export const columns: ColumnDef<Section>[] = [
     ),
     cell: ({ row }) => (
       <span className="flex justify-center items-center w-22 h-6">
-        {row.original.Section}
+        {row.original.section}
       </span>
     ),
   },

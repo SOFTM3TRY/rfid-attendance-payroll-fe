@@ -2,6 +2,7 @@ import { useAuth } from "@/context/AuthContext";
 import { CreateStudent } from "@/services/Student_service";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useStudentDetails } from "./useStudentDetails";
 
 export function useStudentForm() {
   const [step, setStep] = useState(1);
@@ -9,6 +10,7 @@ export function useStudentForm() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { token } = useAuth();
+  const { refetch: refetchStudent } = useStudentDetails(token as string);
   const [formData, setFormData] = useState<any>({
     lrn: "",
     grade: "",
@@ -78,6 +80,7 @@ export function useStudentForm() {
    try {
    const response = await CreateStudent(token as any, formData);
    toast.success("Student created successfully");
+   refetchStudent();
    setOpen(false);
    } catch (error) {
     console.log(error);
