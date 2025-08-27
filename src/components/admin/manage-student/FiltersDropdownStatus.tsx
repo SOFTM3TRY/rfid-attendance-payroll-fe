@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { TableIcon, ChevronDownIcon, CircleUser, UserCheck, UserX } from "lucide-react";
 
-const statusTypes = ["Active", "Inactive"];
+const statusTypes = [1, 0];
 
 interface Props {
   selectedFilters: string[];
@@ -38,11 +38,11 @@ export function FiltersDropdownStatus({ selectedFilters, setSelectedFilters }: P
         {statusTypes.map((status) => (
           <DropdownMenuCheckboxItem
             key={status}
-            checked={selectedFilters.includes(status)}
-            onCheckedChange={() => toggleFilter(status)}
+            checked={selectedFilters.includes(status as any)}
+            onCheckedChange={() => toggleFilter(status as any)}
             className="text-xs"
           >
-            {status} {status === "Active" ? <UserCheck className="text-green-500 mr-1 w-2 h-2 px-0"/> : <UserX className="text-red-500 mr-1 w-2 h-2"/>} 
+            {status} {status === 1 ? <UserCheck className="text-green-500 mr-1 w-2 h-2 px-0"/> : <UserX className="text-red-500 mr-1 w-2 h-2"/>} 
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>
