@@ -214,7 +214,7 @@ export default function AddStudent() {
           </TabsContent>
         </Tabs>
 
-        <SheetFooter className="fixed bottom-5 right-10 mt-10 w-full">
+        <SheetFooter className="fixed bottom-5 right-10 mt-10">
           <div className="flex gap-2 justify-end">
             {step > 1 && (
               <Button
