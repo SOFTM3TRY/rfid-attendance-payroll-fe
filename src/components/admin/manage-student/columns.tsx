@@ -33,7 +33,7 @@ export type Section = {
   last_name: string;
   suffix: string;
   section: number;
-  status: "Active" | "Inactive";
+  status: "Active" | "Inactive" ;
 };
 
 export const columns: ColumnDef<Section>[] = [
@@ -88,12 +88,15 @@ export const columns: ColumnDef<Section>[] = [
       const status = row.original.status;
       return (
         <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
+         {/* @ts-ignore */}
           {row.original.status == 1 ? "Active" : "Inactive"}
           <span
             className={`ml-1 ${
+              // @ts-ignore
               row.original.status ==  1 ? "text-green-500" : "text-red-500"
             }`}
           >
+                {/* @ts-ignore */}
             {row.original.status == 1 ? (
               <UserCheck className="w-4 h-4" />
             ) : (
