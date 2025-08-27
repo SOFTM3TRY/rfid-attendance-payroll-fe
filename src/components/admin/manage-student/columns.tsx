@@ -88,13 +88,13 @@ export const columns: ColumnDef<Section>[] = [
       const status = row.original.status;
       return (
         <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
-          {status}
+          {row.original.status == 1 ? "Active" : "Inactive"}
           <span
             className={`ml-1 ${
-              status === "Active" ? "text-green-500" : "text-red-500"
+              row.original.status ==  1 ? "text-green-500" : "text-red-500"
             }`}
           >
-            {status === "Active" ? (
+            {row.original.status == 1 ? (
               <UserCheck className="w-4 h-4" />
             ) : (
               <UserX className="w-4 h-4" />
