@@ -81,10 +81,19 @@ export default function Step4({ formData }: any) {
     };
   }, [formData.region, formData.province, formData.city, formData.barangay]);
 
+  const displayData = {
+    ...formData,
+    region: regionName || formData.region,
+    province: provinceName || formData.province,
+    city: cityName || formData.city,
+    barangay: barangayName || formData.barangay,
+  };
+
   return (
     <div className="p-4 rounded-md text-sm overflow-auto max-h-auto">
+      {/* Show JSON with address names */}
       <pre className="whitespace-pre-wrap hidden">
-        {JSON.stringify(formData, null, 2)}
+        {JSON.stringify(displayData, null, 2)}
       </pre>
 
       {/* Primary Information */}
@@ -174,7 +183,10 @@ export default function Step4({ formData }: any) {
           Additional Information
         </span>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-          <small className="text-sm font-semibold col-span-1 md:col-span-4 flex item-center"><Map className="text-yellow-500 h-5 w-5 mr-2" />Address</small>
+          <small className="text-sm font-semibold col-span-1 md:col-span-4 flex item-center">
+            <Map className="text-yellow-500 h-5 w-5 mr-2" />
+            Address
+          </small>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Region : </span>
             <span className="text-sm font-light">
@@ -204,7 +216,10 @@ export default function Step4({ formData }: any) {
             <span className="text-sm font-light">{formData.street}</span>
           </div>
 
-          <small className="text-sm mt-10 font-semibold col-span-1 md:col-span-4 flex item-center"><User className="text-green-500 h-5 w-5 mr-2" />Guardian Information</small>
+          <small className="text-sm mt-10 font-semibold col-span-1 md:col-span-4 flex item-center">
+            <User className="text-green-500 h-5 w-5 mr-2" />
+            Guardian Information
+          </small>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">
               Guardian First Name :{" "}
