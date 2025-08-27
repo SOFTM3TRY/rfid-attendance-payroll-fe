@@ -36,12 +36,14 @@ import {
 } from "lucide-react";
 
 export default function AddStudent() {
+
   const {
     step, setStep, open, setOpen, loading, errors,
     handlePrevStep, handleNextStep, handleSubmit, setErrors,
     formData, setFormData
   } = useStudentForm();
 
+  console.log("FormData", formData);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -240,6 +242,7 @@ export default function AddStudent() {
                   onClick={handleSubmit}
                   className="w-40"
                   disabled={loading}
+                  
                 >
                   {loading ? (
                     <>

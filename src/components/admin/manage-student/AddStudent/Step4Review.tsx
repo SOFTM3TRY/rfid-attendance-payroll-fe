@@ -153,12 +153,12 @@ export default function Step4({ formData }: any) {
             <span className="text-sm font-light">{formData.gender}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Birthplace : </span>
-            <span className="text-sm font-light">{formData.birthplace}</span>
+            <span className="text-sm font-semibold">Birth Place : </span>
+            <span className="text-sm font-light">{formData.birth_place}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Birthdate : </span>
-            <span className="text-sm font-light">{formData.birthdate}</span>
+            <span className="text-sm font-semibold">Birth Date : </span>
+            <span className="text-sm font-light">{formData.birth_date}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Student Status : </span>

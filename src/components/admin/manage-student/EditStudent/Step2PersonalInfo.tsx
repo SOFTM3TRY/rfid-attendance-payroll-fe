@@ -141,41 +141,41 @@ export default function Step2({
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="birthplace">
+        <Label htmlFor="birth_place">
           <span className="text-red-500 mr-[-0.3rem]">*</span>
-          Birthplace
+          birth_place
         </Label>
         <Input
-          id="birthplace"
-          name="birthplace"
-          value={formData.birthplace}
+          id="birth_place"
+          name="birth_place"
+          value={formData.birth_place}
           onChange={handleChange}
-          placeholder="Enter Birthplace"
-          className={errors.birthplace ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"}
+          placeholder="Enter birth_place"
+          className={errors.birth_place ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"}
           disabled={loading}
         />
-        {errors.birthplace && (
-          <span className="text-xs text-red-500">{errors.birthplace}</span>
+        {errors.birth_place && (
+          <span className="text-xs text-red-500">{errors.birth_place}</span>
         )}
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="birthdate">
+        <Label htmlFor="birth_date">
           <span className="text-red-500 mr-[-0.3rem]">*</span>
           <CalendarDays className="text-violet-500 h-3 w-3" />
-          Birthdate
+          birth_date
         </Label>
         <Input
-          id="birthdate"
-          name="birthdate"
+          id="birth_date"
+          name="birth_date"
           type="date"
-          value={formData.birthdate}
+          value={formData.birth_date}
           onChange={handleChange}
           placeholder="YYYY-MM-DD"
           disabled={loading}
         />
-        {errors.birthdate && (
-          <span className="text-xs text-red-500">{errors.birthdate}</span>
+        {errors.birth_date && (
+          <span className="text-xs text-red-500">{errors.birth_date}</span>
         )}
       </div>
 
