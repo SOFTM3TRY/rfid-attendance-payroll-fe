@@ -1,16 +1,23 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/context/AuthContext";
+import { useGrade } from "@/hooks/useGrade";
 
 import { KeyRound, GraduationCap, Book, Calendar, Divide, ShieldUser } from "lucide-react";
 
 export default function Step1({ formData, setFormData, errors, setErrors, loading }: any) {
+ const { token } = useAuth();
+  const {data:GradesData,isLoading:isLoadingGradesData} = useGrade( token as string);
+  console.log("GradesDate",GradesData);
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [name]: value, ...(name === "grade" && { section: "" }) }));
     setErrors((prev: any) => { const n = { ...prev }; delete n[name]; return n; });
   };
 
-  const gradeOptions = ["Grade One", "Grade Two", "Grade Three", "Grade Four", "Grade Five", "Grade Six"];
+  
   const generateSections = () => formData.grade ? ["A", "B", "C"] : [];
   const generateSchoolYears = () => {
     const currentYear = new Date().getFullYear();
@@ -19,6 +26,8 @@ export default function Step1({ formData, setFormData, errors, setErrors, loadin
     for (let i = startYear; i <= currentYear + 5; i++) years.push(`${i}-${i + 1}`);
     return years;
   };
+
+
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
@@ -48,7 +57,9 @@ export default function Step1({ formData, setFormData, errors, setErrors, loadin
         <Label htmlFor="grade"><span className="text-red-500 mr-[-0.3rem]">*</span><GraduationCap className="text-green-500 h-3 w-3"/>Grade</Label>
         <select id="grade" name="grade" value={formData.grade} onChange={handleChange} className={errors.grade ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"} disabled={loading}>
           <option value="">Select Grade</option>
-          {gradeOptions.map(grade => <option key={grade} value={grade}>{grade}</option>)}
+          {GradesData?.data.map((grade: any) => (
+            <option key={grade.id} value={grade.grade_level}>{grade.grade_level}</option>
+          ))}
         </select>
         {errors.grade && <span className="text-xs text-red-500">{errors.grade}</span>}
       </div>
