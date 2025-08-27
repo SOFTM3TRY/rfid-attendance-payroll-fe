@@ -1,135 +1,76 @@
-// components/AddStudent/Step1PrimaryInfo.tsx
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-type Props = {
-  formData: {
-    lrn: string;
-    grade: string;
-    section: string;
-    school_year: string;
-  };
-  errors: Record<string, string>;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  loading: boolean;
-};
+import { KeyRound, GraduationCap, Book, Calendar, Divide, ShieldUser } from "lucide-react";
 
-export default function Step1PrimaryInfo({ formData, errors, onChange, loading }: Props) {
+export default function Step1({ formData, setFormData, errors, setErrors, loading }: any) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({ ...prev, [name]: value, ...(name === "grade" && { section: "" }) }));
+    setErrors((prev: any) => { const n = { ...prev }; delete n[name]; return n; });
+  };
+
+  const gradeOptions = ["Grade One", "Grade Two", "Grade Three", "Grade Four", "Grade Five", "Grade Six"];
+  const generateSections = () => formData.grade ? ["A", "B", "C"] : [];
   const generateSchoolYears = () => {
     const currentYear = new Date().getFullYear();
+    const startYear = 2024;
     const years = [];
-    for (let i = 2024; i <= currentYear + 5; i++) {
-      years.push(`${i}-${i + 1}`);
-    }
+    for (let i = startYear; i <= currentYear + 5; i++) years.push(`${i}-${i + 1}`);
     return years;
   };
 
-  const gradeOptions = ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6"];
-  const sectionOptions = ["A", "B", "C"];
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-      {/* LRN */}
-      <div className="grid gap-3">
-        <Label htmlFor="lrn">
-          <span className="text-red-500 mr-[-0.3rem]">*</span> LRN
-        </Label>
-        <Input
-          id="lrn"
-          name="lrn"
-          type="text"
-          inputMode="numeric"
-          maxLength={12}
-          value={formData.lrn}
-          onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, "");
-            if (value.length <= 12) {
-              onChange({
-                ...e,
-                target: {
-                  ...e.target,
-                  value,
-                  name: "lrn",
-                },
-              });
+      
+      <span className="col-span-1 md:col-span-4">
+        <h1 className="text-2xl font-bold flex items-center"><ShieldUser className="text-blue-500 h-6 w-6 mr-1"/>Primary Information</h1>
+      </span>
+
+      <div className="grid gap-2">
+        <Label htmlFor="lrn"><span className="text-red-500 mr-[-0.3rem]">*</span><KeyRound className="text-blue-500 h-3 w-3"/>LRN</Label>
+        <Input id="lrn" name="lrn" type="text" inputMode="numeric" pattern="\d{12}" placeholder="Enter 12-digit LRN" maxLength={12}
+          value={formData.lrn.replace(/\D/g, "")}
+          onChange={e => {
+            const onlyNumbers = e.target.value.replace(/\D/g, "");
+            if (onlyNumbers.length <= 12) {
+              setFormData((prev: any) => ({ ...prev, lrn: onlyNumbers }));
+              setErrors((prev: any) => { const n = { ...prev }; delete n.lrn; return n; });
             }
           }}
-          placeholder="Enter 12-digit LRN"
           className={errors.lrn ? "border border-red-500" : ""}
           disabled={loading}
         />
-        {errors.lrn && <span className="text-sm text-red-500">{errors.lrn}</span>}
+        {errors.lrn && <span className="text-xs text-red-500">{errors.lrn}</span>}
       </div>
 
-      {/* Grade */}
-      <div className="grid gap-3">
-        <Label htmlFor="grade">
-          <span className="text-red-500 mr-[-0.3rem]">*</span> Grade
-        </Label>
-        <select
-          id="grade"
-          name="grade"
-          value={formData.grade}
-          onChange={onChange}
-          className={`border rounded-sm px-3 py-2 dark:bg-zinc-900 ${errors.grade ? "border-red-500" : ""}`}
-          disabled={loading}
-        >
+      <div className="grid gap-2">
+        <Label htmlFor="grade"><span className="text-red-500 mr-[-0.3rem]">*</span><GraduationCap className="text-green-500 h-3 w-3"/>Grade</Label>
+        <select id="grade" name="grade" value={formData.grade} onChange={handleChange} className={errors.grade ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"} disabled={loading}>
           <option value="">Select Grade</option>
-          {gradeOptions.map((grade) => (
-            <option key={grade} value={grade}>
-              {grade}
-            </option>
-          ))}
+          {gradeOptions.map(grade => <option key={grade} value={grade}>{grade}</option>)}
         </select>
-        {errors.grade && <span className="text-sm text-red-500">{errors.grade}</span>}
+        {errors.grade && <span className="text-xs text-red-500">{errors.grade}</span>}
       </div>
 
-      {/* Section */}
-      <div className="grid gap-3">
-        <Label htmlFor="section">
-          <span className="text-red-500 mr-[-0.3rem]">*</span> Section
-        </Label>
-        <select
-          id="section"
-          name="section"
-          value={formData.section}
-          onChange={onChange}
-          className={`border rounded-sm px-3 py-2 dark:bg-zinc-900 ${errors.section ? "border-red-500" : ""}`}
-          disabled={loading || !formData.grade}
-        >
+      <div className="grid gap-2">
+        <Label htmlFor="section"><span className="text-red-500 mr-[-0.3rem]">*</span><Book className="text-yellow-500 h-3 w-3"/>Section</Label>
+        <select id="section" name="section" value={formData.section} onChange={handleChange} className={errors.section ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"} disabled={loading || !formData.grade}>
           <option value="">Select Section</option>
-          {sectionOptions.map((section) => (
-            <option key={section} value={section}>
-              Section {section}
-            </option>
-          ))}
+          {generateSections().map(section => <option key={section} value={section}>Section {section}</option>)}
         </select>
-        {errors.section && <span className="text-sm text-red-500">{errors.section}</span>}
+        {errors.section && <span className="text-xs text-red-500">{errors.section}</span>}
       </div>
 
-      {/* School Year */}
-      <div className="grid gap-3">
-        <Label htmlFor="school_year">
-          <span className="text-red-500 mr-[-0.3rem]">*</span> School Year
-        </Label>
-        <select
-          id="school_year"
-          name="school_year"
-          value={formData.school_year}
-          onChange={onChange}
-          className={`border rounded-sm px-3 py-2 dark:bg-zinc-900 ${errors.school_year ? "border-red-500" : ""}`}
-          disabled={loading}
-        >
+      <div className="grid gap-2">
+        <Label htmlFor="school_year"><span className="text-red-500 mr-[-0.3rem]">*</span><Calendar className="text-violet-500 h-3 w-3"/>School Year</Label>
+        <select id="school_year" name="school_year" value={formData.school_year} onChange={handleChange} className={errors.school_year ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"} disabled={loading}>
           <option value="">Select School Year</option>
-          {generateSchoolYears().map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
+          {generateSchoolYears().map(year => <option key={year} value={year}>{year}</option>)}
         </select>
-        {errors.school_year && <span className="text-sm text-red-500">{errors.school_year}</span>}
+        {errors.school_year && <span className="text-xs text-red-500">{errors.school_year}</span>}
       </div>
+
     </div>
   );
 }

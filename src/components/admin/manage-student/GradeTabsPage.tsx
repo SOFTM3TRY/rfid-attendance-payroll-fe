@@ -21,7 +21,7 @@ import { FiltersDropdownStatus } from "@/components/admin/manage-student/Filters
 
 import { Input } from "@/components/ui/input";
 
-import { AddStudent } from "@/components/admin/manage-student/add-student";
+import  AddStudent  from "@/components/admin/manage-student/AddStudent/AddStudent";
 
 import { useStudentDetails } from "@/hooks/useStudentDetails";
 import { useAuth } from "@/context/AuthContext";
