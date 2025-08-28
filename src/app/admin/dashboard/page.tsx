@@ -44,6 +44,7 @@ import { useClientOnly } from "@/hooks/useClientOnly";
 
 import Loader from "@/components/Loader";
 import { useCountActiveStudents } from "@/hooks/useStudentDetails";
+import { useTeacherActiveCount } from "@/hooks/useTeacher";
 
 export default function Dashboard() {
   const { token } = useAuth();
@@ -53,6 +54,9 @@ export default function Dashboard() {
     token as string
   );
 const {data: countActiveStudents, isLoading: isLoadingCountActiveStudents } = useCountActiveStudents(
+  token as string
+);
+const {data:CountActiveTeachers, isLoading: isLoadingCountActiveTeachers } = useTeacherActiveCount(
   token as string
 );
 console.log("Active Students Count:", countActiveStudents);
@@ -104,7 +108,7 @@ console.log("Active Students Count:", countActiveStudents);
                     Active Teachers
                   </CardDescription>
 
-                  <CardTitle className="text-4xl">0</CardTitle>
+                  <CardTitle className="text-4xl">{CountActiveTeachers?.count}</CardTitle>
 
                   <CardAction className="text-white bg-blue-400 px-2 py-1 rounded-full hover:bg-blue-500 text-xs">
                     <a href="#" className="flex items-center">
