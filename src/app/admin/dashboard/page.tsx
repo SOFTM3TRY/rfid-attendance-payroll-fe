@@ -43,6 +43,7 @@ import { useUserDetails } from "@/hooks/useUserDetails";
 import { useClientOnly } from "@/hooks/useClientOnly";
 
 import Loader from "@/components/Loader";
+import { useCountActiveStudents } from "@/hooks/useStudentDetails";
 
 export default function Dashboard() {
   const { token } = useAuth();
@@ -51,7 +52,10 @@ export default function Dashboard() {
   const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
     token as string
   );
-
+const {data: countActiveStudents, isLoading: isLoadingCountActiveStudents } = useCountActiveStudents(
+  token as string
+);
+console.log("Active Students Count:", countActiveStudents);
   if (!isClient || isLoadingUserDetails) {
     return <Loader />;
   }
@@ -83,7 +87,7 @@ export default function Dashboard() {
                     Active Students
                   </CardDescription>
 
-                  <CardTitle className="text-4xl">0</CardTitle>
+                  <CardTitle className="text-4xl"> {countActiveStudents?.active_students_count}</CardTitle>
 
                   <CardAction className="text-white bg-blue-400 px-2 py-1 rounded-full hover:bg-blue-500 text-xs">
                     <a href="#" className="flex items-center">
