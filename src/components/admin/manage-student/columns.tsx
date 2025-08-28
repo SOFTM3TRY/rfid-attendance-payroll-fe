@@ -22,6 +22,8 @@ import {
   UserCog,
   UserCheck,
   UserX,
+  History,
+  FilePlus,
 } from "lucide-react";
 
 export type Section = {
@@ -135,8 +137,8 @@ export const columns: ColumnDef<Section>[] = [
           row={row}
           trigger={
             <Button variant="outline" size="sm">
-              <Eye className="mr-2 w-4 h-4" />
-              View Profile
+              <Eye className=" w-4 h-4" />
+              View
             </Button>
           }
         />
@@ -146,14 +148,66 @@ export const columns: ColumnDef<Section>[] = [
           className="ml-2"
           onClick={() => setOpenEdit(true)}
         >
-          <SquarePen className="mr-2 w-4 h-4" />
-          Edit Profile
+          <SquarePen className="w-4 h-4" />
+          Edit
         </Button>
         <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
+        <Button
+          variant="outline"
+          size="sm"
+          className="ml-2"
+          onClick={() => console.log("history")}
+        >
+          <History className="w-4 h-4" />
+          History
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="ml-2"
+          onClick={() => console.log("register")}
+        >
+          <FilePlus className="w-4 h-4" />
+          Register
+        </Button>
       </>
     );
   },
 },
+
+//  return (
+//       <>
+//         <DropdownMenu>
+//           <DropdownMenuTrigger asChild>
+//             <Button variant="ghost">⋯</Button>
+//           </DropdownMenuTrigger>
+//           <DropdownMenuContent>
+//             <DropdownMenuItem onClick={() => setOpenView(true)}>
+//               <Eye className="mr-2 w-4 h-4" />
+//               View Profile
+//             </DropdownMenuItem>
+//             <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+//               <SquarePen className="mr-2 w-4 h-4" />
+//               Edit Profile
+//             </DropdownMenuItem>
+//             <DropdownMenuItem onClick={() => console.log("history")}>
+//               <History className="mr-2 w-4 h-4" />
+//               Attendance History
+//             </DropdownMenuItem>
+//             <DropdownMenuItem onClick={() => console.log("register")}>
+//               <FilePlus className="mr-2 w-4 h-4" />
+//               Register
+//             </DropdownMenuItem>
+//           </DropdownMenuContent>
+//         </DropdownMenu>
+//         <ShowProfile
+//           open={openView}
+//           setOpen={setOpenView}
+//           row={row}
+//         />
+//         <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
+//       </>
+//     );
   // {
   //   accessorKey: "Actions",
   //   id: "actions",

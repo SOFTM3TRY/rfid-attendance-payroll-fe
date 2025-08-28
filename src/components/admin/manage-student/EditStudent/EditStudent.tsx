@@ -1,8 +1,4 @@
 import { useStudentForm } from "@/hooks/useStudentForm";
-import Step1 from "@/components/admin/manage-student/EditStudent/Step1PrimaryInfo";
-import Step2 from "@/components/admin/manage-student/EditStudent/Step2PersonalInfo";
-import Step3 from "@/components/admin/manage-student/EditStudent/Step3AdditionalInfo";
-import Step4 from "@/components/admin/manage-student/EditStudent/Step4Review";
 import {
   Sheet,
   SheetContent,
@@ -31,6 +27,7 @@ import {
   ScanEye,
   Send,
   Loader2,
+  User,
 } from "lucide-react";
 
 export default function EditStudent({ open, setOpen, row }: { open: boolean, setOpen: (open: boolean) => void, row: any }) {
@@ -40,6 +37,8 @@ export default function EditStudent({ open, setOpen, row }: { open: boolean, set
     formData, setFormData
   } = useStudentForm();
 
+  const data = row?.original || {}; // ✅ Extract data from row
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
@@ -48,91 +47,39 @@ export default function EditStudent({ open, setOpen, row }: { open: boolean, set
       >
         <SheetHeader className="text-zinc-900 mb-4">
           <SheetTitle className="flex items-center">
-            <UserRoundPlus className="mr-2 w-5 h-5 text-teal-500" />
-            Add Student
+            <User className="mr-2 w-5 h-5 text-teal-500" />
+            Edit Student Profile
           </SheetTitle>
           <SheetDescription>
-            Enter details to add a new student to the system
+            Enter details to edit the student profile.
           </SheetDescription>
         </SheetHeader>
 
-        <Tabs value={`step${step}`} className="w-full p-5">
-          <TabsList className="grid w-full grid-cols-4 mb-4 gap-5 h-20">
-            {/* ...TabsTrigger code unchanged... */}
-          </TabsList>
+        {/* ✅ Display student data */}
+        <pre className="whitespace-pre-wrap">
+          {JSON.stringify(data, null, 2)}
+        </pre>
 
-          <TabsContent value="step1" className="p-5 mt-5">
-            <Step1
-              formData={formData}
-              setFormData={setFormData}
-              errors={errors}
-              setErrors={setErrors}
-              loading={loading}
-            />
-          </TabsContent>
-          <TabsContent value="step2" className="p-5 mt-5">
-            <Step2
-              formData={formData}
-              setFormData={setFormData}
-              errors={errors}
-              setErrors={setErrors}
-              loading={loading}
-            />
-          </TabsContent>
-          <TabsContent value="step3" className="p-5 mt-5">
-            <Step3
-              formData={formData}
-              setFormData={setFormData}
-              errors={errors}
-              setErrors={setErrors}
-              loading={loading}
-            />
-          </TabsContent>
-          <TabsContent value="step4" className="p-5 mt-5">
-            <Step4 formData={formData} />
-          </TabsContent>
-        </Tabs>
+        {/* Steps or form content can go here (Step1, Step2, etc.) */}
 
         <SheetFooter className="fixed bottom-5 right-10 mt-10">
           <div className="flex gap-2 justify-end">
-            {step > 1 && (
-              <Button
-                onClick={handlePrevStep}
-                disabled={loading}
-                className="w-40"
-              >
-                <ChevronsLeft />
-                Back
-              </Button>
-            )}
-            <div>
-              {step < 4 ? (
-                <Button
-                  onClick={handleNextStep}
-                  className="w-40"
-                  disabled={loading}
-                >
-                  Next <ChevronsRight />
-                </Button>
+            <Button
+              onClick={handleSubmit}
+              className="w-40"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin mr-2" size={18} />
+                  Processing...
+                </>
               ) : (
-                <Button
-                  onClick={handleSubmit}
-                  className="w-40"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="animate-spin mr-2" size={18} />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      Submit <Send className="ml-2" />
-                    </>
-                  )}
-                </Button>
+                <>
+                  Update <Send className="ml-2" />
+                </>
               )}
-            </div>
+            </Button>
             <SheetClose asChild>
               <Button variant="ghost" className="w-40" disabled={loading}>
                 <CircleX />
