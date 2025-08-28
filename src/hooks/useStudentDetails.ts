@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { CountActiveStudents, GetStudentDetails } from '@/services/Student_service';
+import { CountActiveStudents, CountByGradeStudents, GetStudentDetails } from '@/services/Student_service';
 
 export const useStudentDetails = (token: string | null) => {
   return useQuery({
@@ -18,3 +18,12 @@ export const useCountActiveStudents = (token: string | null) => {
     staleTime: 1000 * 60 * 5,
   });
 };
+ 
+export const useCountByGradeStudents = (token: string | null, grade: number) => {
+  return useQuery({
+    queryKey: ['count-by-grade-students', grade],
+    queryFn: () => CountByGradeStudents(token as string, grade),
+    enabled: !!token,  
+    staleTime: 1000 * 60 * 5,
+  });
+}

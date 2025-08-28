@@ -50,3 +50,19 @@ export const CountActiveStudents = async (token: string) => {
     throw error;
   }
 }
+export const CountByGradeStudents = async (token: string, grade: number) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/count-students-by-grade/${grade}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
