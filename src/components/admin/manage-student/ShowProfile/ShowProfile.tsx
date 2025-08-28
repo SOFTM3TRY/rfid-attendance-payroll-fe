@@ -10,9 +10,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { Button } from "@/components/ui/button";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
@@ -35,17 +33,14 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
-// import { Label } from "recharts";
 
-export default function ShowProfile({
-  open,
-  setOpen,
-  row,
-}: {
+type ShowProfileProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   row: any;
-}) {
+};
+
+export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
   const data = row.original || {};
   const fullName = [
     data.last_name,
