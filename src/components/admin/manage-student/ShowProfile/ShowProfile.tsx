@@ -10,7 +10,9 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import { Button } from "@/components/ui/button";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
@@ -33,14 +35,17 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
+// import { Label } from "recharts";
 
-type ShowProfileProps = {
+export default function ShowProfile({
+  open,
+  setOpen,
+  row,
+}: {
   open: boolean;
   setOpen: (open: boolean) => void;
   row: any;
-};
-
-export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
+}) {
   const data = row.original || {};
   const fullName = [
     data.last_name,
@@ -52,7 +57,17 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
     .join(" ");
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+        if (!open) {
+          setTimeout(() => {
+            document.body.style.pointerEvents = "auto";
+          }, 200);
+        }
+      }}
+    >
       <SheetContent
         className="bottom-0 h-full rounded-t-md overflow-y-auto p-3"
         side="bottom"
@@ -251,7 +266,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     </p>
                   </div>
                   <div>
-                    <Label htmlFor="region"><MapPinHouse className="w-4 h-4 text-red-500" />Region</Label>
+                    <Label htmlFor="region">
+                      <MapPinHouse className="w-4 h-4 text-red-500" />
+                      Region
+                    </Label>
                     <Input
                       id="region"
                       value={data.additional_info?.region || ""}
@@ -259,7 +277,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="province"><MapPinHouse className="w-4 h-4 text-red-500" />Province</Label>
+                    <Label htmlFor="province">
+                      <MapPinHouse className="w-4 h-4 text-red-500" />
+                      Province
+                    </Label>
                     <Input
                       id="province"
                       value={data.additional_info?.province || ""}
@@ -267,7 +288,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     />
                   </div>
                   <div className="mt-2">
-                    <Label htmlFor="city"><MapPinHouse className="w-4 h-4 text-red-500" />City</Label>
+                    <Label htmlFor="city">
+                      <MapPinHouse className="w-4 h-4 text-red-500" />
+                      City
+                    </Label>
                     <Input
                       id="city"
                       value={data.additional_info?.city || ""}
@@ -275,7 +299,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     />
                   </div>
                   <div className="mt-2">
-                    <Label htmlFor="barangay"><MapPinHouse className="w-4 h-4 text-red-500" />Barangay</Label>
+                    <Label htmlFor="barangay">
+                      <MapPinHouse className="w-4 h-4 text-red-500" />
+                      Barangay
+                    </Label>
                     <Input
                       id="barangay"
                       value={data.additional_info?.barangay || ""}
@@ -283,7 +310,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     />
                   </div>
                   <div className="col-span-1 md:col-span-2 mt-2">
-                    <Label htmlFor="street"><MapPinHouse className="w-4 h-4 text-red-500" />Street</Label>
+                    <Label htmlFor="street">
+                      <MapPinHouse className="w-4 h-4 text-red-500" />
+                      Street
+                    </Label>
                     <Input
                       id="street"
                       value={data.additional_info?.street || ""}
@@ -300,7 +330,8 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
 
                   <div>
                     <Label htmlFor="guardian_first_name">
-                      <User className="w-4 h-4 text-green-500" />Guardian First Name
+                      <User className="w-4 h-4 text-green-500" />
+                      Guardian First Name
                     </Label>
                     <Input
                       id="guardian_first_name"
@@ -310,7 +341,8 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                   </div>
                   <div>
                     <Label htmlFor="guardian_middle_name">
-                      <User className="w-4 h-4 text-green-500" />Guardian Middle Name
+                      <User className="w-4 h-4 text-green-500" />
+                      Guardian Middle Name
                     </Label>
                     <Input
                       id="guardian_middle_name"
@@ -320,7 +352,8 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                   </div>
                   <div className="mt-2">
                     <Label htmlFor="guardian_last_name">
-                      <User className="w-4 h-4 text-green-500" />Guardian Last Name
+                      <User className="w-4 h-4 text-green-500" />
+                      Guardian Last Name
                     </Label>
                     <Input
                       id="guardian_last_name"
@@ -329,7 +362,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     />
                   </div>
                   <div className="mt-2">
-                    <Label htmlFor="guardian_suffix"><User className="w-4 h-4 text-green-500" />Guardian Suffix</Label>
+                    <Label htmlFor="guardian_suffix">
+                      <User className="w-4 h-4 text-green-500" />
+                      Guardian Suffix
+                    </Label>
                     <Input
                       id="guardian_suffix"
                       value={data.additional_info?.guardian_suffix || ""}
@@ -337,7 +373,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     />
                   </div>
                   <div className="mt-2">
-                    <Label htmlFor="guardian_contact"><Phone className="w-4 h-4 text-blue-500" />Guardian Contact</Label>
+                    <Label htmlFor="guardian_contact">
+                      <Phone className="w-4 h-4 text-blue-500" />
+                      Guardian Contact
+                    </Label>
                     <Input
                       id="guardian_contact"
                       value={data.additional_info?.guardian_contact || ""}
@@ -345,7 +384,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     />
                   </div>
                   <div className="mt-2">
-                    <Label htmlFor="guardian_email"><Mail className="w-4 h-4 text-yellow-500" />Guardian Email</Label>
+                    <Label htmlFor="guardian_email">
+                      <Mail className="w-4 h-4 text-yellow-500" />
+                      Guardian Email
+                    </Label>
                     <Input
                       id="guardian_email"
                       value={data.additional_info?.guardian_email || ""}
@@ -354,7 +396,8 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                   </div>
                   <div className="mt-2">
                     <Label htmlFor="guardian_occupation">
-                      <SquareUserRound className="w-4 h-4 text-teal-500" />Guardian Occupation
+                      <SquareUserRound className="w-4 h-4 text-teal-500" />
+                      Guardian Occupation
                     </Label>
                     <Input
                       id="guardian_occupation"
@@ -363,7 +406,10 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
                     />
                   </div>
                   <div className="mt-2">
-                    <Label htmlFor="relationship"><UserCog className="w-4 h-4 text-green-500" />Relationship</Label>
+                    <Label htmlFor="relationship">
+                      <UserCog className="w-4 h-4 text-green-500" />
+                      Relationship
+                    </Label>
                     <Input
                       id="relationship"
                       value={data.additional_info?.relationship || ""}
@@ -382,7 +428,11 @@ export default function ShowProfile({ open, setOpen, row }: ShowProfileProps) {
         </div>
         <SheetFooter className="fixed bottom-5 right-5">
           <SheetClose asChild>
-            <Button className="w-40" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              className="w-40"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               <CircleX /> Close
             </Button>
           </SheetClose>
