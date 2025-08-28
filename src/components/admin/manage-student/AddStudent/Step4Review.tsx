@@ -262,6 +262,12 @@ export default function Step4({ formData }: any) {
               {formData.guardian_email}
             </span>
           </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-sm font-semibold">Guardian Address : </span>
+            <span className="text-sm font-light">
+              {formData.relationship}
+            </span>
+          </div>
         </div>
       </div>
     </div>

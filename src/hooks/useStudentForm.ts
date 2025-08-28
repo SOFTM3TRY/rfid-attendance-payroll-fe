@@ -31,6 +31,7 @@ export function useStudentForm() {
     province: "",
     city: "",
     barangay: "",
+    relationship: "",
     guardian_first_name: "",
     guardian_middle_name: "",
     guardian_last_name: "",
@@ -48,7 +49,7 @@ export function useStudentForm() {
     3: [
       "region", "province", "city", "barangay", "street",
       "guardian_first_name", "guardian_middle_name", "guardian_last_name",
-      "guardian_occupation", "guardian_contact", "guardian_email"
+      "guardian_occupation", "guardian_contact", "guardian_email", "relationship"
     ],
   };
 

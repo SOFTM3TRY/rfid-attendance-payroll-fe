@@ -287,6 +287,48 @@ export default function Step3({
           <span className="text-xs text-red-500">{errors.guardian_email}</span>
         )}
       </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor="relationship">
+          <span className="text-red-500 mr-[-0.3rem]">*</span>Relationship
+        </Label>
+        <select
+          id="relationship"
+          name="relationship"
+          value={formData.relationship}
+          onChange={(e) => {
+            const value = e.target.value;
+            setFormData((prev: any) => ({ ...prev, relationship: value }));
+            setErrors((prev: any) => {
+              const n = { ...prev };
+              if (!value) {
+                n.relationship = "Please select relationship";
+              } else {
+                delete n.relationship;
+              }
+              return n;
+            });
+          }}
+          className={
+            errors.relationship
+              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+          }
+          disabled={loading}
+        >
+          <option value="" disabled hidden>
+            Select Relationship
+          </option>
+          <option value="Mother">Mother</option>
+          <option value="Father">Father</option>
+          <option value="Guardian">Guardian</option>
+        </select>
+        {errors.relationship && (
+          <span className="text-xs text-red-500">
+            {errors.relationship}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
