@@ -27,7 +27,7 @@ import {
 export type Section = {
   LRN: string;
   FullName: string;
-  grade: string;
+  grade_id: string;
   first_name: string;
   middle_name: string;
   last_name: string;
@@ -57,12 +57,25 @@ export const columns: ColumnDef<Section>[] = [
     ),
   },
   {
-    accessorKey: "grade",
+    accessorKey: "grade_id",
     header: () => (
       <Button variant="ghost" size="sm">
         <GraduationCap className="text-green-500" /> Grade
       </Button>
     ),
+        cell: ({ row }) => {
+      const gradeMap = {
+        1: "Grade One",
+        2: "Grade Two",
+        3: "Grade Three",
+        4: "Grade Four",
+        5: "Grade Five",
+        6: "Grade Six",
+      };
+      // @ts-ignore
+
+      return <span>{gradeMap[row.original.grade_id ]}</span>;
+    },
   },
   {
     accessorKey: "section",

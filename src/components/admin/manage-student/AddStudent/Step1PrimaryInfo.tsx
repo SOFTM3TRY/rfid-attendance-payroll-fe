@@ -120,7 +120,7 @@ export default function Step1({
         >
           <option value="">Select Grade</option>
           {GradesData?.data.map((grade: any) => (
-            <option key={grade.id} value={grade.grade_level}>
+            <option key={grade.id} value={grade.id}>
               {grade.grade_level}
             </option>
           ))}

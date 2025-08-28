@@ -41,6 +41,7 @@ interface Section {
   last_name: string;
   grade: string;
   section: string;
+  grade_id: string;
   lrn: string;
   
 }
@@ -68,20 +69,20 @@ export default function GradeTabsPage() {
 
 
   const gradeComponents: Record<string, React.ElementType> = {
-    "Grade One": GradeOneTable,
-    "Grade Two": GradeTwoTable,
-    "Grade Three": GradeThreeTable,
-    "Grade Four": GradeFourTable,
-    "Grade Five": GradeFiveTable,
-    "Grade Six": GradeSixTable,
+    1: GradeOneTable,
+    2: GradeTwoTable,
+  3: GradeThreeTable,
+   4: GradeFourTable,
+  5: GradeFiveTable,
+6: GradeSixTable,
   };
 
   // Filter the data by grade, filters, and search
-   const getFilteredData = (grade: string) => {
+   const getFilteredData = (grade_id: any) => {
      
     
     const filteredData = baseData.filter((row) => {
-      const gradeMatch = row.grade === grade;
+     const gradeMatch = String(row.grade_id) === String(grade_id);
       const sectionMatch = selectedFilters.length === 0 || selectedFilters.includes(String(row.section));
       const statusMatch = selectedStatus.length === 0 || selectedStatus.includes(row.status);
       const fullName = `${row.first_name} ${row.middle_name || ''} ${row.last_name}`;
@@ -93,7 +94,7 @@ export default function GradeTabsPage() {
       return gradeMatch && sectionMatch && statusMatch && searchMatch;
     });
     
-    
+    console.log(`Filtered Data for Grade ${grade_id}:`, filteredData);
     
     return filteredData;
   };
@@ -105,9 +106,10 @@ export default function GradeTabsPage() {
 
   React.useEffect(() => {
     if (GradesData?.data && !selectedGrade) {
-      setSelectedGrade(GradesData.data[0]?.grade_level); // Set initial grade to the first available grade
+      setSelectedGrade(GradesData.data[0]?.id); // Set initial grade to the first available grade
     }
   }, [GradesData, selectedGrade]);
+  console.log("Selected Grade:", selectedGrade);  
 
   return (
     <main>
@@ -123,22 +125,22 @@ export default function GradeTabsPage() {
             {GradesData?.data.map((grade: any) => (
               <TabsTrigger
                 key={grade.id}
-                value={grade.grade_level}
+                value={grade.id}
                 className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
               >
                 <GraduationCap
                   className={`mr-1 h-4 w-4 ${
-                    grade.grade_level === "Grade One"
+                    grade.id === 1
                       ? "text-green-500 dark:text-green-300"
-                      : grade.grade_level === "Grade Two"
+                      : grade.id ===2
                       ? "text-orange-500 dark:text-orange-300"
-                      : grade.grade_level === "Grade Three"
+                      : grade.id ===3
                       ? "text-indigo-500 dark:text-indigo-300"
-                      : grade.grade_level === "Grade Four"
+                      : grade.id ===4
                       ? "text-blue-500 dark:text-blue-300"
-                      : grade.grade_level === "Grade Five"
+                      : grade.id === 5
                       ? "text-red-500 dark:text-red-300"
-                      : grade.grade_level === "Grade Six"
+                      : grade.id ===6
                       ? "text-yellow-500 dark:text-yellow-300"
                       : ""
                   }`}
@@ -184,19 +186,19 @@ export default function GradeTabsPage() {
         </div>
 
         {GradesData?.data.map((grade: any) => {
-          const TableComponent = gradeComponents[grade.grade_level];
+          const TableComponent = gradeComponents[grade.id];
 
           return (
-            <TabsContent key={grade.id} value={grade.grade_level}>
+            <TabsContent key={grade.id} value={grade.id}>
               <TableComponent
                 columns={columns}
-                data={getFilteredData(grade.grade_level).slice(
+                data={getFilteredData(grade.id).slice(
                   pagination.pageIndex * pagination.pageSize,
                   (pagination.pageIndex + 1) * pagination.pageSize
                 )}
                 pagination={pagination}
                 setPagination={setPagination}
-                totalRows={getFilteredData(grade.grade_level).length}
+                totalRows={getFilteredData(grade.id).length}
               />
             </TabsContent>
           );
