@@ -23,7 +23,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-poppins antialiased" style={{ fontFamily: "Poppins" }}>
+      <body className="font-poppins antialiased" style={{ fontFamily: "Poppins", pointerEvents: "auto" }}>
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
