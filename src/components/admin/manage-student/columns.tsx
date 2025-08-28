@@ -108,37 +108,71 @@ export const columns: ColumnDef<Section>[] = [
     },
   },
   {
-    accessorKey: "Actions",
-    id: "actions",
-    cell: ({ row }) => {
-      const [openView, setOpenView] = useState(false);
-      const [openEdit, setOpenEdit] = useState(false);
+  accessorKey: "Actions",
+  id: "actions",
+  cell: ({ row }) => {
+    const [openView, setOpenView] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
 
-      return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost">⋮</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setOpenView(true)}>
-                <Eye className="mr-2 w-4 h-4" />
-                View Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
-                <SquarePen className="mr-2 w-4 h-4" />
-                Edit Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <TableProperties className="mr-2 w-4 h-4" />
-                Attendance History
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <ShowProfile open={openView} setOpen={setOpenView} row={row} />
-          <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
-        </>
-      );
-    },
+    return (
+      <>
+        <ShowProfile
+          open={openView}
+          setOpen={setOpenView}
+          row={row}
+          trigger={
+            <Button variant="outline" size="sm">
+              <Eye className="mr-2 w-4 h-4" />
+              View Profile
+            </Button>
+          }
+        />
+        <Button
+          variant="outline"
+          size="sm"
+          className="ml-2"
+          onClick={() => setOpenEdit(true)}
+        >
+          <SquarePen className="mr-2 w-4 h-4" />
+          Edit Profile
+        </Button>
+        <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
+      </>
+    );
   },
+},
+  // {
+  //   accessorKey: "Actions",
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const [openView, setOpenView] = useState(false);
+  //     const [openEdit, setOpenEdit] = useState(false);
+
+  //     return (
+  //       <>
+  //         <DropdownMenu>
+  //           <DropdownMenuTrigger asChild>
+  //             <Button variant="ghost">⋮</Button>
+  //           </DropdownMenuTrigger>
+  //           <DropdownMenuContent>
+  //             <DropdownMenuItem onClick={() => setOpenView(true)}>
+  //               <Eye className="mr-2 w-4 h-4" />
+  //               View Profile
+  //             </DropdownMenuItem>
+  //             <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+  //               <SquarePen className="mr-2 w-4 h-4" />
+  //               Edit Profile
+  //             </DropdownMenuItem>
+  //             <DropdownMenuItem>
+  //               <TableProperties className="mr-2 w-4 h-4" />
+  //               Attendance History
+  //             </DropdownMenuItem>
+  //           </DropdownMenuContent>
+  //         </DropdownMenu>
+  //         <ShowProfile open={openView} setOpen={setOpenView} row={row} />
+  //         <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
+  //       </>
+  //     );
+  //   },
+  // },
 ];
