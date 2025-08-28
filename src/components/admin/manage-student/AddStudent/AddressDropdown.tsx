@@ -67,7 +67,7 @@ export default function AddressDropdowns({ formData, setFormData, errors, setErr
         <Label htmlFor="region"><span className="text-red-500 mr-[-0.3rem]">*</span>Region</Label>
         <select id="region" name="region" value={formData.region || ""} onChange={handleChange} className={errors.region ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"} disabled={loading}>
           <option value="">Select Region</option>
-          {regions.map((r: any) => <option key={r.code} value={r.code}>{r.name}</option>)}
+          {regions.map((r: any) => <option key={r.code} value={r.name}>{r.name}</option>)}
         </select>
         {errors.region && <span className="text-sm text-red-500">{errors.region}</span>}
       </div>
@@ -76,7 +76,7 @@ export default function AddressDropdowns({ formData, setFormData, errors, setErr
         <Label htmlFor="province"><span className="text-red-500 mr-[-0.3rem]">*</span>Province</Label>
         <select id="province" name="province" value={formData.province || ""} onChange={handleChange} className={errors.province ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"} disabled={loading || !formData.region}>
           <option value="">Select Province</option>
-          {provinces.map((p: any) => <option key={p.code} value={p.code}>{p.name}</option>)}
+          {provinces.map((p: any) => <option key={p.code} value={p.name}>{p.name}</option>)}
         </select>
         {errors.province && <span className="text-sm text-red-500">{errors.province}</span>}
       </div>
@@ -94,7 +94,7 @@ export default function AddressDropdowns({ formData, setFormData, errors, setErr
         <Label htmlFor="barangay"><span className="text-red-500 mr-[-0.3rem]">*</span>Barangay</Label>
         <select id="barangay" name="barangay" value={formData.barangay || ""} onChange={handleChange} className={errors.barangay ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm" : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"} disabled={loading || !formData.city}>
           <option value="">Select Barangay</option>
-          {barangays.map((b: any) => <option key={b.code} value={b.code}>{b.name}</option>)}
+          {barangays.map((b: any) => <option key={b.code} value={b.name}>{b.name}</option>)}
         </select>
         {errors.barangay && <span className="text-sm text-red-500">{errors.barangay}</span>}
       </div>
