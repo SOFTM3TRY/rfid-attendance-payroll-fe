@@ -4,7 +4,7 @@ import { CountActiveStudents, CountByGradeStudents, GetStudentDetails } from '@/
 export const useStudentDetails = (token: string | null) => {
   return useQuery({
     queryKey: ['student-details'],
-    queryFn: () => GetStudentDetails(token as string, { _sort: 'created_at:desc' }),
+    queryFn: () => GetStudentDetails(token as string),
     enabled: !!token,  
     staleTime: 1000 * 60 * 5,
   });
