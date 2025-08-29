@@ -34,6 +34,7 @@ export const CreateStudent = async (token: string, studentData: any) => {
     throw error;
   }
 };
+
 export const CountActiveStudents = async (token: string) => {
   try {
     const response = await axios.get(
@@ -50,6 +51,7 @@ export const CountActiveStudents = async (token: string) => {
     throw error;
   }
 }
+
 export const CountByGradeStudents = async (token: string, grade: number) => {
   try {
     const response = await axios.get(

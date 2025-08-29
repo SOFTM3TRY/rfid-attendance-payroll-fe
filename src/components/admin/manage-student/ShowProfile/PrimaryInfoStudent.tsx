@@ -26,7 +26,19 @@ export default function PrimaryInfo({
         </p>
         <div className="flex gap-2 mt-2">
           <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
-            Grade: {data.grade_id}
+            Grade: {data.grade_id === "1"
+              ? "Grade One"
+              : data.grade_id === "2"
+              ? "Grade Two"
+              : data.grade_id === "3"
+              ? "Grade Three"
+              : data.grade_id === "4"
+              ? "Grade Four"
+              : data.grade_id === "5"
+              ? "Grade Five"
+              : data.grade_id === "6"
+              ? "Grade Six"
+              : data.grade_id}
           </span>
           <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
             Section: {data.section}

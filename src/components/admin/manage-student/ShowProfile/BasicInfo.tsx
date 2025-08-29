@@ -21,10 +21,24 @@ export default function BasicInfo({ data }: { data: any }) {
         <SectionHeader icon={<ShieldUser className="text-blue-500 h-5 w-5" />} title="Primary Information" />
         <InputField label="LRN" value={data.lrn} icon={<ShieldUser className="text-blue-500 h-4 w-4" />} />
         <InputField label="School Year" value={data.school_year} icon={<Calendar className="text-teal-500 h-4 w-4" />} />
-        <InputField label="Grade" value={data.grade_id} icon={<GraduationCap className="text-teal-500 h-4 w-4" />} />
+        {data.grade_id === "1" ? (
+          <InputField label="Grade" value="Grade One" icon={<GraduationCap className="text-teal-500 h-4 w-4" />} />
+        ) : data.grade_id === "2" ? (
+          <InputField label="Grade" value="Grade Two" icon={<GraduationCap className="text-teal-500 h-4 w-4" />} />
+        ) : data.grade_id === "3" ? (
+          <InputField label="Grade" value="Grade Three" icon={<GraduationCap className="text-teal-500 h-4 w-4" />} />
+        ) : data.grade_id === "4" ? (
+          <InputField label="Grade" value="Grade Four" icon={<GraduationCap className="text-teal-500 h-4 w-4" />} />
+        ) : data.grade_id === "5" ? (
+          <InputField label="Grade" value="Grade Five" icon={<GraduationCap className="text-teal-500 h-4 w-4" />} />
+        ) : data.grade_id === "6" ? (
+          <InputField label="Grade" value="Grade Six" icon={<GraduationCap className="text-teal-500 h-4 w-4" />} />
+        ) : (
+          <InputField label="Grade" value={data.grade_id} icon={<GraduationCap className="text-teal-500 h-4 w-4" />} />
+        )}
         <InputField label="Section" value={data.section} icon={<Book className="text-teal-500 h-4 w-4" />} />
 
-        <SectionHeader icon={<UserLock className="text-yellow-500 h-5 w-5" />} title="Basic Information h-4 w-4" />
+        <SectionHeader icon={<UserLock className="text-yellow-500 h-5 w-5" />} title="Basic Information" />
         <InputField label="First Name" value={data.first_name} icon={<User className="text-green-500 h-4 w-4" />} />
         <InputField label="Middle Name" value={data.middle_name} icon={<User className="text-green-500 h-4 w-4" />} />
         <InputField label="Last Name" value={data.last_name} icon={<User className="text-green-500 h-4 w-4" />} />

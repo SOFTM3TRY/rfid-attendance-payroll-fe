@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ShowProfile from "@/components/admin/manage-student/ShowProfile/ShowProfile";
 import EditProfile from "@/components/admin/manage-student/EditStudent/EditStudent";
+import ShowAttendanceHistory from "@/components/admin/manage-student/ShowAttendanceHistory/ShowAttendanceHistory";
+
 import {
   Eye,
   SquarePen,
@@ -35,7 +37,7 @@ export type Section = {
   last_name: string;
   suffix: string;
   section: number;
-  status: "Active" | "Inactive" ;
+  status: "Active" | "Inactive";
 };
 
 export const columns: ColumnDef<Section>[] = [
@@ -55,7 +57,9 @@ export const columns: ColumnDef<Section>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <span>{`${row.original.last_name} ${row.original.first_name} ${row.original.middle_name || ""}  ${row.original.suffix || ""}`}</span>
+      <span>{`${row.original.last_name} ${row.original.first_name} ${
+        row.original.middle_name || ""
+      }  ${row.original.suffix || ""}`}</span>
     ),
   },
   {
@@ -65,7 +69,7 @@ export const columns: ColumnDef<Section>[] = [
         <GraduationCap className="text-green-500" /> Grade
       </Button>
     ),
-        cell: ({ row }) => {
+    cell: ({ row }) => {
       const gradeMap = {
         1: "Grade One",
         2: "Grade Two",
@@ -76,7 +80,7 @@ export const columns: ColumnDef<Section>[] = [
       };
       // @ts-ignore
 
-      return <span>{gradeMap[row.original.grade_id ]}</span>;
+      return <span>{gradeMap[row.original.grade_id]}</span>;
     },
   },
   {
@@ -103,15 +107,15 @@ export const columns: ColumnDef<Section>[] = [
       const status = row.original.status;
       return (
         <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
-         {/* @ts-ignore */}
+          {/* @ts-ignore */}
           {row.original.status == 1 ? "Active" : "Inactive"}
           <span
             className={`ml-1 ${
               // @ts-ignore
-              row.original.status ==  1 ? "text-green-500" : "text-red-500"
+              row.original.status == 1 ? "text-green-500" : "text-red-500"
             }`}
           >
-                {/* @ts-ignore */}
+            {/* @ts-ignore */}
             {row.original.status == 1 ? (
               <UserCheck className="w-4 h-4" />
             ) : (
@@ -123,91 +127,100 @@ export const columns: ColumnDef<Section>[] = [
     },
   },
   {
-  accessorKey: "Actions",
-  id: "actions",
-  cell: ({ row }) => {
-    const [openView, setOpenView] = useState(false);
-    const [openEdit, setOpenEdit] = useState(false);
+    accessorKey: "Actions",
+    id: "actions",
+    cell: ({ row }) => {
+      const [openView, setOpenView] = useState(false);
+      const [openEdit, setOpenEdit] = useState(false);
+      const [openHistory, setOpenHistory] = useState(false);
 
-    return (
-      <>
-        <ShowProfile
-          open={openView}
-          setOpen={setOpenView}
-          row={row}
-          trigger={
-            <Button variant="outline" size="sm">
-              <Eye className=" w-4 h-4" />
-              View
-            </Button>
-          }
-        />
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-2"
-          onClick={() => setOpenEdit(true)}
-        >
-          <SquarePen className="w-4 h-4" />
-          Edit
-        </Button>
-        <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-2"
-          onClick={() => console.log("history")}
-        >
-          <History className="w-4 h-4" />
-          History
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-2"
-          onClick={() => console.log("register")}
-        >
-          <FilePlus className="w-4 h-4" />
-          Register
-        </Button>
-      </>
-    );
+      return (
+        <>
+          <ShowProfile
+            open={openView}
+            setOpen={setOpenView}
+            row={row}
+            trigger={
+              <Button variant="outline" size="sm">
+                <Eye className="w-4 h-4 mr-1" />
+                View
+              </Button>
+            }
+          />
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-2"
+            onClick={() => setOpenEdit(true)}
+          >
+            <SquarePen className="w-4 h-4 mr-1" />
+            Edit
+          </Button>
+          <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-2"
+            onClick={() => setOpenHistory(true)}
+          >
+            <History className="w-4 h-4 mr-1" />
+            History
+          </Button>
+          <ShowAttendanceHistory
+            open={openHistory}
+            setOpen={setOpenHistory}
+            row={row}
+          />
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-2"
+            onClick={() => console.log("register")}
+          >
+            <FilePlus className="w-4 h-4 mr-1" />
+            Register
+          </Button>
+        </>
+      );
+    },
   },
-},
 
-//  return (
-//       <>
-//         <DropdownMenu>
-//           <DropdownMenuTrigger asChild>
-//             <Button variant="ghost">⋯</Button>
-//           </DropdownMenuTrigger>
-//           <DropdownMenuContent>
-//             <DropdownMenuItem onClick={() => setOpenView(true)}>
-//               <Eye className="mr-2 w-4 h-4" />
-//               View Profile
-//             </DropdownMenuItem>
-//             <DropdownMenuItem onClick={() => setOpenEdit(true)}>
-//               <SquarePen className="mr-2 w-4 h-4" />
-//               Edit Profile
-//             </DropdownMenuItem>
-//             <DropdownMenuItem onClick={() => console.log("history")}>
-//               <History className="mr-2 w-4 h-4" />
-//               Attendance History
-//             </DropdownMenuItem>
-//             <DropdownMenuItem onClick={() => console.log("register")}>
-//               <FilePlus className="mr-2 w-4 h-4" />
-//               Register
-//             </DropdownMenuItem>
-//           </DropdownMenuContent>
-//         </DropdownMenu>
-//         <ShowProfile
-//           open={openView}
-//           setOpen={setOpenView}
-//           row={row}
-//         />
-//         <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
-//       </>
-//     );
+  //  return (
+  //       <>
+  //         <DropdownMenu>
+  //           <DropdownMenuTrigger asChild>
+  //             <Button variant="ghost">⋯</Button>
+  //           </DropdownMenuTrigger>
+  //           <DropdownMenuContent>
+  //             <DropdownMenuItem onClick={() => setOpenView(true)}>
+  //               <Eye className="mr-2 w-4 h-4" />
+  //               View Profile
+  //             </DropdownMenuItem>
+  //             <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+  //               <SquarePen className="mr-2 w-4 h-4" />
+  //               Edit Profile
+  //             </DropdownMenuItem>
+  //             <DropdownMenuItem onClick={() => console.log("history")}>
+  //               <History className="mr-2 w-4 h-4" />
+  //               Attendance History
+  //             </DropdownMenuItem>
+  //             <DropdownMenuItem onClick={() => console.log("register")}>
+  //               <FilePlus className="mr-2 w-4 h-4" />
+  //               Register
+  //             </DropdownMenuItem>
+  //           </DropdownMenuContent>
+  //         </DropdownMenu>
+  //         <ShowProfile
+  //           open={openView}
+  //           setOpen={setOpenView}
+  //           row={row}
+  //         />
+  //         <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
+  //       </>
+  //     );
   // {
   //   accessorKey: "Actions",
   //   id: "actions",
