@@ -22,6 +22,16 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  User,
+  UserCheck,
+  UserX,
+  KeyRound,
+  GraduationCap,
+  CalendarDays,
+  ClockArrowUp,
+  ClockArrowDown,
+  Stamp,
+  BadgeCheck,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -46,6 +56,7 @@ import { FilterTable } from "@/components/admin/manage-student/Filtertable";
 export type AttendanceEntry = {
   iref_id: string;
   lrn: string;
+  grade: string;
   date: string;
   time_in: string;
   time_out: string;
@@ -82,6 +93,11 @@ function generateFakeAttendanceData(lrn: string): AttendanceEntry[] {
     return {
       iref_id: `IREF-${lrn.slice(-4)}-${lrn.slice(-3)}`,
       lrn,
+      grade: `Grade ${
+        ["One", "Two", "Three", "Four", "Five", "Six"][
+          Math.floor(Math.random() * 6)
+        ]
+      }`,
       date: formattedDate,
       time_in: timeIn,
       time_out: timeOut,
@@ -93,36 +109,83 @@ function generateFakeAttendanceData(lrn: string): AttendanceEntry[] {
 const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "iref_id",
-    header: "IREF ID",
+    header: () => (
+      <div className="flex items-center">
+        <KeyRound className="text-blue-500 mr-1 w-4 h-4" /> IREF ID
+      </div>
+    ),
   },
   {
     accessorKey: "lrn",
-    header: "LRN",
+    header: () => (
+      <div className="flex items-center">
+        <KeyRound className="text-blue-500 mr-1 w-4 h-4" /> LRN
+      </div>
+    ),
+  },
+  {
+    accessorKey: "grade",
+    header: () => (
+      <div className="flex items-center">
+        <GraduationCap className="text-teal-500 mr-1 w-4 h-4" /> Grade
+      </div>
+    ),
+    filterFn: (row, columnId, filterValue) => {
+      const grade = row.getValue(columnId) as string;
+      return grade.includes(filterValue);
+    },
+    enableColumnFilter: true,
   },
   {
     accessorKey: "date",
-    header: "Date",
+    header: () => (
+      <div className="flex items-center">
+        <CalendarDays className="text-violet-500 mr-1 w-4 h-4" /> Date
+      </div>
+    ),
   },
   {
     accessorKey: "time_in",
-    header: "Time In",
+    header: () => (
+      <div className="flex items-center">
+        <ClockArrowUp className="text-green-500 mr-1 w-4 h-4" /> Time In
+      </div>
+    ),
   },
   {
     accessorKey: "time_out",
-    header: "Time Out",
+    header: () => (
+      <div className="flex items-center">
+        <ClockArrowDown className="text-red-500 mr-1 w-4 h-4" /> Time Out
+      </div>
+    ),
   },
   {
     accessorKey: "remarks",
-    header: "Remarks",
+    header: () => (
+      <div className="flex items-center">
+        <Stamp className="text-green-500 mr-1 w-4 h-4" /> Remarks
+      </div>
+    ),
     cell: ({ row }) => {
       const value = row.getValue("remarks") as string;
       let color = "text-gray-600";
 
-      if (value === "Present") color = "text-green-600 font-medium";
-      if (value === "Late") color = "text-yellow-600 font-medium";
-      if (value === "Absent") color = "text-red-600 font-medium";
+      if (value === "Present")
+        color =
+          "text-green-50 bg-green-500 dark:text-green-700 dark:bg-green-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
+      if (value === "Late")
+        color =
+          "text-yellow-50 bg-yellow-500 dark:text-yellow-700 dark:bg-yellow-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
+      if (value === "Absent")
+        color =
+          "text-red-50 bg-red-500 dark:text-red-700 dark:bg-red-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
 
-      return <div className={color}>{value}</div>;
+      return (
+        <div className={color}>
+           {value}
+        </div>
+      );
     },
   },
 ];
@@ -148,21 +211,17 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination, // <-- ADD THIS LINE
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination, // <-- ADD THIS LINE
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      pagination: {
-        pageSize: 5,
-        pageIndex: 0,
-      },
-    },
   });
 
   const pageIndex = table.getState().pagination?.pageIndex ?? 0;
@@ -188,26 +247,44 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
           className="max-w-sm"
         />
 
+        {/* Grade filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+            <Button variant="outline">
+              Grade <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((col) => col.getCanHide())
-              .map((col) => (
-                <DropdownMenuCheckboxItem
-                  key={col.id}
-                  className="capitalize"
-                  checked={col.getIsVisible()}
-                  onCheckedChange={(value) => col.toggleVisibility(!!value)}
-                >
-                  {col.id}
-                </DropdownMenuCheckboxItem>
-              ))}
+            <DropdownMenuCheckboxItem
+              checked={table.getColumn("grade")?.getFilterValue() === undefined}
+              onCheckedChange={(value) =>
+                value
+                  ? table.getColumn("grade")?.setFilterValue(undefined)
+                  : table.getColumn("grade")?.setFilterValue("Grade One")
+              }
+            >
+              Show all
+            </DropdownMenuCheckboxItem>
+            {[
+              "Grade One",
+              "Grade Two",
+              "Grade Three",
+              "Grade Four",
+              "Grade Five",
+              "Grade Six",
+            ].map((grade) => (
+              <DropdownMenuCheckboxItem
+                key={grade}
+                checked={table.getColumn("grade")?.getFilterValue() === grade}
+                onCheckedChange={(value) =>
+                  value
+                    ? table.getColumn("grade")?.setFilterValue(grade)
+                    : table.getColumn("grade")?.setFilterValue(undefined)
+                }
+              >
+                {grade}
+              </DropdownMenuCheckboxItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

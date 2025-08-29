@@ -109,10 +109,9 @@ export default function ShowAttendanceHistory({
                 Student <span className="text-teal-500 mx-2">{fullName}</span>{" "}
                 Attendance History
               </span>
-
-              <div className="mt-5">
-                <AttendanceHistory lrn={data.lrn} />
-              </div>
+            </div>
+            <div className="mt-10 p-5">
+              <AttendanceHistory lrn={data.lrn} />
             </div>
           </div>
         </div>
