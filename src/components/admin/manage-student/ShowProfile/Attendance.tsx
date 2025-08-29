@@ -63,8 +63,11 @@ export type AttendanceEntry = {
   remarks: "Present" | "Late" | "Absent";
 };
 
-// ✅ Generate 40 fake entries based on student's LRN
-function generateFakeAttendanceData(lrn: string): AttendanceEntry[] {
+// ✅ Generate 40 fake entries based on student's LRN and grade
+function generateFakeAttendanceData(
+  lrn: string,
+  grade: string
+): AttendanceEntry[] {
   const remarksList: AttendanceEntry["remarks"][] = [
     "Present",
     "Late",
@@ -93,11 +96,20 @@ function generateFakeAttendanceData(lrn: string): AttendanceEntry[] {
     return {
       iref_id: `IREF-${lrn.slice(-4)}-${lrn.slice(-3)}`,
       lrn,
-      grade: `Grade ${
-        ["One", "Two", "Three", "Four", "Five", "Six"][
-          Math.floor(Math.random() * 6)
-        ]
-      }`,
+      grade:
+        grade === "1"
+          ? "Grade One"
+          : grade === "2"
+          ? "Grade Two"
+          : grade === "3"
+          ? "Grade Three"
+          : grade === "4"
+          ? "Grade Four"
+          : grade === "5"
+          ? "Grade Five"
+          : grade === "6"
+          ? "Grade Six"
+          : "",
       date: formattedDate,
       time_in: timeIn,
       time_out: timeOut,
@@ -181,19 +193,22 @@ const columns: ColumnDef<AttendanceEntry>[] = [
         color =
           "text-red-50 bg-red-500 dark:text-red-700 dark:bg-red-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
 
-      return (
-        <div className={color}>
-           {value}
-        </div>
-      );
+      return <div className={color}>{value}</div>;
     },
   },
 ];
 
-export function AttendanceHistory({ lrn }: { lrn: string }) {
-  const data = React.useMemo(() => generateFakeAttendanceData(lrn), [lrn]);
+export function Attendance({ lrn, grade }: { lrn: string; grade: string }) {
+  const data = React.useMemo(
+    () => generateFakeAttendanceData(lrn, grade),
+    [lrn, grade]
+  );
 
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
+
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
+    undefined
+  );
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -203,8 +218,16 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const filteredData = React.useMemo(() => {
+    if (!selectedMonth) return data;
+    return data.filter((entry) => {
+      const entryMonth = entry.date.split(" ")[0];
+      return entryMonth === selectedMonth;
+    });
+  }, [data, selectedMonth]);
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: {
       sorting,
@@ -249,43 +272,48 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
 
         {/* Grade filter */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              Grade <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuCheckboxItem
-              checked={table.getColumn("grade")?.getFilterValue() === undefined}
-              onCheckedChange={(value) =>
-                value
-                  ? table.getColumn("grade")?.setFilterValue(undefined)
-                  : table.getColumn("grade")?.setFilterValue("Grade One")
-              }
-            >
-              Show all
-            </DropdownMenuCheckboxItem>
-            {[
-              "Grade One",
-              "Grade Two",
-              "Grade Three",
-              "Grade Four",
-              "Grade Five",
-              "Grade Six",
-            ].map((grade) => (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                {selectedMonth ?? "Filter by Month"}{" "}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
               <DropdownMenuCheckboxItem
-                key={grade}
-                checked={table.getColumn("grade")?.getFilterValue() === grade}
-                onCheckedChange={(value) =>
-                  value
-                    ? table.getColumn("grade")?.setFilterValue(grade)
-                    : table.getColumn("grade")?.setFilterValue(undefined)
-                }
+                checked={selectedMonth === undefined}
+                onCheckedChange={() => setSelectedMonth(undefined)}
               >
-                {grade}
+                Show all months
               </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
+              {[
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ].map((month) => (
+                <DropdownMenuCheckboxItem
+                  key={month}
+                  checked={selectedMonth === month}
+                  onCheckedChange={(value) =>
+                    value
+                      ? setSelectedMonth(month)
+                      : setSelectedMonth(undefined)
+                  }
+                >
+                  {month}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </DropdownMenu>
       </div>
 

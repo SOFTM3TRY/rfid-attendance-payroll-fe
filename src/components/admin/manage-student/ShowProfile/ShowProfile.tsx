@@ -19,6 +19,9 @@ import BasicInfo from "@/components/admin/manage-student/ShowProfile/BasicInfo";
 import AddressInfo from "@/components/admin/manage-student/ShowProfile/AddressInfo";
 import GuardianInfo from "@/components/admin/manage-student/ShowProfile/GuardianInfo";
 
+import { TotalStatus } from "@/components/admin/manage-student/ShowProfile/TotalStatus";
+import { Attendance } from "@/components/admin/manage-student/ShowProfile/Attendance";
+
 export default function ShowProfile({
   open,
   setOpen,
@@ -81,7 +84,22 @@ export default function ShowProfile({
             <AddressInfo data={data.additional_info || {}} />
             <GuardianInfo data={data.additional_info || {}} />
           </div>
-          <div className="col-span-1 md:col-span-2 rounded-md h-full bg-zinc-100 dark:bg-zinc-900"></div>
+          <div className="col-span-1 md:col-span-2 rounded-md h-full bg-zinc-100 dark:bg-zinc-900 p-5">
+            <div className="sticky top-0 z-500">
+              <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full">
+                <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
+                Student <span className="text-teal-500 mx-2">{fullName}</span>{" "}
+                Attendance S.Y {data.school_year}
+              </span>
+            </div>
+            <div className="mt-10">
+              <TotalStatus />
+            </div>
+
+            <div className="p-5">
+              <Attendance lrn={data.lrn} grade={data.grade_id} />
+            </div>
+          </div>
         </div>
 
         <SheetFooter className="fixed bottom-5 right-5">

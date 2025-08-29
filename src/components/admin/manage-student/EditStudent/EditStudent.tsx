@@ -97,14 +97,20 @@ export default function EditStudent({
           <div className="col-span-1 rounded-md">
             <PrimaryInfo data={data} fullName={fullName} />
 
-            <BasicInfo data={data} />
-            <AddressInfo data={data.additional_info || {}} />
-            <GuardianInfo data={data.additional_info || {}} />
+            <div className=" opacity-30 hover:opacity-100 transition duration-300 ease-in-out">
+              <BasicInfo data={data} />
+              <AddressInfo data={data.additional_info || {}} />
+              <GuardianInfo data={data.additional_info || {}} />
+            </div>
           </div>
 
-          <div className="col-span-1 md:col-span-2 rounded-r-md p-7 h-full bg-zinc-100 dark:bg-zinc-900 border-l-4 border-zinc-300 dark:border-zinc-700">
+          <div className="col-span-1 md:col-span-2 rounded-md p-7 h-full bg-zinc-100 dark:bg-zinc-900 border-l-4 border-zinc-300 dark:border-zinc-700">
             <div className="sticky top-0 z-500">
-              <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full"><User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" /> Edit <span className="text-teal-500 mx-2">{fullName}</span> Student Profile</span>
+              <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full">
+                <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
+                Edit <span className="text-teal-500 mx-2">{fullName}</span>{" "}
+                Student Profile
+              </span>
             </div>
             <EditBasicInfo data={data} />
             <EditPrimaryInfo data={data} />
