@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
+import { useSection } from "@/hooks/useSection";
 
 import {
   KeyRound,
@@ -23,7 +24,13 @@ export default function Step1({
   const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(
     token as string
   );
-  console.log("GradesDate", GradesData);
+
+  const SectionID=formData.grade
+  const {data:SectionsData,isLoading:isLoadingSectionsData}=useSection(token as string,SectionID)
+
+ 
+ console.log("Sectiondata",SectionsData);
+ 
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -40,8 +47,9 @@ export default function Step1({
       return n;
     });
   };
-
-  const generateSections = () => (formData.grade ? ["A", "B", "C"] : []);
+ 
+ 
+ 
   const generateSchoolYears = () => {
     const currentYear = new Date().getFullYear();
     const startYear = 2024;
@@ -149,9 +157,9 @@ export default function Step1({
           disabled={loading || !formData.grade}
         >
           <option value="">Select Section</option>
-          {generateSections().map((section) => (
-            <option key={section} value={section}>
-              Section {section}
+          {SectionsData?.data.map((section: any) => (
+            <option key={section.id} value={section.id}>
+              {section.section_name}
             </option>
           ))}
         </select>
