@@ -12,6 +12,7 @@ import {
 import ShowProfile from "@/components/admin/manage-student/ShowProfile/ShowProfile";
 import EditProfile from "@/components/admin/manage-student/EditStudent/EditStudent";
 import ShowAttendanceHistory from "@/components/admin/manage-student/ShowAttendanceHistory/ShowAttendanceHistory";
+import Registration from "@/components/admin/manage-student/Registration/Registration";
 
 import {
   Eye,
@@ -133,6 +134,7 @@ export const columns: ColumnDef<Section>[] = [
       const [openView, setOpenView] = useState(false);
       const [openEdit, setOpenEdit] = useState(false);
       const [openHistory, setOpenHistory] = useState(false);
+      const [openRegister, setOpenRegister] = useState(false);
 
       return (
         <>
@@ -178,11 +180,12 @@ export const columns: ColumnDef<Section>[] = [
             variant="outline"
             size="sm"
             className="ml-2"
-            onClick={() => console.log("register")}
+            onClick={() => setOpenRegister(true)}
           >
             <FilePlus className="w-4 h-4 mr-1" />
             Register
           </Button>
+          <Registration open={openRegister} setOpen={setOpenRegister} row={row} />
         </>
       );
     },
