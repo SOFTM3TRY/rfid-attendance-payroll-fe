@@ -26,9 +26,9 @@ import Loader from "@/components/Loader";
 
 import GradeTabsPage from "@/components/admin/manage-student/GradeTabsPage";
 
-import { User } from "lucide-react";
+import { Users } from "lucide-react";
 
-export default function Profile() {
+export default function ManageAdmin() {
   const { token } = useAuth();
   const isClient = useClientOnly();
 
@@ -49,7 +49,7 @@ export default function Profile() {
 
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-lg font-medium flex"><User  className="mr-2 w-6 h-6 text-teal-500"/> Profile</h1>
+              <h1 className="text-lg font-medium flex"><Users  className="mr-2 w-6 h-6 text-teal-500"/> Manage Admins</h1>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -59,17 +59,14 @@ export default function Profile() {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>Profile</BreadcrumbPage>
+                    <BreadcrumbPage>Manage Admins</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
 
             <div className="p-2 h-full mt-15 z-1">
-              PROFILE PROFILE  
-              PROFILE PROFILE  
-              PROFILE PROFILE  
-              PROFILE PROFILE 
+              <GradeTabsPage />
             </div>
           </div>
           <Footer />

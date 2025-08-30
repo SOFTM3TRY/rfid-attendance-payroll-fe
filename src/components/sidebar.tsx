@@ -7,6 +7,7 @@ import {
   Users,
   IdCardLanyard,
   Settings,
+  ShieldUser,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
@@ -42,11 +43,11 @@ const items = [
   { title: "Calendar", url: "/admin/calendar", icon: Calendar },
   { title: "Manage Student", url: "/admin/manage-student", icon: SquareUser },
   {
-    title: "Manage Employee",
-    url: "/admin/manage-employee",
+    title: "Manage Teacher",
+    url: "/admin/manage-teacher",
     icon: IdCardLanyard,
   },
-  { title: "Manage Account", url: "/admin/manage-account", icon: Users },
+  { title: "Manage Admin", url: "/admin/manage-admin", icon: ShieldUser },
   { title: "System Settings", url: "/admin/system-settings", icon: Settings },
 ];
 
