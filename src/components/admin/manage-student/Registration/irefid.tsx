@@ -9,6 +9,10 @@ interface FlipCardProps {
     last_name: string;
     suffix: string;
     lrn: string;
+    school_year: string;
+    grade_id: string;
+    section: string;
+    rfid_uid: string;
   };
   rotate?: "x" | "y";
 }
@@ -31,33 +35,69 @@ export default function FlipCardUI({ data, rotate = "y" }: FlipCardProps) {
       <div
         className={cn(
           "relative h-full rounded-2xl transition-all duration-500 [transform-style:preserve-3d]",
-          self[0]
+          self[0],
+          data.rfid_uid ? "" : "animate-pulse"
         )}
       >
         {/* Front */}
-        <div className="absolute h-full w-full rounded-2xl bg-black/80 dark:bg-zinc-800 dark:border dark:border-zinc-600 p-4 text-slate-200 [backface-visibility:hidden]">
-          <Avatar className="h-30 w-30 flex-shrink-0">
+        <div className="absolute h-full w-full rounded-2xl bg-white border p-1 shadow-lg text-slate-200 [backface-visibility:hidden]">
+          <div className="bg-gradient-to-r from-teal-700 to-sky-700 w-full h-30 rounded-t-xl"></div>
+
+          <img
+            src="/logo.png"
+            alt="logo"
+            className="w-15 h-15 absolute top-15 right-0 transform -translate-x-1/2 -translate-y-1/2"
+          />
+
+          <Avatar className="h-25 w-25 flex-shrink-0 absolute top-30 left-1/4 transform -translate-x-1/2 -translate-y-1/2 border-4 border-white">
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
-          <div className="absolute bottom-4 left-4 text-xl font-bold ">
-            {data.first_name}
+          <div className="text-start mt-5 text-black px-3 ml-30">
+            <p className="font-medium text-lg">
+              {data.first_name} {data.middle_name} {data.last_name} {data.suffix}
+            </p>
+            <p className="">
+              {data.school_year}
+            </p>
           </div>
+
+          <div className="text-start mt-10 text-black px-10 flex items-center justify-between">
+            <p className="font-medium text-lg text-center">
+              <span> Grade
+              {data.grade_id === "1"
+                ? " One"
+                : data.grade_id === "2"
+                ? " Two"
+                : data.grade_id === "3"
+                ? " Three"
+                : data.grade_id === "4"
+                ? " Four"
+                : data.grade_id === "5"
+                ? " Five"
+                : data.grade_id === "6"
+                ? " Six"
+                : ""}</span> <br />
+                <span className="text-sm">Grade</span>
+            </p>
+            <p className="font-medium text-lg text-center">
+              <span>{data.section}</span> <br /> <span className="text-sm">section</span>
+            </p>
+          </div>
+          
+            <div className="bg-gradient-to-r mt-9 from-teal-700 to-sky-700 w-full h-12 rounded-b-xl"></div>
         </div>
 
         {/* Back */}
         <div
           className={cn(
-            "absolute h-full w-full rounded-2xl bg-black/80 dark:bg-zinc-800 dark:border dark:border-zinc-600 p-4 text-slate-200 [backface-visibility:hidden]",
+            "absolute h-full w-full rounded-2xl bg-white border shadow-lg p-4 [backface-visibility:hidden]",
             self[1]
           )}
         >
-          <div className="flex min-h-full flex-col gap-2">
-            <h1 className="text-xl font-bold text-white">{data.lrn}</h1>
-            <p className="mt-1 border-t border-t-gray-200 py-4 text-base font-medium leading-normal text-gray-100">
-              {data.last_name}, {data.first_name}
-            </p>
+          <div className="flex min-h-full flex-col gap-2 text-black">
+            Back of the id
           </div>
         </div>
       </div>

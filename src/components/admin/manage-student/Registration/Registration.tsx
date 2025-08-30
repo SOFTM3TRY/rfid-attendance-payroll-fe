@@ -17,6 +17,7 @@ import {
   CircleX,
   Loader2,
   Send,
+  Printer
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,9 +29,11 @@ import GuardianInfo from "@/components/admin/manage-student/ShowProfile/Guardian
 
 import SplitText from "@/components/animata/text/split-text";
 import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
+import { Loader } from "@/components/admin/manage-student/Registration/Loader";
 
-import { useEffect, useRef } from "react";
-import clsx from "clsx";
+import { useEffect, useRef, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 export default function FlipCard({
   open,
@@ -69,6 +72,7 @@ export default function FlipCard({
   // ✅ Fix: declare these refs before useEffect
   const formRef = useRef<HTMLFormElement | null>(null);
   const rfidRef = useRef<HTMLInputElement | null>(null);
+  const loadingRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let interval: any;
@@ -112,13 +116,15 @@ export default function FlipCard({
     }
   }, [open]);
 
+  const [submitted, setSubmitted] = useState(false);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
-        className="bottom-0 h-full rounded-t-md overflow-y-auto p-3"
+        className="bottom-0 h-full rounded-t-md overflow-y-auto p-3 overflow-x-hidden"
         side="bottom"
         style={{
-          pointerEvents: data.rfid_iud ? "auto" : "none",
+          pointerEvents: !data.rfid_uid ? "none" : "auto",
         }}
       >
         <SheetHeader>
@@ -164,15 +170,38 @@ export default function FlipCard({
 
           <div className="col-span-1 md:col-span-2 rounded-r-md p-7 h-full bg-zinc-100 dark:bg-zinc-900 border-l-4 border-zinc-300 dark:border-zinc-700">
             <div className="sticky top-0 z-500 flex items-center justify-center">
-              <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full">
+              <span
+                className={cn(
+                  "text-lg font-medium shadow-lg flex items-center",
+                  {
+                    "bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full animate-bounce scale-1.5 infinite ease-in-out":
+                      !data.rfid_uid,
+                  }
+                )}
+              >
                 <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
-                Tap{" "}
-                <span className="text-teal-500 mx-2 font-bold">IREF ID</span> to
-                register attendance for{" "}
-                <span className="text-teal-500 mx-2">{fullName}</span>.
+                {data.rfid_uid ? (
+                  <>
+                    <span className="text-teal-500 mx-2 font-bold">
+                      {fullName}
+                    </span>{" "}
+                    is already registered hover the ID to view front nad Back
+                    side.
+                  </>
+                ) : (
+                  <>
+                    Tap{" "}
+                    <span className="text-teal-500 mx-2 font-bold">IREF ID</span>{" "}
+                    to register attendance for{" "}
+                    <span className="text-teal-500 mx-2">{fullName}</span>.
+                  </>
+                )}
               </span>
             </div>
-            <div className="mt-10 p-5 flex justify-center items-center">
+            <div
+              className="mt-10 p-5 flex justify-center items-center"
+
+            >
               <FlipCardUI data={data} />
             </div>
 
@@ -181,45 +210,52 @@ export default function FlipCard({
               onSubmit={(e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
-                const lrn = formData.get("lrn");
-                const rfidUid = formData.get("rfidUid");
+                const dataObj: Record<string, any> = {};
 
-                if (lrn && rfidUid) {
-                  console.log("Submitting LRN and RFID:", { lrn, rfidUid });
-                  // TODO: Replace with actual backend call (e.g. via fetch/axios)
+                formData.forEach((value, key) => {
+                  dataObj[key] = value;
+                });
+
+                if (dataObj.lrn && dataObj.rfidUid) {
+                  alert(`Form submitted:\n${JSON.stringify(dataObj, null, 2)}`);
+                  setSubmitted(true);
                 }
               }}
+              className=""
             >
-              {/* Hidden but required LRN field */}
-              <Input type="text" name="lrn" value={data.lrn} />
+              {/* Hidden LRN field */}
+              <Input type="hidden" name="lrn" value={data.lrn} readOnly />
 
-              {/* RFID input - hidden, auto-focused, not clickable */}
-              <Input
+              {/* RFID input */}
+              <input
                 ref={rfidRef}
                 type="text"
                 name="rfidUid"
                 autoFocus
                 tabIndex={-1}
-                className="e"
+                className="text-white dark:text-black border-none focus:outline-none focus:ring-none focus:shadow-outline"
+                onChange={(e) => {
+                  const val = e.currentTarget.value.trim();
+                  if (val !== "") {
+                    formRef.current?.requestSubmit();
+                  }
+                }}
               />
             </form>
+            <Loader submitted={submitted} />
           </div>
         </div>
 
         <SheetFooter className="fixed bottom-5 right-5">
           <div className="flex items-center justify-end gap-5">
-            {/* <Button onClick={handleSubmit} className="w-40" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="animate-spin mr-2" size={18} />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  Update <Send className="" />
-                </>
-              )}
-            </Button> */}
+            {data.rfid_uid && (
+              <Button
+                onClick={() => window.print()}
+                className="w-40"
+              >
+                <Printer  className="mr-0"/> Print
+              </Button>
+            )}
             <SheetClose asChild>
               <Button
                 className="w-40"
@@ -235,3 +271,4 @@ export default function FlipCard({
     </Sheet>
   );
 }
+
