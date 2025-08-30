@@ -34,7 +34,7 @@ import { useUserDetails } from "@/hooks/useUserDetails";
 import { useEffect, useState } from "react";
 import { useClientOnly } from "@/hooks/useClientOnly";
 
-import Loader from "@/components/Loader";
+import SplitTextSide from "@/components/animata/text/split-text-side";
 
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: Home },
@@ -64,15 +64,17 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <div className="flex items-center my-3">
+          <div className="flex flex-col items-center justify-center gap-5 p-3 group-data-[collapsible=icon]:mt-3 group-data-[collapsible=icon]:mb-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0">
             <img
               src="/logo.png"
               alt="logo"
-              className="w-8 h-8 me-2 group-data-[collapsible=icon]:block"
+              className="w-25 h-25 group-data-[collapsible=icon]:block group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8"
             />
-            <span className="text-xs font-semibold uppercase block group-data-[collapsible=icon]:hidden text-teal-700 dark:text-teal-500">
-              Young Generation Academy
-            </span>
+
+            <SplitTextSide
+              text="Young Generation Academy"
+              className="group-data-[collapsible=icon]:hidden"
+            />
           </div>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>

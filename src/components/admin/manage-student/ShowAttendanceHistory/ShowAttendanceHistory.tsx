@@ -26,6 +26,8 @@ import GuardianInfo from "@/components/admin/manage-student/ShowProfile/Guardian
 
 import { AttendanceHistory } from "@/components/admin/manage-student/ShowAttendanceHistory/AttendanceHistory";
 
+import SplitText from "@/components/animata/text/split-text";
+
 export default function ShowAttendanceHistory({
   open,
   setOpen,
@@ -90,6 +92,11 @@ export default function ShowAttendanceHistory({
           <SheetTitle className="uppercase">{fullName}</SheetTitle>
           <SheetDescription>S.Y : {data.school_year}</SheetDescription>
         </SheetHeader>
+
+        <SplitText
+                  text="Young Generation Academy"
+                  className="absolute top-15 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 ">
           <pre className="hidden">{JSON.stringify(data, null, 2)}</pre>
