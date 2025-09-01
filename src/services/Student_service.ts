@@ -68,3 +68,21 @@ export const CountByGradeStudents = async (token: string, grade: number) => {
     throw error;
   }
 }
+
+export const RegisterRFIDToStudent = async (token: string, studentlrn: string, data: any) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/register-student-by-lrn/${studentlrn}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

@@ -29,11 +29,16 @@ import GuardianInfo from "@/components/admin/manage-student/ShowProfile/Guardian
 
 import SplitText from "@/components/animata/text/split-text";
 import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
-import { Loader } from "@/components/admin/manage-student/Registration/Loader";
-
+ 
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { useForm } from "react-hook-form";
+import { on } from "events";
+import { useAuth } from "@/context/AuthContext";
+import { RegisterRFIDToStudent } from "@/services/Student_service";
+import toast from "react-hot-toast";
+ import Loader from "@/components/Loader";
 
 export default function FlipCard({
   open,
@@ -54,69 +59,31 @@ export default function FlipCard({
     .filter(Boolean)
     .join(" ");
 
-  const {
-    step,
-    setStep,
-    open: openSheet,
-    setOpen: setOpenSheet,
-    loading,
-    errors,
-    handlePrevStep,
-    handleNextStep,
-    handleSubmit,
-    setErrors,
-    formData,
-    setFormData,
-  } = useStudentForm();
-
-  // ✅ Fix: declare these refs before useEffect
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const rfidRef = useRef<HTMLInputElement | null>(null);
-  const loadingRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    let interval: any;
-
-    if (open) {
-      const focusRFID = () => {
-        if (rfidRef.current) {
-          rfidRef.current.focus();
-        }
-      };
-
-      // Initial focus
-      setTimeout(() => {
-        focusRFID();
-      }, 300);
-
-      // Re-focus if blurred
-      const handleBlur = () => {
-        setTimeout(() => focusRFID(), 100);
-      };
-
-      if (rfidRef.current) {
-        rfidRef.current.addEventListener("blur", handleBlur);
-      }
-
-      // Auto-submit once RFID has value
-      interval = setInterval(() => {
-        const val = rfidRef.current?.value;
-        if (val && val.trim() !== "") {
-          formRef.current?.requestSubmit();
-          clearInterval(interval);
-        }
-      }, 300);
-
-      return () => {
-        if (rfidRef.current) {
-          rfidRef.current.removeEventListener("blur", handleBlur);
-        }
-        clearInterval(interval);
-      };
+const {token}=useAuth();
+const [isLoading,setIsLoading]=useState(false)
+const {register,handleSubmit,} =useForm()
+console.log("data",data.lrn);
+  const onSubmit = async (data: any) => {
+    setIsLoading(true)
+    console.log("data",data);
+    try {
+      const response = await RegisterRFIDToStudent(token as string ,data.lrn,data )
+      console.log("response",response);
+      toast.success("RFID Successfully Registered");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }finally{
+      setIsLoading(false)
     }
-  }, [open]);
-
-  const [submitted, setSubmitted] = useState(false);
+      
+  }
+  
+  
+ if(isLoading){
+  
+  return <Loader />
+  
+}
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -206,43 +173,21 @@ export default function FlipCard({
             </div>
 
             <form
-              ref={formRef}
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                const dataObj: Record<string, any> = {};
-
-                formData.forEach((value, key) => {
-                  dataObj[key] = value;
-                });
-
-                if (dataObj.lrn && dataObj.rfidUid) {
-                  alert(`Form submitted:\n${JSON.stringify(dataObj, null, 2)}`);
-                  setSubmitted(true);
-                }
+              onSubmit={handleSubmit(onSubmit)}
+              onChange={(e) => {
+                e.currentTarget.requestSubmit();
               }}
-              className=""
             >
-              {/* Hidden LRN field */}
-              <Input type="hidden" name="lrn" value={data.lrn} readOnly />
-
+              <input type="hidden" value={`${data.lrn}`} {...register("lrn")} />
               {/* RFID input */}
               <input
-                ref={rfidRef}
                 type="text"
-                name="rfidUid"
                 autoFocus
-                tabIndex={-1}
+                {...register("rfid_uid")}
                 className="text-white dark:text-black border-none focus:outline-none focus:ring-none focus:shadow-outline"
-                onChange={(e) => {
-                  const val = e.currentTarget.value.trim();
-                  if (val !== "") {
-                    formRef.current?.requestSubmit();
-                  }
-                }}
               />
             </form>
-            <Loader submitted={submitted} />
+          
           </div>
         </div>
 

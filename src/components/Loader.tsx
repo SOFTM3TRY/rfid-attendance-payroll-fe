@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Loader = () => {
   return (
-    <StyledWrapper className="flex items-center justify-center h-screen w-screen bg-teal-800/50">
+    <StyledWrapper className="flex items-center justify-center h-screen w-screen bg-teal-600/100  z-50 fixed top-0 left-0">
       <div className="banter-loader">
         <div className="banter-loader__box" />
         <div className="banter-loader__box" />
