@@ -13,12 +13,7 @@ import {
   SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import {
   PlusIcon,
@@ -35,13 +30,29 @@ import {
   Loader2,
 } from "lucide-react";
 
-export default function AddTeacher() {
+import { useEffect } from "react";
 
+export default function AddTeacher() {
   const {
-    step, setStep, open, setOpen, loading, errors,
-    handlePrevStep, handleNextStep, handleSubmit, setErrors,
-    formData, setFormData
+    step,
+    setStep,
+    open,
+    setOpen,
+    loading,
+    errors,
+    handlePrevStep,
+    handleNextStep,
+    handleSubmit,
+    setErrors,
+    formData,
+    setFormData,
   } = useTeacherForm();
+
+  useEffect(() => {
+    if (formData === null) {
+      setStep(1);
+    }
+  }, [formData]);
 
   console.log("FormData", formData);
   return (
@@ -212,7 +223,11 @@ export default function AddTeacher() {
             />
           </TabsContent>
           <TabsContent value="step4" className="p-5 mt-5">
-            <Step4 formData={formData} />
+            <Step4
+              formData={formData}
+              onBack={() => setStep(1)}
+              hasData={Object.keys(formData).length > 0}
+            />
           </TabsContent>
         </Tabs>
 
@@ -242,7 +257,6 @@ export default function AddTeacher() {
                   onClick={handleSubmit}
                   className="w-40"
                   disabled={loading}
-                  
                 >
                   {loading ? (
                     <>

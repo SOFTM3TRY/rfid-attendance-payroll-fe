@@ -75,7 +75,7 @@ export default function Step1({
         </h1>
       </span>
 
-      <div className="grid gap-2">
+      {/* <div className="grid gap-2">
         <Label htmlFor="employeeNumber">
           <span className="text-red-500 mr-[-0.3rem]">*</span>
           <KeyRound className="text-blue-500 h-3 w-3" />
@@ -86,7 +86,7 @@ export default function Step1({
             id="employeeNumber"
             name="employeeNumber"
             type="text"
-            placeholder="Enter your employee number"
+            placeholder="Enter your employee number (e.g. YGA-2025-001)"
             value={formData.employeeNumber}
             onChange={(e) => {
               setFormData((prev: any) => ({
@@ -116,11 +116,11 @@ export default function Step1({
                 type="button"
                 className="ml-2"
                 onClick={() => {
+                  const num = Math.floor(100 + Math.random() * 900);
+                  const currentYear = new Date().getFullYear();
                   setFormData((prev: any) => ({
                     ...prev,
-                    employeeNumber: `CLAN${Math.floor(
-                      100000 + Math.random() * 900000
-                    )}`,
+                    employeeNumber: `YGA-${currentYear}-${num}`,
                   }));
                 }}
               >
@@ -139,7 +139,7 @@ export default function Step1({
         {errors.employeeNumber && (
           <span className="text-xs text-red-500">{errors.employeeNumber}</span>
         )}
-      </div>
+      </div> */}
 
       <div className="grid gap-2">
         <Label htmlFor="grade">

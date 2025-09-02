@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
-import { CreateStudent } from "@/services/Student_service";
+import { CreateTeacher } from "@/services/Teacher_service";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useStudentDetails } from "./useStudentDetails";
@@ -12,40 +12,38 @@ export function useTeacherForm() {
   const { token } = useAuth();
   const { refetch: refetchStudent } = useStudentDetails(token as string);
   const [formData, setFormData] = useState<any>({
-    employeeNumber: "",
     grade: "",
     section: "",
     school_year: "",
+    status: "",
     first_name: "",
-    middle_name: "",
     last_name: "",
+    middle_name: "",
     suffix: "",
-    role: "teacher",
-    gender: "",
-    birth_place: "",
+    contact_no: "",
+    email: "",
+    role_id: "2",
     birth_date: "",
-    teacher_status: "",
-    personal_email: "",
-    contact_number: "",
-    street: "",
-    region: "",
+    birth_place: "",
+    gender: "",
     province: "",
     city: "",
     barangay: "",
-    emergency_fname: "",
-    emergency_mname: "",
-    emergency_lname: "",
+    street: "",
     emergency_contact: "",
+    emergency_fname: "",
+    emergency_lname: "",
+    emergency_mname: "",
   });
 
   const stepFieldsMap: Record<number, string[]> = {
-    1: ["employeeNumber", "grade", "section", "school_year"],
+    1: ["grade", "section", "school_year"],
     2: [
-      "first_name", "middle_name", "last_name", "suffix", "role", "gender",
-      "birth_place", "birth_date", "student_status", "personal_email", "contact_number"
+      "first_name", "middle_name", "last_name", "suffix", "contact_no", "email", "role_id",
+      "birth_place", "birth_date", "gender", "status",
     ],
     3: [
-      "region", "province", "city", "barangay", "street",
+      "province", "city", "barangay", "street",
       "emergency_fname", "emergency_mname", "emergency_lname", "emergency_contact"
     ],
   };
@@ -75,14 +73,42 @@ export function useTeacherForm() {
 
   const handleSubmit = async () => {
     setLoading(true);
-   try {
-   const response = await CreateStudent(token as any, formData);
-   toast.success("Student created successfully");
-   refetchStudent();
-   setOpen(false);
-   } catch (error) {
-    console.log(error);
-   }
+    try {
+      const response = await CreateTeacher(token as any, formData);
+      toast.success("Teacher created successfully");
+      refetchStudent();
+      setOpen(false);
+      setFormData({
+        grade: "",
+        section: "",
+        school_year: "",
+        status: "",
+        first_name: "",
+        last_name: "",
+        middle_name: "",
+        suffix: "",
+        contact_no: "",
+        email: "",
+        role_id: "2",
+        birth_date: "",
+        birth_place: "",
+        gender: "",
+        province: "",
+        city: "",
+        barangay: "",
+        street: "",
+        emergency_contact: "",
+        emergency_fname: "",
+        emergency_lname: "",
+        emergency_mname: "",
+      });
+    } catch (error) {
+      console.error(error);
+      // @ts-ignore
+      const { data } = error.response;
+      setErrors({ ...errors, ...data.errors });
+      toast.error(data.message);
+    }
     setTimeout(() => setLoading(false), 1000);
   };
 
@@ -92,3 +118,4 @@ export function useTeacherForm() {
     formData, setFormData
   };
 }
+

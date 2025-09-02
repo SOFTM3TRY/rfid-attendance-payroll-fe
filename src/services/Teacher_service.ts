@@ -16,3 +16,21 @@ export const CountTeacherActive = async (token: string) => {
     throw error;
   }
 }
+
+export const CreateTeacher = async (token: string, teacherData: any) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/employee-register`,
+      teacherData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

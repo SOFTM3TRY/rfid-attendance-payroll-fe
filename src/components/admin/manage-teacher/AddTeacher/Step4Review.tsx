@@ -104,10 +104,6 @@ export default function Step4({ formData }: any) {
         </span>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">LRN : </span>
-            <span className="text-sm font-light">{formData.employeeNumber}</span>
-          </div>
-          <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Advisory Grade : </span>
             <span className="text-sm font-light">{formData.grade}</span>
           </div>
@@ -161,18 +157,18 @@ export default function Step4({ formData }: any) {
             <span className="text-sm font-light">{formData.birth_date}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Student Status : </span>
+            <span className="text-sm font-semibold">Teacher Status : </span>
             <span className="text-sm font-light">
-              {formData.student_status}
+              {formData.status === "1" ? "Active" : "Inactive"}
             </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Email : </span>
-            <span className="text-sm font-light">{formData.personal_email}</span>
+            <span className="text-sm font-light">{formData.email}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Contact Number : </span>
-            <span className="text-sm font-light">{formData.contact_number}</span>
+            <span className="text-sm font-light">{formData.contact_no}</span>
           </div>
         </div>
       </div>

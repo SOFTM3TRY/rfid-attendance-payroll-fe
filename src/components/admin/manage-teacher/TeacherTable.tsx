@@ -75,7 +75,7 @@ export function TeacherTable<TData>({
   return (
     <div className="w-full">
       <div className="rounded-md border">
-        <div className="my-5 flex flex-wrap gap-4 justify-between items-center">
+        <div className="my-5 flex flex-wrap gap-4 justify-between items-center px-5">
           <FilterTable pagination={pagination} setPagination={setPagination} />
 
           {/* Search */}
