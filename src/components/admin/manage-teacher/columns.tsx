@@ -12,19 +12,19 @@ import Registration from "@/components/admin/manage-student/Registration/Registr
 import { useState } from "react";
 
 export type Teacher = {
-  LRN: string;
+  employee_number: string;
   first_name: string;
   middle_name?: string;
   last_name: string;
   suffix?: string;
   grade_id: number;
   section: number;
-  status: "Active" | "Inactive" | number;
+  status: "Active" | "Inactive";
 };
 
 export const columns: ColumnDef<Teacher>[] = [
   {
-    accessorKey: "LRN",
+    accessorKey: "employee_number",
     header: () => (
       <Button variant="ghost" size="sm">
         <ShieldUser className="text-blue-500" /> Emloyee No.
@@ -69,7 +69,7 @@ export const columns: ColumnDef<Teacher>[] = [
         <BookAudio className="text-violet-500" /> Advisory Section
       </Button>
     ),
-    cell: ({ row }) => <span>{row.original.section}</span>,
+    cell: ({ row }) => <span>{row.original.section || "N/A"}</span>,
   },
   {
     accessorKey: "status",
@@ -79,14 +79,23 @@ export const columns: ColumnDef<Teacher>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const statusValue = row.original.status;
-      const isActive = statusValue === "Active" || statusValue === 1;
-
+      const status = row.original.status;
       return (
         <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
-          {isActive ? "Active" : "Inactive"}
-          <span className={`ml-1 ${isActive ? "text-green-500" : "text-red-500"}`}>
-            {isActive ? <UserCheck className="w-4 h-4" /> : <UserX className="w-4 h-4" />}
+          {/* @ts-ignore */}
+          {row.original.status == 1 ? "Active" : "Inactive"}
+          <span
+            className={`ml-1 ${
+              // @ts-ignore
+              row.original.status == 1 ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {/* @ts-ignore */}
+            {row.original.status == 1 ? (
+              <UserCheck className="w-4 h-4" />
+            ) : (
+              <UserX className="w-4 h-4" />
+            )}
           </span>
         </span>
       );

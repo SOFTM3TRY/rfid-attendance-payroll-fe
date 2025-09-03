@@ -34,3 +34,20 @@ export const CreateTeacher = async (token: string, teacherData: any) => {
     throw error;
   }
 }
+
+export const GetAllTeachers = async (token: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-all-teachers`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

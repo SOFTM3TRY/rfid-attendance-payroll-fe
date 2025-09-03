@@ -48,16 +48,17 @@ export function TeacherTable<TData>({
   setPagination,
   totalRows,
 }: Props<TData>) {
+  
   const table = useReactTable({
-    data,
-    columns,
-    state: { pagination },
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    manualPagination: true,
-    pageCount: Math.ceil(totalRows / pagination.pageSize),
-  });
+  data,
+  columns,
+  state: { pagination },
+  onPaginationChange: setPagination,
+  getCoreRowModel: getCoreRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
+  manualPagination: true, // ✅ Enable server-side pagination
+  pageCount: Math.ceil(totalRows / pagination.pageSize),
+});
 
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [search, setSearch] = useState("");
@@ -71,6 +72,7 @@ export function TeacherTable<TData>({
     setSearch(e.target.value);
     setPagination((p) => ({ ...p, pageIndex: 0 })); // reset page on search change
   };
+  
 
   return (
     <div className="w-full">

@@ -66,6 +66,7 @@ export default function Profile() {
             </div>
 
             <div className="p-2 h-full mt-15 z-1">
+             
               PROFILE PROFILE  
               PROFILE PROFILE  
               PROFILE PROFILE  
