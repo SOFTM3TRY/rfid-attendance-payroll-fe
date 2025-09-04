@@ -1,5 +1,4 @@
-import { CountTeacherActive } from "@/services/Teacher_service";
-import { GetAllTeachers } from "@/services/Teacher_service";
+import { CountTeacherActive,GetAllTeachers } from "@/services/Teacher_service";
 import { useQuery } from "@tanstack/react-query";
 
 export const useTeacherActiveCount = (token: string | null) => {

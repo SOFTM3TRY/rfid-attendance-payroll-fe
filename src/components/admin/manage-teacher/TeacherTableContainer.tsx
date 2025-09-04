@@ -35,8 +35,17 @@ export function TeacherTableContainer() {
     }));
   }, [teacherList]);
 
+  const paginatedData = useMemo(() => {
+    const start = pagination.pageIndex * pagination.pageSize;
+    const end = start + pagination.pageSize;
+    return mappedTeachers.slice(start, end);
+  }, [pagination, mappedTeachers]);
+
   if (isLoading) return <p className="text-center mt-10">Loading...</p>;
-  if (isError) return <p className="text-center mt-10 text-red-500">Failed to load teachers.</p>;
+  if (isError)
+    return (
+      <p className="text-center mt-10 text-red-500">Failed to load teachers.</p>
+    );
 
   return (
     <div className="mt-10">
@@ -50,7 +59,7 @@ export function TeacherTableContainer() {
 
       <TeacherTable
         columns={columns}
-        data={mappedTeachers}
+        data={paginatedData}
         pagination={pagination}
         setPagination={setPagination}
         totalRows={mappedTeachers.length}

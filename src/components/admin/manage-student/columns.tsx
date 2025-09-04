@@ -15,6 +15,12 @@ import ShowAttendanceHistory from "@/components/admin/manage-student/ShowAttenda
 import Registration from "@/components/admin/manage-student/Registration/Registration";
 
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import {
   Eye,
   SquarePen,
   TableProperties,
@@ -138,6 +144,27 @@ export const columns: ColumnDef<Section>[] = [
 
       return (
         <>
+        <div className="flex gap-2">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 w-7 p-0"
+                        onClick={() => console.log("Edit", row.original)}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="top"
+                      align="center"
+                      className="block group-data-[collapsible=icon]:hidden"
+                    >
+                      Edit {row.original.id}
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
           <ShowProfile
             open={openView}
             setOpen={setOpenView}

@@ -24,7 +24,7 @@ import { useClientOnly } from "@/hooks/useClientOnly";
 
 import Loader from "@/components/Loader";
 
-import GradeTabsPage from "@/components/admin/manage-student/GradeTabsPage";
+import SystemTabPage from "@/components/admin/manage-system/SystemTabPage";
 
 import { Users } from "lucide-react";
 
@@ -66,7 +66,7 @@ export default function manageSettings() {
             </div>
 
             <div className="p-2 h-full mt-15 z-1">
-              <GradeTabsPage />
+              <SystemTabPage />
             </div>
           </div>
           <Footer />

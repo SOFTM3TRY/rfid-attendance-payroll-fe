@@ -7,15 +7,11 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-
 import {
   ChevronsLeft,
   ChevronLeft,
   ChevronRight,
   ChevronsRight,
-  Search,
 } from "lucide-react";
 
 import {
@@ -28,11 +24,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
-import { columns } from "@/components/admin/manage-teacher/columns";
-import { FiltersDropdown } from "@/components/admin/manage-student/FiltersDropdown";
-import { FilterTable } from "@/components/admin/manage-student/Filtertable";
-import { FiltersDropdownStatus } from "@/components/admin/manage-student/FiltersDropdownStatus";
-
 interface Props<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
@@ -41,14 +32,13 @@ interface Props<TData> {
   totalRows: number;
 }
 
-export function TeacherTable<TData>({
+export function ManageSectionTable<TData>({
   columns,
   data,
   pagination,
   setPagination,
   totalRows,
 }: Props<TData>) {
-  
   const table = useReactTable({
     data,
     columns,
@@ -56,54 +46,17 @@ export function TeacherTable<TData>({
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    pageCount: Math.ceil(totalRows / pagination.pageSize),
   });
 
   const start = pagination.pageIndex * pagination.pageSize + 1;
   const end = Math.min(start + data.length - 1, totalRows);
   const totalPages = Math.ceil(totalRows / pagination.pageSize);
 
-  const [search, setSearch] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    setPagination((p) => ({ ...p, pageIndex: 0 }));
-  };
-
   return (
     <div className="w-full">
       <div className="rounded-md border">
-        <div className="my-5 flex flex-wrap gap-4 justify-between items-center px-5">
-          <FilterTable pagination={pagination} setPagination={setPagination} />
-
-          {/* Search */}
-          <div className="relative max-w-md w-80">
-            <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
-            <Input
-              placeholder="Search Full Name or Employee No...."
-              value={search}
-              onChange={handleFilterChange}
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <FiltersDropdownStatus
-              selectedFilters={selectedStatus}
-              setSelectedFilters={(filters) => {
-                setSelectedStatus(filters);
-                setPagination((p) => ({ ...p, pageIndex: 0 }));
-              }}
-            />
-            {/* <FiltersDropdown
-              selectedFilters={selectedFilters}
-              setSelectedFilters={(filters) => {
-                setSelectedFilters(filters);
-                setPagination((p) => ({ ...p, pageIndex: 0 }));
-              }}
-            /> */}
-          </div>
-        </div>
-
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
