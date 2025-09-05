@@ -24,6 +24,7 @@ import EditAddressInfo from "@/components/admin/manage-student/EditStudent/EditA
 import EditGuardianInfo from "@/components/admin/manage-student/EditStudent/EditGuardianInfo";
 
 import SplitText from "@/components/animata/text/split-text";
+import toast from "react-hot-toast";
 
 export default function EditStudent({
   open,
@@ -63,10 +64,14 @@ export default function EditStudent({
 
   const handleSubmitWithAlert = async () => {
     await handleSubmit();
-    alert(
-      "Student data updated successfully:\n\n" +
-        JSON.stringify(data, null, 2)
-    );
+
+    toast.success("Student data updated successfully");
+
+    setOpen(false);
+    // alert(
+    //   "Student data updated successfully:\n\n" +
+    //     JSON.stringify(data, null, 2)
+    // );
   };
 
   return (
