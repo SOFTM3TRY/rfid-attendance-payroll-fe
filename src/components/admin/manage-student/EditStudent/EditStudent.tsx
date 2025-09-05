@@ -23,7 +23,7 @@ import EditPrimaryInfo from "@/components/admin/manage-student/EditStudent/EditP
 import EditAddressInfo from "@/components/admin/manage-student/EditStudent/EditAddressInfo";
 import EditGuardianInfo from "@/components/admin/manage-student/EditStudent/EditGuardianInfo";
 
-import  SplitText from "@/components/animata/text/split-text";
+import SplitText from "@/components/animata/text/split-text";
 
 export default function EditStudent({
   open,
@@ -51,7 +51,7 @@ export default function EditStudent({
     setFormData,
   } = useStudentForm();
 
-  const data = row?.original || {}; // ✅ Extract data from row
+  const data = row?.original || {};
   const fullName = [
     data.last_name,
     data.first_name,
@@ -60,6 +60,14 @@ export default function EditStudent({
   ]
     .filter(Boolean)
     .join(" ");
+
+  const handleSubmitWithAlert = async () => {
+    await handleSubmit();
+    alert(
+      "Student data updated successfully:\n\n" +
+        JSON.stringify(data, null, 2)
+    );
+  };
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -128,7 +136,11 @@ export default function EditStudent({
 
         <SheetFooter className="fixed bottom-5 right-5">
           <div className="flex items-center justify-end gap-5">
-            <Button onClick={handleSubmit} className="w-40" disabled={loading}>
+            <Button
+              onClick={handleSubmitWithAlert}
+              className="w-40"
+              disabled={loading}
+            >
               {loading ? (
                 <>
                   <Loader2 className="animate-spin mr-2" size={18} />
