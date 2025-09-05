@@ -39,8 +39,6 @@ export default function Step1({
     SectionID
   );
 
-  console.log("Sectiondata", SectionsData);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {

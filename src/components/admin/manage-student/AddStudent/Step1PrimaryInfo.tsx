@@ -28,10 +28,6 @@ export default function Step1({
   const SectionID=formData.grade
   const {data:SectionsData,isLoading:isLoadingSectionsData}=useSection(token as string,SectionID)
 
- 
- console.log("Sectiondata",SectionsData);
- 
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {

@@ -62,16 +62,13 @@ export default function FlipCard({
 const {token}=useAuth();
 const [isLoading,setIsLoading]=useState(false)
 const {register,handleSubmit,} =useForm()
-console.log("data",data.lrn);
   const onSubmit = async (data: any) => {
     setIsLoading(true)
-    console.log("data",data);
     try {
       const response = await RegisterRFIDToStudent(token as string ,data.lrn,data )
-      console.log("response",response);
       toast.success("RFID Successfully Registered");
     } catch (error) {
-      console.error("Error submitting form:", error);
+      toast.error("RFID Registration Failed");
     }finally{
       setIsLoading(false)
     }

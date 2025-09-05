@@ -24,7 +24,6 @@ export default function ProtectedRoute({
   useEffect(() => {
     if (!isLoadingUserDetails && userDetails) {
       const userRole = userDetails?.data.role_id;
-      console.log("User role:", userRole);
       if (role && userRole !== parseInt(role)) {
         toast.error("You do not have access to this page.");
         router.push("/unauthorized");
@@ -36,7 +35,6 @@ export default function ProtectedRoute({
   useEffect(() => {
     const validateToken = async () => {
       const token = getCookie("token");
-      console.log("Token from cookies:", token);
 
       try {
         await checkToken(token as string);

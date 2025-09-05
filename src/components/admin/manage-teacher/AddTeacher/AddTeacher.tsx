@@ -54,7 +54,6 @@ export default function AddTeacher() {
     }
   }, [formData]);
 
-  console.log("FormData", formData);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>

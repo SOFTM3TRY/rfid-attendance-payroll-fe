@@ -48,7 +48,7 @@ interface Section {
 
 export default function GradeTabsPage() {
 
-    const [selectedGrade, setSelectedGrade] = useState<string | null>(null); // Initialize the selectedGrade
+  const [selectedGrade, setSelectedGrade] = useState<string | null>(null); // Initialize the selectedGrade
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
@@ -57,15 +57,10 @@ export default function GradeTabsPage() {
   const { data: studentDetails, isLoading: isLoadingStudent, isError } = useStudentDetails(token as string);
   const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(token as string);
 
-  console.log("All Grades:", GradesData);
-  console.log("Student Details:", studentDetails);
-
   // Pagination state here
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
   const baseData: Section[] = Array.isArray(studentDetails?.data) ? studentDetails?.data : [];
-  console.log("Base Data:", baseData);
-
 
   const gradeComponents: Record<string, React.ElementType> = {
     1: GradeOneTable,
@@ -93,8 +88,6 @@ export default function GradeTabsPage() {
       return gradeMatch && sectionMatch && statusMatch && searchMatch;
     });
     
-    console.log(`Filtered Data for Grade ${grade_id}:`, filteredData);
-    
     return filteredData;
   };
 
@@ -108,7 +101,6 @@ export default function GradeTabsPage() {
       setSelectedGrade(GradesData.data[0]?.id); // Set initial grade to the first available grade
     }
   }, [GradesData, selectedGrade]);
-  console.log("Selected Grade:", selectedGrade);  
 
   return (
     <main>
