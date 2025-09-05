@@ -52,7 +52,7 @@ export default function AddStudent() {
             strokeWidth={3}
             className="bg-white rounded-full text-teal-900 p-0.5 mr-1"
           />
-          Add Student
+          Add Grade
         </Button>
       </SheetTrigger>
 
@@ -63,14 +63,14 @@ export default function AddStudent() {
         <SheetHeader className="text-zinc-900 mb-4">
           <SheetTitle className="flex items-center">
             <UserRoundPlus className="mr-2 w-5 h-5 text-teal-500" />
-            Add Student
+            Add Grade 
           </SheetTitle>
           <SheetDescription>
-            Enter details to add a new student to the system
+            Add New Grade
           </SheetDescription>
         </SheetHeader>
 
-        <Tabs value={`step${step}`} className="w-full p-5">
+        {/* <Tabs value={`step${step}`} className="w-auto p-5">
           <TabsList className="grid w-full grid-cols-4 mb-4 gap-5 h-20">
             <TabsTrigger
               value="step1"
@@ -98,9 +98,9 @@ export default function AddStudent() {
                   </h1>
                 </div>
               </div>
-            </TabsTrigger>
+            </TabsTrigger> */}
 
-            <TabsTrigger
+            {/* <TabsTrigger
               value="step2"
               disabled={step < 2}
               className={`flex items-start justify-start p-3 ${
@@ -181,10 +181,10 @@ export default function AddStudent() {
                   </h1>
                 </div>
               </div>
-            </TabsTrigger>
-          </TabsList>
+            </TabsTrigger> */}
+          {/* </TabsList> */}
 
-          <TabsContent value="step1" className="p-5 mt-5">
+          {/* <TabsContent value="step1" className="p-5 mt-5">
             <Step1
               formData={formData}
               setFormData={setFormData}
@@ -192,8 +192,8 @@ export default function AddStudent() {
               setErrors={setErrors}
               loading={loading}
             />
-          </TabsContent>
-          <TabsContent value="step2" className="p-5 mt-5">
+          </TabsContent> */}
+          {/* <TabsContent value="step2" className="p-5 mt-5">
             <Step2
               formData={formData}
               setFormData={setFormData}
@@ -213,8 +213,8 @@ export default function AddStudent() {
           </TabsContent>
           <TabsContent value="step4" className="p-5 mt-5">
             <Step4 formData={formData} />
-          </TabsContent>
-        </Tabs>
+          </TabsContent> */}
+        {/* </Tabs> */}
 
         <SheetFooter className="fixed bottom-5 right-10 mt-10">
           <div className="flex gap-2 justify-end">

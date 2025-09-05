@@ -18,7 +18,7 @@ import {
   UserCheck,
 } from "lucide-react";
 
-import AddStudent from "@/components/admin/manage-student/AddStudent/AddStudent";
+import AddStudent from "@/components/admin/manage-system/AddGrade/AddGrade";
 
 import {
   Table,
