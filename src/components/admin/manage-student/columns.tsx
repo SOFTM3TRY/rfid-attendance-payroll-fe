@@ -144,7 +144,7 @@ export const columns: ColumnDef<Section>[] = [
 
       return (
         <>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -164,7 +164,7 @@ export const columns: ColumnDef<Section>[] = [
                       Edit {row.original.id}
                     </TooltipContent>
                   </Tooltip>
-                </div>
+                </div> */}
           <ShowProfile
             open={openView}
             setOpen={setOpenView}
