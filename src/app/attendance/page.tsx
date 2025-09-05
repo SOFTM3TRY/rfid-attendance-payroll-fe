@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AttendanceTimeIn } from "@/services/Attendance";
 
 type ScanMode = "time_in" | "time_out";
 type FormData = { rfid_uid: string };
@@ -62,14 +63,26 @@ export default function Attendance() {
 
   // Time In onSubmit
   const onSubmitIn = async (data: FormData) => {
-    if (!data.rfid_uid) return;
-
+    if (!data?.rfid_uid) return;
+  
+  const RFID = data?.rfid_uid
     setIsLoading(true);
     try {
-      const jsonPayload = JSON.stringify({ rfid_uid: data.rfid_uid });
-      console.log("📥 Time In Payload:", jsonPayload);
-      toast.success("✅ Time In scanned successfully");
-      // toast.success(resposnse.message);
+     
+      try{
+      const response = await AttendanceTimeIn (RFID)
+      console.log(response)
+      toast.success(response.message)
+      }catch(error){
+        // @ts-ignore
+        if (error.response && error.response.data) {
+          // @ts-ignore
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("❌ Failed to process Time In");
+        }
+      }
+     
       resetIn({ rfid_uid: "" });
       inputRefIn.current?.focus();
     } catch {
