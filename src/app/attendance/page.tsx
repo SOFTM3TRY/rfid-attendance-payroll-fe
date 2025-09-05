@@ -68,12 +68,12 @@ export default function Attendance() {
     try {
       const jsonPayload = JSON.stringify({ rfid_uid: data.rfid_uid });
       console.log("📥 Time In Payload:", jsonPayload);
-      toast.success("Time In scanned successfully");
+      toast.success("✅ Time In scanned successfully");
       // toast.success(resposnse.message);
       resetIn({ rfid_uid: "" });
       inputRefIn.current?.focus();
     } catch {
-      toast.error("Failed to process Time In");
+      toast.error("❌ Failed to process Time In");
     } finally {
       setIsLoading(false);
     }
@@ -87,12 +87,12 @@ export default function Attendance() {
     try {
       const jsonPayload = JSON.stringify({ rfid_uid: data.rfid_uid });
       console.log("📤 Time Out Payload:", jsonPayload);
-      toast.success("Time Out scanned successfully");
+      toast.success("✅ Time Out scanned successfully");
       // toast.success(resposnse.message);
       resetOut({ rfid_uid: "" });
       inputRefOut.current?.focus();
     } catch {
-      toast.error("Failed to process Time Out");
+      toast.error("❌ Failed to process Time Out");
     } finally {
       setIsLoading(false);
     }
@@ -129,7 +129,7 @@ export default function Attendance() {
       <div className="flex flex-col items-center gap-4 justify-center">
         <img src="/logo.png" alt="logo" className="w-32 h-32" />
         <SplitText text="Young Generation Academy" />
-        <h1 className="text-4xl font-bold mb-5 text-sky-200">Attendance Monitoring System</h1>
+        <h1 className="text-4xl font-bold mb-5 text-sky-300">Attendance Monitoring System</h1>
         <p className="text-sm px-5 py-2 bg-zinc-200 dark:bg-zinc-900 rounded-full text-dark dark:text-white animate-bounce">
           Tap your RFID to mark your attendance
         </p>
