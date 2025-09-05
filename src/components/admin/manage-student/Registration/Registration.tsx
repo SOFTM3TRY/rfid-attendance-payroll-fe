@@ -73,6 +73,9 @@ export default function FlipCard({
       );
 
       toast.success("RFID Successfully Registered");
+      // reset input
+      const input = document.getElementById("rfid_uid") as HTMLInputElement;
+      input.value = "";
     } catch (error) {
       toast.error("RFID Registration Failed");
     } finally {
@@ -183,10 +186,11 @@ export default function FlipCard({
                 autoFocus
                 {...register("rfid_uid")}
                 className="text-zinc-200 dark:text-zinc-900 border-none focus:outline-none focus:ring-none focus:shadow-outline"
+                id="rfid_uid"
               />
             </form>
 
-            <hr className="mt-10"/>
+            <hr className="mt-10" />
             <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
               <TriangleAlert
                 strokeWidth={3}

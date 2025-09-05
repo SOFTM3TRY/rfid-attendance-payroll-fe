@@ -72,21 +72,21 @@ export default function Attendance() {
       try{
       const response = await AttendanceTimeIn (RFID)
       console.log(response)
-      toast.success(response.message)
+      toast.success(response.data.message);
       }catch(error){
         // @ts-ignore
         if (error.response && error.response.data) {
           // @ts-ignore
           toast.error(error.response.data.message);
         } else {
-          toast.error("❌ Failed to process Time In");
+          toast.error("Failed to process Time In");
         }
       }
      
       resetIn({ rfid_uid: "" });
       inputRefIn.current?.focus();
     } catch {
-      toast.error("❌ Failed to process Time In");
+      toast.error("Failed to process Time In");
     } finally {
       setIsLoading(false);
     }
@@ -99,13 +99,13 @@ export default function Attendance() {
     setIsLoading(true);
     try {
       const jsonPayload = JSON.stringify({ rfid_uid: data.rfid_uid });
-      console.log("📤 Time Out Payload:", jsonPayload);
-      toast.success("✅ Time Out scanned successfully");
+      console.log("Time Out Payload:", jsonPayload);
+      toast.success("Time Out scanned successfully");
       // toast.success(resposnse.message);
       resetOut({ rfid_uid: "" });
       inputRefOut.current?.focus();
     } catch {
-      toast.error("❌ Failed to process Time Out");
+      toast.error("Failed to process Time Out");
     } finally {
       setIsLoading(false);
     }
