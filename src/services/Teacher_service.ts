@@ -51,3 +51,20 @@ export const GetAllTeachers = async (token: string) => {
     throw error;
   }
 }
+
+export const GetTeacherDetails = async (token: string, id: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-teacher-by-id/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
