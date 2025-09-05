@@ -1,5 +1,3 @@
-"use client";
-
 import { useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
 import { TeacherTable } from "@/components/admin/manage-teacher/TeacherTable";
@@ -13,16 +11,16 @@ export function TeacherTableContainer() {
   const { token } = useAuth();
   const { data: apiData, isLoading, isError } = useAllTeachers(token);
 
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
 
-  // Extract teacher list from API response
   const teacherList = useMemo(() => {
-    if (!apiData?.data) return [];
-    return Array.isArray(apiData.data) ? apiData.data : [];
+    return Array.isArray(apiData?.data) ? apiData.data : [];
   }, [apiData]);
 
-  // Map teacherList to match the expected <Teacher> type
-  const mappedTeachers: Teacher[] = useMemo(() => {
+  const mappedTeachers = useMemo<Teacher[]>(() => {
     return teacherList.map((teacher: any) => ({
       employee_number: teacher.employee_no,
       first_name: teacher.first_name,
@@ -35,31 +33,28 @@ export function TeacherTableContainer() {
     }));
   }, [teacherList]);
 
-  const paginatedData = useMemo(() => {
-    const start = pagination.pageIndex * pagination.pageSize;
-    const end = start + pagination.pageSize;
-    return mappedTeachers.slice(start, end);
-  }, [pagination, mappedTeachers]);
-
-  if (isLoading) return <p className="text-center mt-10">Loading...</p>;
+  if (isLoading)
+    return <p className="text-center mt-10">Loading...</p>;
   if (isError)
     return (
-      <p className="text-center mt-10 text-red-500">Failed to load teachers.</p>
+      <p className="text-center mt-10 text-red-500">
+        Failed to load teachers.
+      </p>
     );
 
   return (
-    <div className="mt-10">
-      <div className="flex justify-between items-center mb-5">
+    <div className="" style={{ pointerEvents: "auto" }}>
+      <div className="flex justify-between items-center mb-10">
         <p className="flex items-center gap-1">
-          <Table2 className="w-4 h-4 text-violet-500" />
-          Teacher Table
+          <Table2 className="w-6 h-6 text-violet-500" />
+          Teachers Table
         </p>
         <AddTeacher />
       </div>
 
       <TeacherTable
         columns={columns}
-        data={paginatedData}
+        data={mappedTeachers}              
         pagination={pagination}
         setPagination={setPagination}
         totalRows={mappedTeachers.length}

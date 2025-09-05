@@ -48,7 +48,6 @@ export function TeacherTable<TData>({
   setPagination,
   totalRows,
 }: Props<TData>) {
-  
   const table = useReactTable({
     data,
     columns,
@@ -71,9 +70,9 @@ export function TeacherTable<TData>({
   };
 
   return (
-    <div className="w-full">
-      <div className="rounded-md border">
-        <div className="my-5 flex flex-wrap gap-4 justify-between items-center px-5">
+    <div className="w-full" style={{ pointerEvents: "auto" }}>
+      <div>
+        <div className="mt-5 mb-10 flex flex-wrap gap-4 justify-between items-center">
           <FilterTable pagination={pagination} setPagination={setPagination} />
 
           {/* Search */}
@@ -104,12 +103,12 @@ export function TeacherTable<TData>({
           </div>
         </div>
 
-        <Table>
+        <Table className="rounded-md border">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="py-3">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -124,7 +123,7 @@ export function TeacherTable<TData>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -146,7 +145,7 @@ export function TeacherTable<TData>({
           </TableBody>
         </Table>
 
-        <div className="flex items-center justify-between px-5 py-4 space-x-2">
+        <div className="flex items-center justify-between px-5 py-4 space-x-2 mt-3">
           <div className="text-sm text-muted-foreground flex-1">
             Showing {start} to {end} of {totalRows} entries
           </div>

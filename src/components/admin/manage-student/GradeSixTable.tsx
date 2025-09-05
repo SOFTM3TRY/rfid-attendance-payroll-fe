@@ -62,7 +62,7 @@ export function GradeSixTable<TData>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="py-3">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -77,7 +77,7 @@ export function GradeSixTable<TData>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -99,7 +99,7 @@ export function GradeSixTable<TData>({
           </TableBody>
         </Table>
 
-        <div className="flex items-center justify-between px-5 py-4 space-x-2">
+        <div className="flex items-center justify-between px-5 py-4 space-x-2 mt-3">
           <div className="text-sm text-muted-foreground flex-1">
             Showing {start} to {end} of {totalRows} entries
           </div>

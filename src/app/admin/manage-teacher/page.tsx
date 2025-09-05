@@ -48,7 +48,7 @@ export default function ManageTeacher() {
               </Breadcrumb>
             </div>
 
-            <div className="p-2 h-full mt-4">
+            <div className="p-2 h-full mt-10 z-1">
               <TeacherTableContainer />
             </div>
           </div>

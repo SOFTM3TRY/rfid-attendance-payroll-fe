@@ -63,6 +63,49 @@ export type AttendanceEntry = {
   remarks: "Present" | "Late" | "Absent";
 };
 
+// ✅ Generate 40 fake entries based on student's LRN
+function generateFakeAttendanceData(lrn: string): AttendanceEntry[] {
+  const remarksList: AttendanceEntry["remarks"][] = [
+    "Present",
+    "Late",
+    "Absent",
+  ];
+  const today = new Date();
+
+  return Array.from({ length: 40 }).map((_, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+    const month = date.toLocaleString("default", { month: "long" });
+    const formattedDate = `${month} ${date.getDate()}, ${date.getFullYear()}`;
+
+    const timeIn = `${8 + Math.floor(Math.random() * 2)}:${Math.floor(
+      Math.random() * 60
+    )
+      .toString()
+      .padStart(2, "0")} AM`;
+
+    const timeOut = `${3 + Math.floor(Math.random() * 2)}:${Math.floor(
+      Math.random() * 60
+    )
+      .toString()
+      .padStart(2, "0")} PM`;
+
+    return {
+      // iref_id: `IREF-${lrn.slice(-4)}-${lrn.slice(-3)}`,
+      lrn,
+      grade: `Grade ${
+        ["One", "Two", "Three", "Four", "Five", "Six"][
+          Math.floor(Math.random() * 6)
+        ]
+      }`,
+      date: formattedDate,
+      time_in: timeIn,
+      time_out: timeOut,
+      remarks: remarksList[i % 3],
+    };
+  });
+}
+
 const columns: ColumnDef<AttendanceEntry>[] = [
   // {
   //   accessorKey: "iref_id",
@@ -75,7 +118,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "lrn",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <KeyRound className="text-blue-500 mr-1 w-4 h-4" /> LRN
       </div>
     ),
@@ -83,7 +126,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "grade",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <GraduationCap className="text-teal-500 mr-1 w-4 h-4" /> Grade
       </div>
     ),
@@ -96,7 +139,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "date",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <CalendarDays className="text-violet-500 mr-1 w-4 h-4" /> Date
       </div>
     ),
@@ -104,7 +147,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "time_in",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <ClockArrowUp className="text-green-500 mr-1 w-4 h-4" /> Time In
       </div>
     ),
@@ -112,7 +155,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "time_out",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <ClockArrowDown className="text-red-500 mr-1 w-4 h-4" /> Time Out
       </div>
     ),
@@ -120,7 +163,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "remarks",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <Stamp className="text-green-500 mr-1 w-4 h-4" /> Remarks
       </div>
     ),
@@ -148,7 +191,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
 ];
 
 export function AttendanceHistory({ lrn }: { lrn: string }) {
-  const [data, setData] = React.useState<AttendanceEntry[]>([]);
+  const data = React.useMemo(() => generateFakeAttendanceData(lrn), [lrn]);
 
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
@@ -168,13 +211,13 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination,
+      pagination, // <-- ADD THIS LINE
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
+    onPaginationChange: setPagination, // <-- ADD THIS LINE
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -246,13 +289,13 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
         </DropdownMenu>
       </div>
 
-      <div className="overflow-hidden rounded-md border my-5">
+      <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="py-5">
+                  <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -269,25 +312,28 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-5 text-center">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-10 text-md">
-                  This student has no attendance history.
+                <TableCell colSpan={columns.length} className="text-center">
+                  No results.
                 </TableCell>
               </TableRow>
-              )}
+            )}
           </TableBody>
         </Table>
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-5 py-4 space-x-2">
+      <div className="flex items-center justify-between px-5 py-4 space-x-2">
         <div className="text-sm text-muted-foreground flex-1">
           Showing {start} to {end} of {totalRows} entries
         </div>
@@ -336,5 +382,3 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
     </div>
   );
 }
-
-/*******  a31b22ce-9174-4c1c-9d94-c559b98e311f  *******/

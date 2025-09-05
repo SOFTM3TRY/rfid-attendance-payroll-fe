@@ -43,7 +43,6 @@ export default function AddStudent() {
     formData, setFormData
   } = useStudentForm();
 
-  console.log("FormData", formData);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>

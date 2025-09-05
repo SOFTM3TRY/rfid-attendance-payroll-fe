@@ -41,13 +41,13 @@ export default function ManageStudent() {
   }
 
   return (
-    <ProtectedRoute role="1">
+    <ProtectedRoute role="1" >
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
         <AppSidebar />
         <main className="w-full h-auto">
           <Navbar />
 
-          <div className="p-5">
+          <div className="p-5" style={{ pointerEvents: "auto" }}>
             <div className="flex items-center justify-between">
               <h1 className="text-lg font-medium flex"><Users  className="mr-2 w-6 h-6 text-teal-500"/> Manage Students</h1>
               <Breadcrumb>
@@ -65,7 +65,7 @@ export default function ManageStudent() {
               </Breadcrumb>
             </div>
 
-            <div className="p-2 h-full mt-15 z-1">
+            <div className="p-2 h-full mt-10 z-1">
               <GradeTabsPage />
             </div>
           </div>

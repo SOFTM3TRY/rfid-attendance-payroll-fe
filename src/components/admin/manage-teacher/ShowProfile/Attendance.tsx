@@ -54,7 +54,7 @@ import {
 import { FilterTable } from "@/components/admin/manage-student/Filtertable";
 
 export type AttendanceEntry = {
-  // iref_id: string;
+  iref_id: string;
   lrn: string;
   grade: string;
   date: string;
@@ -63,19 +63,74 @@ export type AttendanceEntry = {
   remarks: "Present" | "Late" | "Absent";
 };
 
+// ✅ Generate 40 fake entries based on student's LRN and grade
+function generateFakeAttendanceData(
+  lrn: string,
+  grade: string
+): AttendanceEntry[] {
+  const remarksList: AttendanceEntry["remarks"][] = [
+    "Present",
+    "Late",
+    "Absent",
+  ];
+  const today = new Date();
+
+  return Array.from({ length: 40 }).map((_, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+    const month = date.toLocaleString("default", { month: "long" });
+    const formattedDate = `${month} ${date.getDate()}, ${date.getFullYear()}`;
+
+    const timeIn = `${8 + Math.floor(Math.random() * 2)}:${Math.floor(
+      Math.random() * 60
+    )
+      .toString()
+      .padStart(2, "0")} AM`;
+
+    const timeOut = `${3 + Math.floor(Math.random() * 2)}:${Math.floor(
+      Math.random() * 60
+    )
+      .toString()
+      .padStart(2, "0")} PM`;
+
+    return {
+      iref_id: `IREF-${lrn.slice(-4)}-${lrn.slice(-3)}`,
+      lrn,
+      grade:
+        grade === "1"
+          ? "Grade One"
+          : grade === "2"
+          ? "Grade Two"
+          : grade === "3"
+          ? "Grade Three"
+          : grade === "4"
+          ? "Grade Four"
+          : grade === "5"
+          ? "Grade Five"
+          : grade === "6"
+          ? "Grade Six"
+          : "",
+      date: formattedDate,
+      time_in: timeIn,
+      time_out: timeOut,
+      remarks: remarksList[i % 3],
+    };
+  });
+}
+
 const columns: ColumnDef<AttendanceEntry>[] = [
-  // {
-  //   accessorKey: "iref_id",
-  //   header: () => (
-  //     <div className="flex items-center">
-  //       <KeyRound className="text-blue-500 mr-1 w-4 h-4" /> RFID UID
-  //     </div>
-  //   ),
-  // },
+  {
+    accessorKey: "iref_id",
+    header: () => (
+      <div className="flex items-center">
+        <KeyRound className="text-blue-500 mr-1 w-4 h-4" /> RFID UID
+      </div>
+    ),
+  },
   {
     accessorKey: "lrn",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <KeyRound className="text-blue-500 mr-1 w-4 h-4" /> LRN
       </div>
     ),
@@ -83,7 +138,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "grade",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <GraduationCap className="text-teal-500 mr-1 w-4 h-4" /> Grade
       </div>
     ),
@@ -96,7 +151,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "date",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <CalendarDays className="text-violet-500 mr-1 w-4 h-4" /> Date
       </div>
     ),
@@ -104,7 +159,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "time_in",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <ClockArrowUp className="text-green-500 mr-1 w-4 h-4" /> Time In
       </div>
     ),
@@ -112,7 +167,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "time_out",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <ClockArrowDown className="text-red-500 mr-1 w-4 h-4" /> Time Out
       </div>
     ),
@@ -120,7 +175,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   {
     accessorKey: "remarks",
     header: () => (
-      <div className="flex items-center bg-zinc-200 px-2 py-2 dark:bg-zinc-800 rounded-md justify-center">
+      <div className="flex items-center">
         <Stamp className="text-green-500 mr-1 w-4 h-4" /> Remarks
       </div>
     ),
@@ -138,19 +193,22 @@ const columns: ColumnDef<AttendanceEntry>[] = [
         color =
           "text-red-50 bg-red-500 dark:text-red-700 dark:bg-red-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
 
-      return (
-        <div className={color}>
-           {value}
-        </div>
-      );
+      return <div className={color}>{value}</div>;
     },
   },
 ];
 
-export function AttendanceHistory({ lrn }: { lrn: string }) {
-  const [data, setData] = React.useState<AttendanceEntry[]>([]);
+export function Attendance({ lrn, grade }: { lrn: string; grade: string }) {
+  const data = React.useMemo(
+    () => generateFakeAttendanceData(lrn, grade),
+    [lrn, grade]
+  );
 
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
+
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
+    undefined
+  );
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -160,21 +218,29 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const filteredData = React.useMemo(() => {
+    if (!selectedMonth) return data;
+    return data.filter((entry) => {
+      const entryMonth = entry.date.split(" ")[0];
+      return entryMonth === selectedMonth;
+    });
+  }, [data, selectedMonth]);
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination,
+      pagination, // <-- ADD THIS LINE
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
+    onPaginationChange: setPagination, // <-- ADD THIS LINE
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -206,53 +272,58 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
 
         {/* Grade filter */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              Grade <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuCheckboxItem
-              checked={table.getColumn("grade")?.getFilterValue() === undefined}
-              onCheckedChange={(value) =>
-                value
-                  ? table.getColumn("grade")?.setFilterValue(undefined)
-                  : table.getColumn("grade")?.setFilterValue("Grade One")
-              }
-            >
-              Show all
-            </DropdownMenuCheckboxItem>
-            {[
-              "Grade One",
-              "Grade Two",
-              "Grade Three",
-              "Grade Four",
-              "Grade Five",
-              "Grade Six",
-            ].map((grade) => (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                {selectedMonth ?? "Filter by Month"}{" "}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
               <DropdownMenuCheckboxItem
-                key={grade}
-                checked={table.getColumn("grade")?.getFilterValue() === grade}
-                onCheckedChange={(value) =>
-                  value
-                    ? table.getColumn("grade")?.setFilterValue(grade)
-                    : table.getColumn("grade")?.setFilterValue(undefined)
-                }
+                checked={selectedMonth === undefined}
+                onCheckedChange={() => setSelectedMonth(undefined)}
               >
-                {grade}
+                Show all months
               </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
+              {[
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ].map((month) => (
+                <DropdownMenuCheckboxItem
+                  key={month}
+                  checked={selectedMonth === month}
+                  onCheckedChange={(value) =>
+                    value
+                      ? setSelectedMonth(month)
+                      : setSelectedMonth(undefined)
+                  }
+                >
+                  {month}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </DropdownMenu>
       </div>
 
-      <div className="overflow-hidden rounded-md border my-5">
+      <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="py-5">
+                  <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -269,25 +340,28 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-5 text-center">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-10 text-md">
-                  This student has no attendance history.
+                <TableCell colSpan={columns.length} className="text-center">
+                  No results.
                 </TableCell>
               </TableRow>
-              )}
+            )}
           </TableBody>
         </Table>
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-5 py-4 space-x-2">
+      <div className="flex items-center justify-between px-5 py-4 space-x-2">
         <div className="text-sm text-muted-foreground flex-1">
           Showing {start} to {end} of {totalRows} entries
         </div>
@@ -336,5 +410,3 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
     </div>
   );
 }
-
-/*******  a31b22ce-9174-4c1c-9d94-c559b98e311f  *******/

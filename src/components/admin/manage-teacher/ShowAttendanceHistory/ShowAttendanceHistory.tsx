@@ -17,7 +17,6 @@ import {
   CircleX,
   Loader2,
   Send,
-  TriangleAlert,
 } from "lucide-react";
 
 import PrimaryInfo from "@/components/admin/manage-student/ShowProfile/PrimaryInfoStudent";
@@ -119,14 +118,7 @@ export default function ShowAttendanceHistory({
               </span>
             </div>
             <div className="mt-10 p-5">
-              <AttendanceHistory data={data} />
-            </div>
-            <hr />
-            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
-              <TriangleAlert strokeWidth={3} className="mr-2 text-yellow-500 dark:text-yellow-400"/>This Content Not available Now.
-            </div>
-            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
-              <TriangleAlert strokeWidth={3} className="mr-2 text-yellow-500 dark:text-yellow-400"/>This Content Not available Now.
+              <AttendanceHistory lrn={data.lrn} />
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ import * as React from "react";
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, GraduationCap, Search } from "lucide-react";
+import { PlusIcon, GraduationCap, Search, Table2 } from "lucide-react";
 
 import { GradeOneTable } from "@/components/admin/manage-student/GradeOneTable";
 import { GradeTwoTable } from "@/components/admin/manage-student/GradeTwoTable";
@@ -112,6 +112,12 @@ export default function GradeTabsPage() {
 
   return (
     <main>
+      <div className="flex justify-between items-center mb-10">
+        <p className="flex items-center gap-1">
+          <Table2 className="w-6 h-6 text-violet-500" />
+          Students Table
+        </p>
+      </div>
       <Tabs
         value={selectedGrade || ""}
         onValueChange={(value) => {
@@ -119,8 +125,8 @@ export default function GradeTabsPage() {
           setPagination((p) => ({ ...p, pageIndex: 0 })); // reset page when grade changes
         }}
       >
-        <div className="flex justify-between mb-3">
-          <TabsList className="flex-wrap gap-3 bg-zinc-100 dark:bg-zinc-900">
+        <div className="flex justify-between items-center mb-3">
+          <TabsList className="flex-wrap gap-3 bg-zinc-100 dark:bg-zinc-900 p-2 h-14">
             {GradesData?.data.map((grade: any) => (
               <TabsTrigger
                 key={grade.id}
@@ -157,7 +163,7 @@ export default function GradeTabsPage() {
           <FilterTable pagination={pagination} setPagination={setPagination} />
 
           {/* Search */}
-          <div className="relative max-w-md w-80">
+          <div className="relative max-w-md w-80 mb-5">
             <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Search Full Name or LRN..."

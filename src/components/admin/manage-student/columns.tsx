@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +33,8 @@ import {
   UserX,
   History,
   FilePlus,
+  Pencil,
+  Grip,
 } from "lucide-react";
 
 export type Section = {
@@ -51,7 +53,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "lrn",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <ShieldUser className="text-blue-500" /> LRN
       </Button>
     ),
@@ -59,7 +61,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "FullName",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <User className="text-yellow-500" /> Full Name
       </Button>
     ),
@@ -72,7 +74,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "grade_id",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <GraduationCap className="text-green-500" /> Grade
       </Button>
     ),
@@ -93,7 +95,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "section",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <BookAudio className="text-violet-500" /> Section
       </Button>
     ),
@@ -106,7 +108,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "status",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <UserCog className="text-teal-500" /> Status
       </Button>
     ),
@@ -143,78 +145,141 @@ export const columns: ColumnDef<Section>[] = [
       const [openRegister, setOpenRegister] = useState(false);
 
       return (
-        <>
-        {/* <div className="flex gap-2">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 w-7 p-0"
-                        onClick={() => console.log("Edit", row.original)}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="top"
-                      align="center"
-                      className="block group-data-[collapsible=icon]:hidden"
-                    >
-                      Edit {row.original.id}
-                    </TooltipContent>
-                  </Tooltip>
-                </div> */}
-          <ShowProfile
-            open={openView}
-            setOpen={setOpenView}
-            row={row}
-            trigger={
-              <Button variant="outline" size="sm">
-                <Eye className="w-4 h-4 mr-1" />
-                View
-              </Button>
-            }
-          />
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="ml-2"
-            onClick={() => setOpenEdit(true)}
-          >
-            <SquarePen className="w-4 h-4 mr-1" />
-            Edit
-          </Button>
+        <div className="flex justify-start items-center" style={{ pointerEvents: "auto" }}>
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Grip strokeWidth={3} className="w-12 h-12 text-teal-800 dark:text-teal-300" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                align="center"
+                className="block group-data-[collapsible=icon]:hidden"
+              >
+                Actions
+              </TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setOpenView(true)}>
+                <Eye className="w-4 h-4 text-teal-700 dark:text-teal-500" />
+                View Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+                <SquarePen className="w-4 h-4 text-sky-700 dark:text-sky-500" />
+                Edit Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenHistory(true)}>
+                <History className="w-4 h-4 text-indigo-700 dark:text-indigo-500" />
+                Attendance History
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenRegister(true)}>
+                <FilePlus className="w-4 h-4 text-blue-700 dark:text-blue-500" />
+                Register
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <ShowProfile open={openView} setOpen={setOpenView} row={row} />
           <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="ml-2"
-            onClick={() => setOpenHistory(true)}
-          >
-            <History className="w-4 h-4 mr-1" />
-            History
-          </Button>
-          <ShowAttendanceHistory
-            open={openHistory}
-            setOpen={setOpenHistory}
-            row={row}
-          />
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="ml-2"
-            onClick={() => setOpenRegister(true)}
-          >
-            <FilePlus className="w-4 h-4 mr-1" />
-            Register
-          </Button>
+          <ShowAttendanceHistory open={openHistory} setOpen={setOpenHistory} row={row} />
           <Registration open={openRegister} setOpen={setOpenRegister} row={row} />
-        </>
+        </div>
       );
+
+      // return (
+      //   <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal">
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           size="sm"
+      //           onClick={() => setOpenView(true)}
+      //           className="flex items-center justify-center mr-1 bg-teal-700 hover:bg-teal-600 dark:bg-teal-600 text-white dark:hover:bg-teal-700 "
+      //         >
+      //           <Eye className="w-4 h-4" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         View {`${row.original.first_name} ${row.original.last_name}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <ShowProfile open={openView} setOpen={setOpenView} row={row} />
+
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           size="sm"
+      //           onClick={() => setOpenEdit(true)}
+      //           className="flex items-center justify-center mr-1 bg-sky-700 hover:bg-sky-600 dark:bg-sky-600 text-white dark:hover:bg-sky-700 "
+      //         >
+      //           <SquarePen className="w-4 h-4" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         Edit {`${row.original.first_name} ${row.original.last_name}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
+
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           size="sm"
+      //           onClick={() => setOpenHistory(true)}
+      //           className="flex items-center justify-center mr-1 bg-indigo-700 hover:bg-indigo-600 dark:bg-indigo-600 text-white dark:hover:bg-indigo-700 "
+      //         >
+      //           <History className="w-4 h-4" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         Attendance History of {`${row.original.first_name} ${row.original.last_name}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <ShowAttendanceHistory
+      //       open={openHistory}
+      //       setOpen={setOpenHistory}
+      //       row={row}
+      //     />
+
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           size="sm"
+      //           onClick={() => setOpenRegister(true)}
+      //           className="flex items-center justify-center bg-blue-700 hover:bg-blue-600 dark:bg-blue-600 text-white dark:hover:bg-blue-700 "
+      //         >
+      //           <FilePlus className="w-4 h-4" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         Register {`${row.original.first_name} ${row.original.last_name}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <Registration
+      //       open={openRegister}
+      //       setOpen={setOpenRegister}
+      //       row={row}
+      //     />
+      //   </span>
+      // );
     },
   },
 
@@ -222,7 +287,7 @@ export const columns: ColumnDef<Section>[] = [
   //       <>
   //         <DropdownMenu>
   //           <DropdownMenuTrigger asChild>
-  //             <Button variant="ghost">⋯</Button>
+  //             <Button variant="outline">⋯</Button>
   //           </DropdownMenuTrigger>
   //           <DropdownMenuContent>
   //             <DropdownMenuItem onClick={() => setOpenView(true)}>
@@ -262,7 +327,7 @@ export const columns: ColumnDef<Section>[] = [
   //       <>
   //         <DropdownMenu>
   //           <DropdownMenuTrigger asChild>
-  //             <Button variant="ghost">⋮</Button>
+  //             <Button variant="outline">⋮</Button>
   //           </DropdownMenuTrigger>
   //           <DropdownMenuContent>
   //             <DropdownMenuItem onClick={() => setOpenView(true)}>

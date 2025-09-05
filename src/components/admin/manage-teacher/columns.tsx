@@ -1,15 +1,39 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
-  Eye, SquarePen, History, FilePlus,
-  ShieldUser, User, GraduationCap, BookAudio,
-  UserCog, UserCheck, UserX
+  Eye,
+  SquarePen,
+  History,
+  FilePlus,
+  ShieldUser,
+  User,
+  GraduationCap,
+  BookAudio,
+  UserCog,
+  UserCheck,
+  UserX,
+  Rows4,
+  Grip,
 } from "lucide-react";
-import ShowProfile from "@/components/admin/manage-student/ShowProfile/ShowProfile";
-import EditProfile from "@/components/admin/manage-student/EditStudent/EditStudent";
-import ShowAttendanceHistory from "@/components/admin/manage-student/ShowAttendanceHistory/ShowAttendanceHistory";
-import Registration from "@/components/admin/manage-student/Registration/Registration";
+import ShowProfile from "@/components/admin/manage-teacher/ShowProfile/ShowProfile";
+import EditProfile from "@/components/admin/manage-teacher/EditTeacher/EditTeacher";
+import ShowAttendanceHistory from "@/components/admin/manage-teacher/ShowAttendanceHistory/ShowAttendanceHistory";
+import Registration from "@/components/admin/manage-teacher/Registration/Registration";
+import ShowTeacherClass from "@/components/admin/manage-teacher/ShowClass/ShowTeacherClass";
 import { useState } from "react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export type Teacher = {
   employee_number: string;
@@ -26,7 +50,7 @@ export const columns: ColumnDef<Teacher>[] = [
   {
     accessorKey: "employee_number",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <ShieldUser className="text-blue-500" /> Emloyee No.
       </Button>
     ),
@@ -34,19 +58,23 @@ export const columns: ColumnDef<Teacher>[] = [
   {
     accessorKey: "FullName",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <User className="text-yellow-500" /> Full Name
       </Button>
     ),
     cell: ({ row }) => {
       const { last_name, first_name, middle_name, suffix } = row.original;
-      return <span>{`${last_name} ${first_name} ${middle_name || ""} ${suffix || ""}`}</span>;
+      return (
+        <span>{`${last_name} ${first_name} ${middle_name || ""} ${
+          suffix || ""
+        }`}</span>
+      );
     },
   },
   {
     accessorKey: "grade_id",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <GraduationCap className="text-green-500" /> Advisory Grade
       </Button>
     ),
@@ -65,7 +93,7 @@ export const columns: ColumnDef<Teacher>[] = [
   {
     accessorKey: "section",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <BookAudio className="text-violet-500" /> Advisory Section
       </Button>
     ),
@@ -74,7 +102,7 @@ export const columns: ColumnDef<Teacher>[] = [
   {
     accessorKey: "status",
     header: () => (
-      <Button variant="ghost" size="sm">
+      <Button variant="outline" size="sm">
         <UserCog className="text-teal-500" /> Status
       </Button>
     ),
@@ -109,34 +137,183 @@ export const columns: ColumnDef<Teacher>[] = [
       const [openEdit, setOpenEdit] = useState(false);
       const [openHistory, setOpenHistory] = useState(false);
       const [openRegister, setOpenRegister] = useState(false);
+      const [openTeacherClass, setOpenTeacherClass] = useState(false);
 
       return (
-        <>
+        <div
+          className="flex justify-start items-center"
+          style={{ pointerEvents: "auto" }}
+        >
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Grip
+                      strokeWidth={3}
+                      className="w-12 h-12 text-teal-800 dark:text-teal-300"
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                align="center"
+                className="block group-data-[collapsible=icon]:hidden"
+              >
+                Actions
+              </TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setOpenView(true)}>
+                <Eye className="w-4 h-4 text-teal-700 dark:text-teal-500" />
+                View Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+                <SquarePen className="w-4 h-4 text-sky-700 dark:text-sky-500" />
+                Edit Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenHistory(true)}>
+                <History className="w-4 h-4 text-indigo-700 dark:text-indigo-500" />
+                Attendance History
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenTeacherClass(true)}>
+                <Rows4 className="w-4 h-4 text-violet-700 dark:text-violet-500" />
+                Teacher Class
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenRegister(true)}>
+                <FilePlus className="w-4 h-4 text-blue-700 dark:text-blue-500" />
+                Register
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <ShowProfile open={openView} setOpen={setOpenView} row={row} />
           <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
           <ShowAttendanceHistory open={openHistory} setOpen={setOpenHistory} row={row} />
+          <ShowTeacherClass open={openTeacherClass} setOpen={setOpenTeacherClass} row={row} />
           <Registration open={openRegister} setOpen={setOpenRegister} row={row} />
-
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" onClick={() => setOpenView(true)}>
-              <Eye className="w-4 h-4 mr-1" />
-              View
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setOpenEdit(true)}>
-              <SquarePen className="w-4 h-4 mr-1" />
-              Edit
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setOpenHistory(true)}>
-              <History className="w-4 h-4 mr-1" />
-              History
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setOpenRegister(true)}>
-              <FilePlus className="w-4 h-4 mr-1" />
-              Register
-            </Button>
-          </div>
-        </>
+        </div>
       );
+
+      // return (
+      //   <span className="text-xs w-auto h-6 flex items-center justify-start rounded-md font-normal">
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           variant="outline"
+      //           size="sm"
+      //           onClick={() => setOpenView(true)}
+      //         >
+      //           <Eye className="w-4 h-4 mr-1" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         View {`${row.original.first_name} ${row.original.last_name}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <ShowProfile open={openView} setOpen={setOpenView} row={row} />
+
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           variant="outline"
+      //           size="sm"
+      //           className="ml-2"
+      //           onClick={() => setOpenEdit(true)}
+      //         >
+      //           <SquarePen className="w-4 h-4 mr-1" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         Edit {`${row.original.first_name} ${row.original.last_name}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
+
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           variant="outline"
+      //           size="sm"
+      //           className="ml-2"
+      //           onClick={() => setOpenHistory(true)}
+      //         >
+      //           <History className="w-4 h-4 mr-1" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         Attendance History of {`${row.original.first_name} ${row.original.last_name}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <ShowAttendanceHistory
+      //       open={openHistory}
+      //       setOpen={setOpenHistory}
+      //       row={row}
+      //     />
+
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           variant="outline"
+      //           size="sm"
+      //           className="ml-2"
+      //           onClick={() => setOpenTeacherClass(true)}
+      //         >
+      //           <Rows4 className="w-4 h-4 mr-1" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         Class of {`${row.original.grade_id} ${row.original.section}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <ShowTeacherClass
+      //       open={openTeacherClass}
+      //       setOpen={setOpenTeacherClass}
+      //       row={row}
+      //     />
+
+      //     <Tooltip>
+      //       <TooltipTrigger asChild>
+      //         <Button
+      //           variant="outline"
+      //           size="sm"
+      //           className="ml-2"
+      //           onClick={() => setOpenRegister(true)}
+      //         >
+      //           <FilePlus className="w-4 h-4 mr-1" />
+      //         </Button>
+      //       </TooltipTrigger>
+      //       <TooltipContent
+      //         side="top"
+      //         align="center"
+      //         className="block group-data-[collapsible=icon]:hidden"
+      //       >
+      //         Register {`${row.original.first_name} ${row.original.last_name}`}
+      //       </TooltipContent>
+      //     </Tooltip>
+      //     <Registration
+      //       open={openRegister}
+      //       setOpen={setOpenRegister}
+      //       row={row}
+      //     />
+      //   </span>
+      // );
     },
   },
 ];
