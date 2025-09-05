@@ -12,7 +12,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, UserCheck, UserX, CircleX } from "lucide-react";
+import { User, UserCheck, UserX, CircleX,  TriangleAlert, } from "lucide-react";
 
 import PrimaryInfo from "@/components/admin/manage-student/ShowProfile/PrimaryInfoStudent";
 import BasicInfo from "@/components/admin/manage-student/ShowProfile/BasicInfo";
@@ -76,7 +76,7 @@ export default function ShowProfile({
           <SheetTitle className="uppercase">{fullName}</SheetTitle>
           <SheetDescription>S.Y : {data.school_year}</SheetDescription>
         </SheetHeader>
-        
+
         <SplitText
           text="Young Generation Academy"
           className="absolute top-15 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -104,8 +104,21 @@ export default function ShowProfile({
             </div>
 
             <div className="p-5">
-              <Attendance lrn={data.lrn} grade={data.grade_id} />
+              <Attendance data={data.attendance || []} />
             </div>
+
+            <hr className="mt-10" />
+            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
+              <TriangleAlert
+                strokeWidth={3}
+                className="mr-2 text-yellow-500 dark:text-yellow-400"
+              />
+              This Content Not available Now.
+            </div>
+            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            <div className="mt-5 p-20 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            <div className="mt-5 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            <div className="mt-5 h-96 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
           </div>
         </div>
 

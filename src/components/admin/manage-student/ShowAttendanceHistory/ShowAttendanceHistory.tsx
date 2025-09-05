@@ -119,14 +119,22 @@ export default function ShowAttendanceHistory({
               </span>
             </div>
             <div className="mt-10 p-5">
-              <AttendanceHistory data={data} />
+              <AttendanceHistory lrn={data.lrn} />
             </div>
             <hr />
             <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
               <TriangleAlert strokeWidth={3} className="mr-2 text-yellow-500 dark:text-yellow-400"/>This Content Not available Now.
             </div>
             <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
-              <TriangleAlert strokeWidth={3} className="mr-2 text-yellow-500 dark:text-yellow-400"/>This Content Not available Now.
+            </div>
+
+            <div className="mt-5 p-20 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
+            </div>
+
+            <div className="mt-5 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
+            </div>
+
+            <div className="mt-5 h-96 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
             </div>
           </div>
         </div>

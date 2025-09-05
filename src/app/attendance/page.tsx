@@ -68,12 +68,12 @@ export default function Attendance() {
     try {
       const jsonPayload = JSON.stringify({ rfid_uid: data.rfid_uid });
       console.log("📥 Time In Payload:", jsonPayload);
-      toast.success("✅ Time In scanned successfully");
+      toast.success("Time In scanned successfully");
       // toast.success(resposnse.message);
       resetIn({ rfid_uid: "" });
       inputRefIn.current?.focus();
     } catch {
-      toast.error("❌ Failed to process Time In");
+      toast.error("Failed to process Time In");
     } finally {
       setIsLoading(false);
     }
@@ -87,12 +87,12 @@ export default function Attendance() {
     try {
       const jsonPayload = JSON.stringify({ rfid_uid: data.rfid_uid });
       console.log("📤 Time Out Payload:", jsonPayload);
-      toast.success("✅ Time Out scanned successfully");
+      toast.success("Time Out scanned successfully");
       // toast.success(resposnse.message);
       resetOut({ rfid_uid: "" });
       inputRefOut.current?.focus();
     } catch {
-      toast.error("❌ Failed to process Time Out");
+      toast.error("Failed to process Time Out");
     } finally {
       setIsLoading(false);
     }

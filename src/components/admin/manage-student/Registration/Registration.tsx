@@ -17,7 +17,8 @@ import {
   CircleX,
   Loader2,
   Send,
-  Printer
+  Printer,
+  TriangleAlert,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,7 +30,7 @@ import GuardianInfo from "@/components/admin/manage-student/ShowProfile/Guardian
 
 import SplitText from "@/components/animata/text/split-text";
 import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
- 
+
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -38,7 +39,7 @@ import { on } from "events";
 import { useAuth } from "@/context/AuthContext";
 import { RegisterRFIDToStudent } from "@/services/Student_service";
 import toast from "react-hot-toast";
- import Loader from "@/components/Loader";
+import Loader from "@/components/Loader";
 
 export default function FlipCard({
   open,
@@ -59,28 +60,29 @@ export default function FlipCard({
     .filter(Boolean)
     .join(" ");
 
-const {token}=useAuth();
-const [isLoading,setIsLoading]=useState(false)
-const {register,handleSubmit,} =useForm()
+  const { token } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const { register, handleSubmit } = useForm();
   const onSubmit = async (data: any) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const response = await RegisterRFIDToStudent(token as string ,data.lrn,data )
+      const response = await RegisterRFIDToStudent(
+        token as string,
+        data.lrn,
+        data
+      );
+
       toast.success("RFID Successfully Registered");
     } catch (error) {
       toast.error("RFID Registration Failed");
-    }finally{
-      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
-      
+  };
+
+  if (isLoading) {
+    return <Loader />;
   }
-  
-  
- if(isLoading){
-  
-  return <Loader />
-  
-}
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -155,20 +157,18 @@ const {register,handleSubmit,} =useForm()
                 ) : (
                   <>
                     Tap{" "}
-                    <span className="text-teal-500 mx-2 font-bold">IREF ID</span>{" "}
+                    <span className="text-teal-500 mx-2 font-bold">
+                      IREF ID
+                    </span>{" "}
                     to register attendance for{" "}
                     <span className="text-teal-500 mx-2">{fullName}</span>.
                   </>
                 )}
               </span>
             </div>
-            <div
-              className="mt-10 p-5 flex justify-center items-center"
-
-            >
+            <div className="mt-10 p-5 flex justify-center items-center">
               <FlipCardUI data={data} />
             </div>
-
             <form
               onSubmit={handleSubmit(onSubmit)}
               onChange={(e) => {
@@ -182,21 +182,30 @@ const {register,handleSubmit,} =useForm()
                 type="text"
                 autoFocus
                 {...register("rfid_uid")}
-                className="text-white dark:text-black border-none focus:outline-none focus:ring-none focus:shadow-outline"
+                className="text-zinc-200 dark:text-zinc-900 border-none focus:outline-none focus:ring-none focus:shadow-outline"
               />
             </form>
-          
+
+            <hr className="mt-10"/>
+            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
+              <TriangleAlert
+                strokeWidth={3}
+                className="mr-2 text-yellow-500 dark:text-yellow-400"
+              />
+              This Content Not available Now.
+            </div>
+            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            <div className="mt-5 p-20 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            <div className="mt-5 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            <div className="mt-5 h-96 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
           </div>
         </div>
 
         <SheetFooter className="fixed bottom-5 right-5">
           <div className="flex items-center justify-end gap-5">
             {data.rfid_uid && (
-              <Button
-                onClick={() => window.print()}
-                className="w-40"
-              >
-                <Printer  className="mr-0"/> Print
+              <Button onClick={() => window.print()} className="w-40">
+                <Printer className="mr-0" /> Print
               </Button>
             )}
             <SheetClose asChild>
@@ -214,4 +223,3 @@ const {register,handleSubmit,} =useForm()
     </Sheet>
   );
 }
-
