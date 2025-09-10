@@ -126,12 +126,23 @@
 //   );
 // }
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetClose } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { CircleX, User } from "lucide-react";
-import { useTeacherDetails } from "@/hooks/useTeacher";
+"use client";
 
-export default function ShowTeacherClass({
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { CircleX, User, Code2 } from "lucide-react";
+import { useTeacherDetails } from "@/hooks/useTeacher";
+import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
+
+export default function ShowProfile({
   open,
   setOpen,
   row,
@@ -140,10 +151,11 @@ export default function ShowTeacherClass({
   setOpen: (open: boolean) => void;
   row: any;
 }) {
-  const token = localStorage.getItem("token");
-  const teacherId = row?.original?.id;
+  const id = row.original.id;
+  const { token } = useAuth();
+  const [showJson, setShowJson] = useState(false);
 
-  const { data, isLoading, error } = useTeacherDetails(token, { id: teacherId });
+  const { data, isLoading, error } = useTeacherDetails(token, { id });
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -155,72 +167,36 @@ export default function ShowTeacherClass({
           </SheetTitle>
         </SheetHeader>
 
-        {/* Loading and Error Handling */}
-        {isLoading && <p className="text-sm text-gray-500 mt-4">Loading teacher details...</p>}
-        {error && <p className="text-sm text-red-500 mt-4">Error loading teacher data.</p>}
+        {isLoading && <p>Loading teacher details...</p>}
+        {error && <p className="text-red-500">Error loading teacher data.</p>}
 
-        {/* Main Profile Display */}
         {data && (
           <div className="mt-4 space-y-6 text-sm">
-            {/* Name Section */}
             <div>
               <h3 className="font-semibold text-teal-600 mb-1">Full Name</h3>
-              <p>{`${data.last_name}, ${data.first_name} ${data.middle_name} ${data.suffix || ""}`}</p>
+              <p>{`${data.last_name}, ${data.first_name} ${data.middle_name || ""} ${data.suffix || ""}`}</p>
             </div>
 
-            {/* Contact Info */}
+            {/* Example of showing grade/section */}
             <div>
-              <h3 className="font-semibold text-teal-600 mb-1">Contact</h3>
-              <p>📞 {data.contact_no}</p>
-              <p>📧 {data.email}</p>
+              <h3 className="font-semibold text-teal-600 mb-1">Grade & Section</h3>
+              <p>{`Grade ${data.grade_id} - Section ${data.section}`}</p>
             </div>
 
-            {/* Address */}
+            {/* Toggle JSON */}
             <div>
-              <h3 className="font-semibold text-teal-600 mb-1">Address</h3>
-              <p>{`${data.street}, ${data.barangay}, ${data.city}, ${data.province}, ${data.region}`}</p>
-            </div>
-
-            {/* Emergency Contact */}
-            <div>
-              <h3 className="font-semibold text-teal-600 mb-1">Emergency Contact</h3>
-              <p>👤 {`${data.emergency_lname}, ${data.emergency_fname} ${data.emergency_mname}`}</p>
-              <p>📞 {data.emergency_contact}</p>
-            </div>
-
-            {/* Academic Info */}
-            <div>
-              <h3 className="font-semibold text-teal-600 mb-1">School Info</h3>
-              <p>📘 School Year: {data.school_year}</p>
-              <p>🏫 Grade: {data.grade}</p>
-              <p>🏷️ Section: {data.section}</p>
-            </div>
-
-            {/* Personal Info */}
-            <div>
-              <h3 className="font-semibold text-teal-600 mb-1">Personal Info</h3>
-              <p>🎂 Birthdate: {data.birth_date}</p>
-              <p>📍 Birthplace: {data.birth_place}</p>
-              <p>🚻 Gender: {data.gender}</p>
-            </div>
-
-            {/* Status */}
-            <div>
-              <h3 className="font-semibold text-teal-600 mb-1">Status</h3>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                  data.status === "1"
-                    ? "bg-green-200 text-green-800"
-                    : "bg-red-200 text-red-800"
-                }`}
-              >
-                {data.status === "1" ? "Active" : "Inactive"}
-              </span>
+              <Button variant="ghost" className="text-xs" onClick={() => setShowJson(!showJson)}>
+                <Code2 className="w-4 h-4" /> {showJson ? "Hide JSON" : "Show JSON"}
+              </Button>
+              {showJson && (
+                <pre className="mt-2 p-3 bg-gray-100 text-xs overflow-x-auto rounded">
+                  {JSON.stringify(data, null, 2)}
+                </pre>
+              )}
             </div>
           </div>
         )}
 
-        {/* Footer */}
         <SheetFooter className="mt-10">
           <SheetClose asChild>
             <Button variant="outline" onClick={() => setOpen(false)}>

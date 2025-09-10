@@ -22,6 +22,7 @@ export function TeacherTableContainer() {
 
   const mappedTeachers = useMemo<Teacher[]>(() => {
     return teacherList.map((teacher: any) => ({
+      id: teacher.id,
       employee_number: teacher.employee_no,
       first_name: teacher.first_name,
       middle_name: teacher.middle_name,
