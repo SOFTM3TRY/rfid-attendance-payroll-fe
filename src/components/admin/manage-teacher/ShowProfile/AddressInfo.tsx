@@ -3,17 +3,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Map, MapPinHouse } from "lucide-react";
 
-export default function AddressInfo({ data }: { data: any }) {
+import { useAuth } from "@/context/AuthContext";
+import { useTeacherDetails } from "@/hooks/useTeacher";
+
+export default function AddressInfo({
+  id,
+}: {
+  id: string;
+}) {
+  const { token } = useAuth();
+  const { data, isLoading, error } = useTeacherDetails(token, { id });
+
+  const teacher = data?.data?.teacher?.[0] || null;
+  const info = teacher?.additional_info || {};
+
   return (
     <div className="w-full py-5 flex flex-col gap-4 px-5 mt-5 rounded-md bg-zinc-100 dark:bg-zinc-900">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SectionHeader icon={<Map className="text-red-500 h-5 w-5" />} title="Address" />
 
-        <InputField label="Region" value={data.region} />
-        <InputField label="Province" value={data.province} />
-        <InputField label="City" value={data.city} />
-        <InputField label="Barangay" value={data.barangay} />
-        <InputField label="Street" value={data.street} full />
+        <InputField label="Region" value={info.region} />
+        <InputField label="Province" value={info.province} />
+        <InputField label="City" value={info.city} />
+        <InputField label="Barangay" value={info.barangay} />
+        <InputField label="Street" value={info.street} full />
       </div>
     </div>
   );

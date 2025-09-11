@@ -1,131 +1,3 @@
-// // ShowProfile.tsx
-// import {
-//   Sheet,
-//   SheetClose,
-//   SheetContent,
-//   SheetDescription,
-//   SheetFooter,
-//   SheetHeader,
-//   SheetTitle,
-//   SheetTrigger,
-// } from "@/components/ui/sheet";
-
-// import { Button } from "@/components/ui/button";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { User, UserCheck, UserX, CircleX } from "lucide-react";
-
-// import PrimaryInfo from "@/components/admin/manage-teacher/ShowProfile/PrimaryInfoStudent";
-// import BasicInfo from "@/components/admin/manage-teacher/ShowProfile/BasicInfo";
-// import AddressInfo from "@/components/admin/manage-teacher/ShowProfile/AddressInfo";
-// import GuardianInfo from "@/components/admin/manage-teacher/ShowProfile/GuardianInfo";
-
-// import { TotalStatus } from "@/components/admin/manage-teacher/ShowProfile/TotalStatus";
-
-// import { useTeacherDetails } from "@/hooks/useTeacher";
-
-// import SplitText from "@/components/animata/text/split-text";
-
-// export default function ShowProfile({
-//   open,
-//   setOpen,
-//   row,
-//   trigger,
-// }: {
-//   open: boolean;
-//   setOpen: (open: boolean) => void;
-//   row: any;
-//   trigger?: React.ReactNode;
-// }) {
-//   const data = row.original || {};
-//   const fullName = [
-//     data.last_name,
-//     data.first_name,
-//     data.middle_name,
-//     data.suffix,
-//   ]
-//     .filter(Boolean)
-//     .join(" ");
-
-//   return (
-//     <Sheet open={open} onOpenChange={setOpen}>
-//       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
-//       <SheetContent
-//         className="bottom-0 h-full rounded-t-md overflow-y-auto p-3"
-//         side="bottom"
-//       >
-//         <SheetHeader>
-//           <SheetDescription className="flex items-center text-center text-md">
-//             <User className="mr-1 w-4 h-4 text-teal-500" />
-//             Student Profile
-//             <span
-//               className={`text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
-//                 data.status == 1
-//                   ? "bg-green-200 text-green-900 dark:bg-green-100 dark:text-green-800"
-//                   : "bg-red-200 text-red-900 dark:bg-red-100 dark:text-red-800"
-//               }`}
-//             >
-//               {data.status == 1 ? "Active" : "Inactive"}
-//               <span className="ml-1">
-//                 {data.status == 1 ? (
-//                   <UserCheck className="w-4 h-4 text-green-800" />
-//                 ) : (
-//                   <UserX className="w-4 h-4 text-red-800" />
-//                 )}
-//               </span>
-//             </span>
-//           </SheetDescription>
-//           <SheetTitle className="uppercase">{fullName}</SheetTitle>
-//           <SheetDescription>S.Y : {data.school_year}</SheetDescription>
-//         </SheetHeader>
-        
-//         <SplitText
-//           text="Young Generation Academy"
-//           className="absolute top-15 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-//         />
-
-//         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 p-5">
-//           {/* Avatar + Primary */}
-//           <div className="col-span-1 rounded-md">
-//             <PrimaryInfo data={data} fullName={fullName} />
-
-//             <BasicInfo data={data} />
-//             <AddressInfo data={data.additional_info || {}} />
-//             <GuardianInfo data={data.additional_info || {}} />
-//           </div>
-//           <div className="col-span-1 md:col-span-2 rounded-md h-full bg-zinc-100 dark:bg-zinc-900 p-5">
-//             <div className="sticky top-0 z-500">
-//               <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full">
-//                 <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
-//                 Student <span className="text-teal-500 mx-2">{fullName}</span>{" "}
-//                 Attendance S.Y {data.school_year}
-//               </span>
-//             </div>
-//             <div className="mt-10">
-//               <TotalStatus />
-//             </div>
-
-//             <div className="p-5">
-//               <Attendance lrn={data.lrn} grade={data.grade_id} />
-//             </div>
-//           </div>
-//         </div>
-
-//         <SheetFooter className="fixed bottom-5 right-5">
-//           <SheetClose asChild>
-//             <Button
-//               className="w-40"
-//               variant="outline"
-//               onClick={() => setOpen(false)}
-//             >
-//               <CircleX /> Close
-//             </Button>
-//           </SheetClose>
-//         </SheetFooter>
-//       </SheetContent>
-//     </Sheet>
-//   );
-// }
-
 "use client";
 
 import {
@@ -135,12 +7,32 @@ import {
   SheetTitle,
   SheetFooter,
   SheetClose,
+  SheetDescription,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { CircleX, User, Code2 } from "lucide-react";
+import {
+  CircleX,
+  User,
+  Code2,
+  UserCheck,
+  UserX,
+  TriangleAlert,
+  Info,
+} from "lucide-react";
 import { useTeacherDetails } from "@/hooks/useTeacher";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
+
+import PrimaryInfo from "@/components/admin/manage-teacher/ShowProfile/PrimaryInfoStudent";
+import BasicInfo from "@/components/admin/manage-teacher/ShowProfile/BasicInfo";
+import AddressInfo from "@/components/admin/manage-teacher/ShowProfile/AddressInfo";
+import EmergencyInfo from "@/components/admin/manage-teacher/ShowProfile/EmergencyInfo";
+
+import { TotalStatus } from "@/components/admin/manage-teacher/ShowProfile/TotalStatus";
+import { Attendance } from "@/components/admin/manage-teacher/ShowProfile/Attendance";
+
+import SplitText from "@/components/animata/text/split-text";
 
 export default function ShowProfile({
   open,
@@ -157,50 +49,110 @@ export default function ShowProfile({
 
   const { data, isLoading, error } = useTeacherDetails(token, { id });
 
+  const teacher = data?.data?.teacher?.[0] || null;
+  const students = data?.data?.students || [];
+  const info = teacher?.additional_info || {};
+
+  const fullName = teacher
+    ? `${teacher.last_name}, ${teacher.first_name} ${teacher.middle_name || ""} ${teacher.suffix || ""}`
+    : "Unknown";
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent className="h-full overflow-y-auto p-6" side="bottom">
-        <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <User className="w-5 h-5 text-teal-500" />
-            Teacher Details
-          </SheetTitle>
-        </SheetHeader>
-
+      <SheetContent
+        className="bottom-0 h-full rounded-t-md overflow-y-auto p-3"
+        side="bottom"
+      >
+        {teacher && (
+          <SheetHeader>
+            <SheetDescription className="flex items-center text-center text-md">
+              <User className="mr-1 w-4 h-4 text-teal-500" />
+              Teacher Profile
+              <span
+                className={`text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
+                  data.status == 1
+                    ? "bg-green-200 text-green-900 dark:bg-green-100 dark:text-green-800"
+                    : "bg-red-200 text-red-900 dark:bg-red-100 dark:text-red-800"
+                }`}
+              >
+                {data.status == 1 ? "Active" : "Inactive"}
+                <span className="ml-1">
+                  {data.status == 1 ? (
+                    <UserCheck className="w-4 h-4 text-green-800" />
+                  ) : (
+                    <UserX className="w-4 h-4 text-red-800" />
+                  )}
+                </span>
+              </span>
+            </SheetDescription>
+            <SheetTitle className="uppercase">{`${teacher.last_name}, ${
+              teacher.first_name
+            } ${teacher.middle_name || ""} ${
+              teacher.suffix || ""
+            }`}</SheetTitle>
+            <SheetDescription>S.Y : {teacher.school_year}</SheetDescription>
+          </SheetHeader>
+        )}
         {isLoading && <p>Loading teacher details...</p>}
+
         {error && <p className="text-red-500">Error loading teacher data.</p>}
+        <SplitText
+          text="Young Generation Academy"
+          className="absolute top-15 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 p-5">
+          {/* Avatar + Primary */}
+          <div className="col-span-1 rounded-md">
 
-        {data && (
-          <div className="mt-4 space-y-6 text-sm">
-            <div>
-              <h3 className="font-semibold text-teal-600 mb-1">Full Name</h3>
-              <p>{`${data.last_name}, ${data.first_name} ${data.middle_name || ""} ${data.suffix || ""}`}</p>
+            {teacher && (
+              <>
+                <PrimaryInfo id={id} />
+                <BasicInfo id={id} />
+                <AddressInfo id={id} />
+                <EmergencyInfo id={id} />
+              </>
+            )}
+          </div>
+          <div className="col-span-1 md:col-span-2 rounded-md h-full bg-zinc-100 dark:bg-zinc-900 p-5">
+            <div className="sticky top-0 z-500">
+              <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full">
+                <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
+                Teacher <span className="text-teal-500 mx-2">{fullName}</span> Attendance
+                S.Y {info?.school_year}
+              </span>
+            </div>
+            <div className="mt-10"><TotalStatus /></div>
+
+            <div className="p-5">
+              <Attendance data={data.attendance || []} />
             </div>
 
-            {/* Example of showing grade/section */}
-            <div>
-              <h3 className="font-semibold text-teal-600 mb-1">Grade & Section</h3>
-              <p>{`Grade ${data.grade_id} - Section ${data.section}`}</p>
+            <hr className="mt-10" />
+            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
+              <TriangleAlert
+                strokeWidth={3}
+                className="mr-2 text-yellow-500 dark:text-yellow-400"
+              />
+              This Content Not available Now.
             </div>
-
-            {/* Toggle JSON */}
-            <div>
-              <Button variant="ghost" className="text-xs" onClick={() => setShowJson(!showJson)}>
-                <Code2 className="w-4 h-4" /> {showJson ? "Hide JSON" : "Show JSON"}
-              </Button>
-              {showJson && (
-                <pre className="mt-2 p-3 bg-gray-100 text-xs overflow-x-auto rounded">
+            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            <div className="mt-5 p-20 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            <div className="mt-5 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+            {/* <div className="mt-5 h-96 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div> */}
+          </div>
+          {/* <pre className="mt-2 p-3 bg-zinc-900 text-xs overflow-x-auto rounded text-white">
                   {JSON.stringify(data, null, 2)}
                 </pre>
-              )}
-            </div>
-          </div>
-        )}
-
-        <SheetFooter className="mt-10">
+                       */}
+        </div>
+        <SheetFooter className="fixed bottom-5 right-5">
           <SheetClose asChild>
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              <CircleX className="mr-2" /> Close
+            <Button
+              className="w-40"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
+              <CircleX /> Close
             </Button>
           </SheetClose>
         </SheetFooter>
