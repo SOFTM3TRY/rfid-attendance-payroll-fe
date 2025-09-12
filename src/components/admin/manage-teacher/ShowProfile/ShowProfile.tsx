@@ -124,7 +124,7 @@ export default function ShowProfile({
             <div className="mt-10"><TotalStatus /></div>
 
             <div className="p-5">
-              <Attendance data={data.attendance || []} />
+              <Attendance />
             </div>
 
             <hr className="mt-10" />

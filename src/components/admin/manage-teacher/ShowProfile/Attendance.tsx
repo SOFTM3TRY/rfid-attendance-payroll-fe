@@ -130,7 +130,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
   },
 ];
 
-export const Attendance = ({ data }: { data: AttendanceEntry[] }) => {
+export const Attendance = () => {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
@@ -145,17 +145,9 @@ export const Attendance = ({ data }: { data: AttendanceEntry[] }) => {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const filteredData = React.useMemo(() => {
-    if (!selectedMonth) return data;
-    return data.filter((entry) => {
-      const entryMonth = entry.date.split(" ")[0];
-      return entryMonth === selectedMonth;
-    });
-  }, [data, selectedMonth]);
-
   const table = useReactTable({
-    data: filteredData,
     columns,
+    data: [],
     state: {
       sorting,
       columnFilters,
@@ -176,7 +168,7 @@ export const Attendance = ({ data }: { data: AttendanceEntry[] }) => {
 
   const pageIndex = table.getState().pagination?.pageIndex ?? 0;
   const pageSize = table.getState().pagination?.pageSize ?? 5;
-  const totalRows = data.length;
+  const totalRows = 0;
   const start = pageIndex * pageSize + 1;
   const end = Math.min(start + pageSize - 1, totalRows);
   const totalPages = table.getPageCount();
@@ -278,7 +270,10 @@ export const Attendance = ({ data }: { data: AttendanceEntry[] }) => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-20">
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-center py-20"
+                >
                   No Attendance Found for this Teacher.
                 </TableCell>
               </TableRow>
@@ -337,3 +332,4 @@ export const Attendance = ({ data }: { data: AttendanceEntry[] }) => {
     </div>
   );
 };
+
