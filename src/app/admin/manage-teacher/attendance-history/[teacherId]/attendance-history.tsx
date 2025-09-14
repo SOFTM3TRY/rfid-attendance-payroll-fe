@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -16,22 +15,17 @@ import {
 } from "@tanstack/react-table";
 
 import {
-  ArrowUpDown,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  User,
-  UserCheck,
-  UserX,
+  ChevronLeft,
+  ChevronRight,
   KeyRound,
   GraduationCap,
   CalendarDays,
   ClockArrowUp,
   ClockArrowDown,
   Stamp,
-  BadgeCheck,
+  ChevronDown,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -54,7 +48,6 @@ import {
 import { FilterTable } from "@/components/admin/manage-student/Filtertable";
 
 export type AttendanceEntry = {
-  // iref_id: string;
   lrn: string;
   grade: string;
   date: string;
@@ -63,58 +56,8 @@ export type AttendanceEntry = {
   remarks: "Present" | "Late" | "Absent";
 };
 
-// ✅ Generate 40 fake entries based on student's LRN
-function generateFakeAttendanceData(lrn: string): AttendanceEntry[] {
-  const remarksList: AttendanceEntry["remarks"][] = [
-    "Present",
-    "Late",
-    "Absent",
-  ];
-  const today = new Date();
-
-  return Array.from({ length: 40 }).map((_, i) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() - i);
-    const month = date.toLocaleString("default", { month: "long" });
-    const formattedDate = `${month} ${date.getDate()}, ${date.getFullYear()}`;
-
-    const timeIn = `${8 + Math.floor(Math.random() * 2)}:${Math.floor(
-      Math.random() * 60
-    )
-      .toString()
-      .padStart(2, "0")} AM`;
-
-    const timeOut = `${3 + Math.floor(Math.random() * 2)}:${Math.floor(
-      Math.random() * 60
-    )
-      .toString()
-      .padStart(2, "0")} PM`;
-
-    return {
-      // iref_id: `IREF-${lrn.slice(-4)}-${lrn.slice(-3)}`,
-      lrn,
-      grade: `Grade ${
-        ["One", "Two", "Three", "Four", "Five", "Six"][
-          Math.floor(Math.random() * 6)
-        ]
-      }`,
-      date: formattedDate,
-      time_in: timeIn,
-      time_out: timeOut,
-      remarks: remarksList[i % 3],
-    };
-  });
-}
-
+// Columns only - no data
 const columns: ColumnDef<AttendanceEntry>[] = [
-  // {
-  //   accessorKey: "iref_id",
-  //   header: () => (
-  //     <div className="flex items-center">
-  //       <KeyRound className="text-blue-500 mr-1 w-4 h-4" /> RFID UID
-  //     </div>
-  //   ),
-  // },
   {
     accessorKey: "lrn",
     header: () => (
@@ -130,10 +73,6 @@ const columns: ColumnDef<AttendanceEntry>[] = [
         <GraduationCap className="text-teal-500 mr-1 w-4 h-4" /> Grade
       </div>
     ),
-    filterFn: (row, columnId, filterValue) => {
-      const grade = row.getValue(columnId) as string;
-      return grade.includes(filterValue);
-    },
     enableColumnFilter: true,
   },
   {
@@ -171,30 +110,30 @@ const columns: ColumnDef<AttendanceEntry>[] = [
       const value = row.getValue("remarks") as string;
       let color = "text-gray-600";
 
-      if (value === "Present")
+      if (value === "Present") {
         color =
-          "text-green-50 bg-green-500 dark:text-green-700 dark:bg-green-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
-      if (value === "Late")
+          "text-green-50 bg-green-500 dark:text-green-700 dark:bg-green-200 py-1 rounded-full text-center font-medium flex items-center justify-center";
+      } else if (value === "Late") {
         color =
-          "text-yellow-50 bg-yellow-500 dark:text-yellow-700 dark:bg-yellow-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
-      if (value === "Absent")
+          "text-yellow-50 bg-yellow-500 dark:text-yellow-700 dark:bg-yellow-200 py-1 rounded-full text-center font-medium flex items-center justify-center";
+      } else if (value === "Absent") {
         color =
-          "text-red-50 bg-red-500 dark:text-red-700 dark:bg-red-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
+          "text-red-50 bg-red-500 dark:text-red-700 dark:bg-red-200 py-1 rounded-full text-center font-medium flex items-center justify-center";
+      }
 
-      return (
-        <div className={color}>
-           {value}
-        </div>
-      );
+      return <div className={color}>{value}</div>;
     },
   },
 ];
 
-export function AttendanceHistory({ lrn }: { lrn: string }) {
-  const data = React.useMemo(() => generateFakeAttendanceData(lrn), [lrn]);
+export default function AttendanceHistorySection() {
+  // Replace this with real data from backend later
+  const [data] = React.useState<AttendanceEntry[]>([]);
 
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
-
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -211,13 +150,13 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination, // <-- ADD THIS LINE
+      pagination,
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination, // <-- ADD THIS LINE
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -233,11 +172,9 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
 
   return (
     <div className="w-full">
+      {/* Filters */}
       <div className="flex items-center justify-between py-4">
-        <div>
-          <FilterTable pagination={pagination} setPagination={setPagination} />
-        </div>
-
+        <FilterTable pagination={pagination} setPagination={setPagination} />
         <Input
           placeholder="Filter Date..."
           value={(table.getColumn("date")?.getFilterValue() as string) ?? ""}
@@ -246,8 +183,7 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
           }
           className="max-w-sm"
         />
-
-        {/* Grade filter */}
+        {/* Grade Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
@@ -265,30 +201,28 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
             >
               Show all
             </DropdownMenuCheckboxItem>
-            {[
-              "Grade One",
-              "Grade Two",
-              "Grade Three",
-              "Grade Four",
-              "Grade Five",
-              "Grade Six",
-            ].map((grade) => (
-              <DropdownMenuCheckboxItem
-                key={grade}
-                checked={table.getColumn("grade")?.getFilterValue() === grade}
-                onCheckedChange={(value) =>
-                  value
-                    ? table.getColumn("grade")?.setFilterValue(grade)
-                    : table.getColumn("grade")?.setFilterValue(undefined)
-                }
-              >
-                {grade}
-              </DropdownMenuCheckboxItem>
-            ))}
+            {["Grade One", "Grade Two", "Grade Three", "Grade Four", "Grade Five", "Grade Six"].map(
+              (grade) => (
+                <DropdownMenuCheckboxItem
+                  key={grade}
+                  checked={
+                    table.getColumn("grade")?.getFilterValue() === grade
+                  }
+                  onCheckedChange={(value) =>
+                    value
+                      ? table.getColumn("grade")?.setFilterValue(grade)
+                      : table.getColumn("grade")?.setFilterValue(undefined)
+                  }
+                >
+                  {grade}
+                </DropdownMenuCheckboxItem>
+              )
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
+      {/* Table */}
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -323,8 +257,8 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center">
-                  No results.
+                <TableCell colSpan={columns.length} className="text-center py-10 text-muted-foreground text-sm">
+                  Attendance history not available.
                 </TableCell>
               </TableRow>
             )}
@@ -335,11 +269,11 @@ export function AttendanceHistory({ lrn }: { lrn: string }) {
       {/* Pagination */}
       <div className="flex items-center justify-between px-5 py-4 space-x-2">
         <div className="text-sm text-muted-foreground flex-1">
-          Showing {start} to {end} of {totalRows} entries
+          Showing {totalRows ? start : 0} to {totalRows ? end : 0} of {totalRows} entries
         </div>
 
         <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
-          Page {pageIndex + 1} of {totalPages}
+          Page {pageIndex + 1} of {totalPages || 1}
         </div>
 
         <div className="flex gap-2">

@@ -1,37 +1,37 @@
-// GuardianInfo.tsx
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+import { useParams } from "next/navigation";
+import { useClientOnly } from "@/hooks/useClientOnly";
+
 import {
   User,
   Phone,
-  Mail,
-  SquareUserRound,
-  UserCog,
 } from "lucide-react";
 
 import { useAuth } from "@/context/AuthContext";
 import { useTeacherDetails } from "@/hooks/useTeacher";
 
-export default function GuardianInfo({
-  id,
-}: {
-  id: string;
-}) {
-  const { token } = useAuth();
-  const { data, isLoading, error } = useTeacherDetails(token, { id });
+export default function EmergencyInfo({ id }: { id: string }) {
 
-  const teacher = data?.data?.teacher?.[0] || null;
-  const info = teacher?.additional_info || {};
+  const { token } = useAuth();
+  const isClient = useClientOnly();
+
+  const { data: teacherDetails,  } =
+    useTeacherDetails(token, { id });
+
+  const teacher = teacherDetails?.data?.teacher?.[0] || null;
+  const additional_info = teacher?.additional_info || {};
 
   return (
     <div className="w-full py-5 flex flex-col gap-4 px-5 mt-5 rounded-md bg-zinc-100 dark:bg-zinc-900">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SectionHeader icon={<User className="text-teal-500 h-5 w-5" />} title="Guardian Information" />
 
-        <InputField label="Guardian First Name" value={info.emergency_fname} />
-        <InputField label="Guardian Middle Name" value={info.emergency_mname} />
-        <InputField label="Guardian Last Name" value={info.emergency_lname} />
-        <InputField label="Guardian Contact" value={info.emergency_contact} icon={<Phone className="text-blue-500 h-4 w-4" />} />
+        <InputField label="Guardian First Name" value={additional_info.emergency_fname} />
+        <InputField label="Guardian Middle Name" value={additional_info.emergency_mname} />
+        <InputField label="Guardian Last Name" value={additional_info.emergency_lname} />
+        <InputField label="Guardian Contact" value={additional_info.emergency_contact} icon={<Phone className="text-blue-500 h-4 w-4" />} />
 
       </div>
     </div>

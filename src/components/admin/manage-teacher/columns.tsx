@@ -1,5 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+
 import {
   Eye,
   SquarePen,
@@ -15,11 +17,8 @@ import {
   Rows4,
   Grip,
 } from "lucide-react";
-import ShowProfile from "@/components/admin/manage-teacher/ShowProfile/ShowProfile";
 import EditProfile from "@/components/admin/manage-teacher/EditTeacher/EditTeacher";
-import ShowAttendanceHistory from "@/components/admin/manage-teacher/ShowAttendanceHistory/ShowAttendanceHistory";
 import Registration from "@/components/admin/manage-teacher/Registration/Registration";
-import ShowTeacherClass from "@/components/admin/manage-teacher/ShowClass/ShowTeacherClass";
 import { useState } from "react";
 
 import {
@@ -139,11 +138,10 @@ export const columns: ColumnDef<Teacher>[] = [
     accessorKey: "Actions",
     id: "actions",
     cell: ({ row }) => {
+      const router = useRouter();
       const teacherId = row.original.id;
 
-      const [openView, setOpenView] = useState(false);
       const [openEdit, setOpenEdit] = useState(false);
-      const [openHistory, setOpenHistory] = useState(false);
       const [openRegister, setOpenRegister] = useState(false);
       const [openTeacherClass, setOpenTeacherClass] = useState(false);
 
@@ -173,36 +171,42 @@ export const columns: ColumnDef<Teacher>[] = [
               </TooltipContent>
             </Tooltip>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setOpenView(true)}>
+              <DropdownMenuItem
+                onClick={() => window.open(`/admin/manage-teacher/teacher-profile/${teacherId}`, "_blank")}
+              >
                 <Eye className="w-4 h-4 text-teal-700 dark:text-teal-500" />
                 View Profile
               </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => setOpenEdit(true)}>
                 <SquarePen className="w-4 h-4 text-sky-700 dark:text-sky-500" />
                 Edit Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setOpenHistory(true)}>
+
+              <DropdownMenuItem onClick={() => window.open(`/admin/manage-teacher/attendance-history/${teacherId}`, "_blank")}>
                 <History className="w-4 h-4 text-indigo-700 dark:text-indigo-500" />
                 Attendance History
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setOpenTeacherClass(true)}>
+
+              <DropdownMenuItem onClick={() => window.open(`/admin/manage-teacher/advisory-class/${teacherId}`, "_blank")}>
                 <Rows4 className="w-4 h-4 text-violet-700 dark:text-violet-500" />
-                Teacher Class
+                Advisory Class
               </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => setOpenRegister(true)}>
                 <FilePlus className="w-4 h-4 text-blue-700 dark:text-blue-500" />
                 Register
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <ShowProfile open={openView} setOpen={setOpenView} row={row} />
           <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
-          <ShowAttendanceHistory open={openHistory} setOpen={setOpenHistory} row={row} />
-          <ShowTeacherClass open={openTeacherClass} setOpen={setOpenTeacherClass} row={row} />
-          <Registration open={openRegister} setOpen={setOpenRegister} row={row} />
+          <Registration
+            open={openRegister}
+            setOpen={setOpenRegister}
+            row={row}
+          />
         </div>
       );
     },
   },
 ];
-

@@ -1,32 +1,35 @@
-// AddressInfo.tsx
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+import { useParams } from "next/navigation";
+import { useClientOnly } from "@/hooks/useClientOnly";
+
 import { Map, MapPinHouse } from "lucide-react";
 
 import { useAuth } from "@/context/AuthContext";
 import { useTeacherDetails } from "@/hooks/useTeacher";
 
-export default function AddressInfo({
-  id,
-}: {
-  id: string;
-}) {
-  const { token } = useAuth();
-  const { data, isLoading, error } = useTeacherDetails(token, { id });
+export default function AddressInfo({ id }: { id: string }) {
 
-  const teacher = data?.data?.teacher?.[0] || null;
-  const info = teacher?.additional_info || {};
+  const { token } = useAuth();
+  const isClient = useClientOnly();
+
+  const { data: teacherDetails,  } =
+    useTeacherDetails(token, { id });
+
+  const teacher = teacherDetails?.data?.teacher?.[0] || null;
+  const additional_info = teacher?.additional_info || {};
 
   return (
     <div className="w-full py-5 flex flex-col gap-4 px-5 mt-5 rounded-md bg-zinc-100 dark:bg-zinc-900">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SectionHeader icon={<Map className="text-red-500 h-5 w-5" />} title="Address" />
 
-        <InputField label="Region" value={info.region} />
-        <InputField label="Province" value={info.province} />
-        <InputField label="City" value={info.city} />
-        <InputField label="Barangay" value={info.barangay} />
-        <InputField label="Street" value={info.street} full />
+        <InputField label="Region" value={additional_info.region} />
+        <InputField label="Province" value={additional_info.province} />
+        <InputField label="City" value={additional_info.city} />
+        <InputField label="Barangay" value={additional_info.barangay} />
+        <InputField label="Street" value={additional_info.street} full />
       </div>
     </div>
   );
@@ -67,3 +70,4 @@ function SectionHeader({
     </div>
   );
 }
+

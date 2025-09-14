@@ -34,6 +34,8 @@
     "clsx": "^2.1.1",
     "cookies-next": "^6.1.0",
     "date-fns": "^4.1.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.2",
     "lucide-react": "^0.534.0",
     "mini-svg-data-uri": "^1.4.4",
     "motion": "^12.23.12",
