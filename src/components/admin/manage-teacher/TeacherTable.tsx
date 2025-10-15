@@ -1,3 +1,7 @@
+'use client';
+
+import React, { useState, useMemo } from "react";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -7,8 +11,15 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 
 import {
   ChevronsLeft,
@@ -16,6 +27,10 @@ import {
   ChevronRight,
   ChevronsRight,
   Search,
+  CircleUser,
+  UserCheck,
+  UserX,
+  ChevronDownIcon,
 } from "lucide-react";
 
 import {
@@ -26,12 +41,50 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 
-import { columns } from "@/components/admin/manage-teacher/columns";
-import { FiltersDropdown } from "@/components/admin/manage-student/FiltersDropdown";
 import { FilterTable } from "@/components/admin/manage-student/Filtertable";
-import { FiltersDropdownStatus } from "@/components/admin/manage-student/FiltersDropdownStatus";
+
+const statusTypes = [
+  { value: "1", label: "Active", icon: <UserCheck className="text-green-500 mr-1 w-3 h-3" /> },
+  { value: "0", label: "Inactive", icon: <UserX className="text-red-500 mr-1 w-3 h-3" /> },
+];
+
+interface FiltersDropdownStatusProps {
+  selectedFilters: string[];
+  setSelectedFilters: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+function FiltersDropdownStatus({ selectedFilters, setSelectedFilters }: FiltersDropdownStatusProps) {
+  const toggleFilter = (status: string) => {
+    setSelectedFilters((prev) =>
+      prev.includes(status) ? prev.filter((t) => t !== status) : [...prev, status]
+    );
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" className="flex items-center gap-2">
+          <CircleUser className="w-4 h-4 text-teal-500" />
+          Status
+          <ChevronDownIcon className="w-4 h-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {statusTypes.map(({ value, label, icon }) => (
+          <DropdownMenuCheckboxItem
+            key={value}
+            checked={selectedFilters.includes(value)}
+            onCheckedChange={() => toggleFilter(value)}
+            className="text-xs flex items-center"
+          >
+            {icon} {label}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 interface Props<TData> {
   columns: ColumnDef<TData>[];
@@ -41,15 +94,46 @@ interface Props<TData> {
   totalRows: number;
 }
 
-export function TeacherTable<TData>({
+export function TeacherTable<TData extends { status: string; last_name: string; first_name: string; middle_name?: string; suffix?: string; employee_number?: string }>({
   columns,
   data,
   pagination,
   setPagination,
   totalRows,
 }: Props<TData>) {
+  const [search, setSearch] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+
+  // Filter data by status and search before passing to react-table
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      // Filter by status
+      if (selectedStatus.length > 0 && !selectedStatus.includes(item.status)) {
+        return false;
+      }
+
+      // Filter by search
+      if (search.trim() !== "") {
+        const lowerSearch = search.toLowerCase();
+        const fullName = `${item.last_name} ${item.first_name} ${item.middle_name || ""} ${item.suffix || ""}`;
+        const employeeNo = item.employee_number || "";
+
+        const matchesName = fullName.toLowerCase().includes(lowerSearch);
+        const matchesEmpNo = employeeNo.toLowerCase().includes(lowerSearch);
+
+        return matchesName || matchesEmpNo;
+      }
+
+      return true;
+    });
+  }, [data, selectedStatus, search]);
+
+
+  // Update totalRows after filtering
+  const filteredTotalRows = filteredData.length;
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: { pagination },
     onPaginationChange: setPagination,
@@ -58,11 +142,8 @@ export function TeacherTable<TData>({
   });
 
   const start = pagination.pageIndex * pagination.pageSize + 1;
-  const end = Math.min(start + data.length - 1, totalRows);
-  const totalPages = Math.ceil(totalRows / pagination.pageSize);
-
-  const [search, setSearch] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const end = Math.min(start + table.getRowModel().rows.length - 1, filteredTotalRows);
+  const totalPages = Math.ceil(filteredTotalRows / pagination.pageSize);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -93,13 +174,6 @@ export function TeacherTable<TData>({
                 setPagination((p) => ({ ...p, pageIndex: 0 }));
               }}
             />
-            {/* <FiltersDropdown
-              selectedFilters={selectedFilters}
-              setSelectedFilters={(filters) => {
-                setSelectedFilters(filters);
-                setPagination((p) => ({ ...p, pageIndex: 0 }));
-              }}
-            /> */}
           </div>
         </div>
 
@@ -109,35 +183,26 @@ export function TeacherTable<TData>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id} className="py-3">
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {data.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-5">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-16 text-center text-red-500 dark:text-red-800"
-                >
+                <TableCell colSpan={columns.length} className="h-16 text-center text-red-500 dark:text-red-800">
                   No data found.
                 </TableCell>
               </TableRow>
@@ -147,7 +212,7 @@ export function TeacherTable<TData>({
 
         <div className="flex items-center justify-between px-5 py-4 space-x-2 mt-3">
           <div className="text-sm text-muted-foreground flex-1">
-            Showing {start} to {end} of {totalRows} entries
+            Showing {start} to {end} of {filteredTotalRows} entries
           </div>
 
           <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
@@ -158,9 +223,7 @@ export function TeacherTable<TData>({
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                setPagination((prev) => ({ ...prev, pageIndex: 0 }))
-              }
+              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: 0 }))}
               disabled={pagination.pageIndex === 0}
               className="w-24 h-8 font-normal text-xs"
             >
@@ -185,12 +248,7 @@ export function TeacherTable<TData>({
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: prev.pageIndex + 1,
-                }))
-              }
+              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }))}
               disabled={pagination.pageIndex >= totalPages - 1}
               className="w-24 h-8 font-normal text-xs"
             >
@@ -200,12 +258,7 @@ export function TeacherTable<TData>({
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: totalPages - 1,
-                }))
-              }
+              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: totalPages - 1 }))}
               disabled={pagination.pageIndex >= totalPages - 1}
               className="w-24 h-8 font-normal text-xs"
             >
@@ -218,3 +271,4 @@ export function TeacherTable<TData>({
     </div>
   );
 }
+

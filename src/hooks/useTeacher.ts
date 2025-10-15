@@ -1,6 +1,11 @@
 import { CountTeacherActive, GetAllTeachers, GetTeacherDetails } from "@/services/Teacher_service";
 import { useQuery } from "@tanstack/react-query";
 
+// type UseTeacherDetailsParams = {
+//   id: string;
+//   enabled?: boolean;
+// };
+
 export const useTeacherActiveCount = (token: string | null) => {
   return useQuery({
     queryKey: ['count-active-teachers'],
@@ -27,3 +32,15 @@ export const useTeacherDetails = (token: string | null, { id }: { id: string }) 
     staleTime: 1000 * 60 * 5,
   });
 };
+
+// export const useTeacherDetails = (
+//   token: string | null,
+//   { id, enabled = true }: UseTeacherDetailsParams
+// ) => {
+//   return useQuery({
+//     queryKey: ['teacher-details', id],
+//     queryFn: () => GetTeacherDetails(token as string, id),
+//     enabled: !!token && !!id && enabled,
+//     staleTime: 1000 * 60 * 5,
+//   });
+// };

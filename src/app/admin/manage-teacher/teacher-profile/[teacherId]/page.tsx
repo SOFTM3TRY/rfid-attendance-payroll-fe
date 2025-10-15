@@ -44,7 +44,7 @@ export default function TeacherProfile() {
     return <Loader />;
   }
 
-  const { data: teacherDetails, isLoading: isLoadingTeacherDetails } =
+  const { data: teacherDetails } =
     useTeacherDetails(token, { id: teacherId });
 
   const teacher = teacherDetails?.data?.teacher?.[0] || null;
@@ -91,10 +91,8 @@ export default function TeacherProfile() {
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbPage>
-                      {isLoadingTeacherDetails
-                        ? "Loading..."
-                        : fullName.length > 20
-                        ? `${fullName.substring(0, 20)}...`
+                      {fullName.length > 17
+                        ? `${fullName.substring(0, 17)}...`
                         : fullName}
                     </BreadcrumbPage>
                   </BreadcrumbItem>

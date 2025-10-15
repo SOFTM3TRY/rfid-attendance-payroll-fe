@@ -7,7 +7,7 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { TableIcon, ChevronDownIcon, CircleUser, UserCheck, UserX } from "lucide-react";
+import { ChevronDownIcon, CircleUser, UserCheck, UserX } from "lucide-react";
 
 const statusTypes = [{ value: "1", label: "Active" }, { value: "0", label: "Inactive" }];
 

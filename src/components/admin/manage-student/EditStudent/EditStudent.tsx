@@ -1,4 +1,4 @@
-import { useStudentForm } from "@/hooks/useStudentForm";
+import { useEditStudentForm } from "@/hooks/useEditStudentForm";
 import {
   Sheet,
   SheetContent,
@@ -38,19 +38,18 @@ export default function EditStudent({
   trigger?: React.ReactNode;
 }) {
   const {
-    step,
-    setStep,
-    open: openSheet,
-    setOpen: setOpenSheet,
-    loading,
-    errors,
-    handlePrevStep,
-    handleNextStep,
-    handleSubmit,
-    setErrors,
-    formData,
-    setFormData,
-  } = useStudentForm();
+  step,
+  setStep,
+  loading,
+  errors,
+  handlePrevStep,
+  handleNextStep,
+  handleSubmit,
+  setErrors,
+  formData,
+  setFormData,
+} = useEditStudentForm(row?.original);
+
 
   const data = row?.original || {};
   const fullName = [
@@ -68,10 +67,11 @@ export default function EditStudent({
     toast.success("Student data updated successfully");
 
     setOpen(false);
-    // alert(
-    //   "Student data updated successfully:\n\n" +
-    //     JSON.stringify(data, null, 2)
-    // );
+
+    console.log(
+      "Student data updated successfully:\n\n" +
+        JSON.stringify(data, null, 2)
+    );
   };
 
   return (

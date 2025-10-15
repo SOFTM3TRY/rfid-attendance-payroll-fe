@@ -42,16 +42,11 @@ export type Teacher = {
   last_name: string;
   suffix?: string;
   grade_id: number;
-  section: number;
+  section: string;
   status: "Active" | "Inactive";
 };
 
 export const columns: ColumnDef<Teacher>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => <span>{row.original.id}</span>,
-  },
   {
     accessorKey: "employee_number",
     header: () => (

@@ -21,14 +21,14 @@ import { FiltersDropdownStatus } from "@/components/admin/manage-student/Filters
 
 import { Input } from "@/components/ui/input";
 
-import  AddStudent  from "@/components/admin/manage-student/AddStudent/AddStudent";
+import AddStudent from "@/components/admin/manage-student/AddStudent/AddStudent";
 
 import { useStudentDetails } from "@/hooks/useStudentDetails";
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
 
- 
- 
+
+
 interface Section {
   Grade: string;
   Section: string;
@@ -42,9 +42,9 @@ interface Section {
   section: string;
   grade_id: string;
   lrn: string;
-  
+
 }
- 
+
 
 export default function GradeTabsPage() {
 
@@ -65,33 +65,52 @@ export default function GradeTabsPage() {
   const gradeComponents: Record<string, React.ElementType> = {
     1: GradeOneTable,
     2: GradeTwoTable,
-  3: GradeThreeTable,
-   4: GradeFourTable,
-  5: GradeFiveTable,
-6: GradeSixTable,
+    3: GradeThreeTable,
+    4: GradeFourTable,
+    5: GradeFiveTable,
+    6: GradeSixTable,
   };
 
-  // Filter the data by grade, filters, and search
-   const getFilteredData = (grade_id: any) => {
-     
-    
-    const filteredData = baseData.filter((row) => {
-     const gradeMatch = String(row.grade_id) === String(grade_id);
-      const sectionMatch = selectedFilters.length === 0 || selectedFilters.includes(String(row.section));
+  // Get filtered data WITHOUT applying section filter yet
+  const filteredDataWithoutSectionFilter = React.useMemo(() => {
+    return baseData.filter((row) => {
+      const gradeMatch = String(row.grade_id) === String(selectedGrade);
       const statusMatch = selectedStatus.length === 0 || selectedStatus.includes(row.status);
       const fullName = `${row.first_name} ${row.middle_name || ''} ${row.last_name}`;
       const searchMatch = search === "" ||
         fullName.toLowerCase().includes(search.toLowerCase()) ||
         row.lrn.includes(search);
-   
-      
+
+      return gradeMatch && statusMatch && searchMatch;
+    });
+  }, [baseData, selectedGrade, selectedStatus, search]);
+
+  // Now derive sectionTypes from the above filtered data
+  const sectionTypes = React.useMemo(() => {
+    const sectionsSet = new Set(
+      filteredDataWithoutSectionFilter
+        .map((row) => row.section?.trim())
+        .filter(Boolean)
+    );
+    return Array.from(sectionsSet);
+  }, [filteredDataWithoutSectionFilter]);
+
+  // Filter the data by grade, filters, and search
+  const getFilteredData = (grade_id: any) => {
+    return baseData.filter((row) => {
+      const gradeMatch = String(row.grade_id) === String(grade_id);
+      const sectionMatch = selectedFilters.length === 0 || selectedFilters.includes(row.section?.trim());
+      const statusMatch = selectedStatus.length === 0 || selectedStatus.includes(row.status);
+      const fullName = `${row.first_name} ${row.middle_name || ''} ${row.last_name}`;
+      const searchMatch = search === "" ||
+        fullName.toLowerCase().includes(search.toLowerCase()) ||
+        row.lrn.includes(search);
+
       return gradeMatch && sectionMatch && statusMatch && searchMatch;
     });
-    
-    return filteredData;
   };
 
-   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setPagination((p) => ({ ...p, pageIndex: 0 })); // reset page on search change
   };
@@ -114,7 +133,9 @@ export default function GradeTabsPage() {
         value={selectedGrade || ""}
         onValueChange={(value) => {
           setSelectedGrade(value);
-          setPagination((p) => ({ ...p, pageIndex: 0 })); // reset page when grade changes
+          setSelectedFilters([]); // Reset section filters
+          setSelectedStatus([]);  // Reset status filters (optional)
+          setPagination((p) => ({ ...p, pageIndex: 0 }));
         }}
       >
         <div className="flex justify-between items-center mb-3">
@@ -126,21 +147,20 @@ export default function GradeTabsPage() {
                 className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
               >
                 <GraduationCap
-                  className={`mr-1 h-4 w-4 ${
-                    grade.id === 1
-                      ? "text-green-500 dark:text-green-300"
-                      : grade.id ===2
+                  className={`mr-1 h-4 w-4 ${grade.id === 1
+                    ? "text-green-500 dark:text-green-300"
+                    : grade.id === 2
                       ? "text-orange-500 dark:text-orange-300"
-                      : grade.id ===3
-                      ? "text-indigo-500 dark:text-indigo-300"
-                      : grade.id ===4
-                      ? "text-blue-500 dark:text-blue-300"
-                      : grade.id === 5
-                      ? "text-red-500 dark:text-red-300"
-                      : grade.id ===6
-                      ? "text-yellow-500 dark:text-yellow-300"
-                      : ""
-                  }`}
+                      : grade.id === 3
+                        ? "text-indigo-500 dark:text-indigo-300"
+                        : grade.id === 4
+                          ? "text-blue-500 dark:text-blue-300"
+                          : grade.id === 5
+                            ? "text-red-500 dark:text-red-300"
+                            : grade.id === 6
+                              ? "text-yellow-500 dark:text-yellow-300"
+                              : ""
+                    }`}
                 />
                 {grade.grade_level}
               </TabsTrigger>
@@ -174,10 +194,8 @@ export default function GradeTabsPage() {
             />
             <FiltersDropdown
               selectedFilters={selectedFilters}
-              setSelectedFilters={(filters) => {
-                setSelectedFilters(filters);
-                setPagination((p) => ({ ...p, pageIndex: 0 }));
-              }}
+              setSelectedFilters={setSelectedFilters}
+              sectionTypes={sectionTypes}
             />
           </div>
         </div>

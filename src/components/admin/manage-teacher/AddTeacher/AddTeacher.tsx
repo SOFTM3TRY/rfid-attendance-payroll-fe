@@ -253,7 +253,9 @@ export default function AddTeacher() {
                 </Button>
               ) : (
                 <Button
-                  onClick={handleSubmit}
+                  onClick={() => {
+                    handleSubmit().then(() => setStep(1));
+                  }}
                   className="w-40"
                   disabled={loading}
                 >

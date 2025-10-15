@@ -41,7 +41,7 @@ import { FilterTable } from "@/components/admin/manage-student/Filtertable";
 // Type from your API
 export type Student = {
   id: number;
-  student_no: string;
+  lrn: string;
   first_name: string;
   middle_name: string;
   last_name: string;
@@ -52,10 +52,10 @@ export type Student = {
 
 const columns: ColumnDef<Student>[] = [
   {
-    accessorKey: "student_no",
+    accessorKey: "lrn",
     header: () => (
       <div className="flex items-center">
-        <BadgeInfo className="text-blue-500 mr-1 w-4 h-4" /> Student No
+        <BadgeInfo className="text-blue-500 mr-1 w-4 h-4" /> LRN
       </div>
     ),
   },

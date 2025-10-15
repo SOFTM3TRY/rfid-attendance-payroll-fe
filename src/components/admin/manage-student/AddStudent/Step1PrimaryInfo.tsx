@@ -154,7 +154,7 @@ export default function Step1({
         >
           <option value="">Select Section</option>
           {SectionsData?.data.map((section: any) => (
-            <option key={section.id} value={section.id}>
+            <option key={section.id} value={section.section_name}>
               {section.section_name}
             </option>
           ))}

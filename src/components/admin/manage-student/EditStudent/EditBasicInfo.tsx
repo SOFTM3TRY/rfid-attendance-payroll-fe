@@ -9,33 +9,23 @@ import {
   Book,
   Calendar,
   KeyRound,
-  User,
-  UserLock,
-  CalendarDays,
-  MapPinHouse,
-  CircleSmall,
-  School,
 } from "lucide-react";
-
-// Mocked data, replace with actual API/context
-const GradesData = {
-  data: [
-    { id: "1", grade_level: "Grade 1" },
-    { id: "2", grade_level: "Grade 2" },
-    // Add more as needed
-  ],
-};
+import { useAuth } from "@/context/AuthContext";
+import { useGrade } from "@/hooks/useGrade";
+import { useSection } from "@/hooks/useSection";
 
 function generateSchoolYears() {
-  const currentYear = new Date().getFullYear();
-  return Array.from({ length: 5 }, (_, i) => `${currentYear - i}-${currentYear - i + 1}`);
+  const current = new Date().getFullYear();
+  return Array.from({ length: 6 }, (_, i) => `${current - i}-${current - i + 1}`);
 }
 
-function generateSections() {
-  return ["A", "B", "C", "D"];
+interface EditBasicInfoProps {
+  data: any; // Replace with your exact type
 }
 
-export default function EditBasicInfo({ data }: { data: any }) {
+export default function EditBasicInfo({ data }: EditBasicInfoProps) {
+  const { token } = useAuth();
+
   const [formData, setFormData] = useState({
     lrn: "",
     grade: "",
@@ -54,6 +44,14 @@ export default function EditBasicInfo({ data }: { data: any }) {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
 
+  // Fetch grades
+  const { data: GradesData, isLoading: isLoadingGrades } = useGrade(token as string);
+
+  // Use the grade from formData to fetch sections
+  const gradeId = formData.grade;
+  const { data: SectionsData, isLoading: isLoadingSections } = useSection(token as string, gradeId);
+
+  // When `data` prop changes, initialize formData
   useEffect(() => {
     if (data) {
       setFormData({
@@ -75,7 +73,12 @@ export default function EditBasicInfo({ data }: { data: any }) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "grade" ? { section: "" } : {}),
+    }));
 
     setErrors((prev) => {
       const updated = { ...prev };
@@ -85,9 +88,7 @@ export default function EditBasicInfo({ data }: { data: any }) {
   };
 
   return (
-    <div className="flex flex-col gap-10 rounded-md bg-zinc-100 dark:bg-zinc-900 mt-10">
-
-      {/* ========== Primary Information ========== */}
+    <div className="flex flex-col gap-10 rounded-md bg-zinc-100 dark:bg-zinc-900 mt-10 p-4">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
         <span className="col-span-1 md:col-span-4">
           <h1 className="text-sm font-medium flex items-center text-zinc-800 dark:text-zinc-100 bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-sm w-56">
@@ -145,10 +146,10 @@ export default function EditBasicInfo({ data }: { data: any }) {
             className={`border dark:bg-zinc-900 py-1 px-3 rounded-sm ${
               errors.grade ? "border-red-500" : ""
             }`}
-            disabled={loading}
+            disabled={loading || isLoadingGrades}
           >
             <option value="">Select Grade</option>
-            {GradesData.data.map((grade) => (
+            {GradesData?.data.map((grade: any) => (
               <option key={grade.id} value={grade.id}>
                 {grade.grade_level}
               </option>
@@ -172,12 +173,17 @@ export default function EditBasicInfo({ data }: { data: any }) {
             className={`border dark:bg-zinc-900 py-1 px-3 rounded-sm ${
               errors.section ? "border-red-500" : ""
             }`}
-            disabled={loading || !formData.grade}
+            disabled={
+              loading ||
+              isLoadingSections ||
+              !formData.grade ||
+              !SectionsData?.data
+            }
           >
             <option value="">Select Section</option>
-            {generateSections().map((section) => (
-              <option key={section} value={section}>
-                Section {section}
+            {SectionsData?.data.map((section: any) => (
+              <option key={section.id} value={section.section_name}>
+                {section.section_name}
               </option>
             ))}
           </select>

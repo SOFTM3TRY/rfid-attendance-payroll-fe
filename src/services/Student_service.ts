@@ -69,6 +69,15 @@ export const CountByGradeStudents = async (token: string, grade: number) => {
   }
 }
 
+export async function UpdateStudent(token: string, studentId: string, data: any) {
+  const response = await axios.put(`/api/students/${studentId}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
 export const RegisterRFIDToStudent = async (token: string, studentlrn: string, data: any) => {
   try {
     const response = await axios.post(

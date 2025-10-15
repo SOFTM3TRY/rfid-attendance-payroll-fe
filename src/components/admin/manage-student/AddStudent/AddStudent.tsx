@@ -74,11 +74,10 @@ export default function AddStudent() {
             <TabsTrigger
               value="step1"
               disabled={step < 1}
-              className={`flex items-start justify-start p-3 ${
-                step === 1
+              className={`flex items-start justify-start p-3 ${step === 1
                   ? "border-2 border-blue-500 dark:border-blue-500"
                   : ""
-              }`}
+                }`}
             >
               <div className="flex gap-2">
                 <div className="text-start">
@@ -102,11 +101,10 @@ export default function AddStudent() {
             <TabsTrigger
               value="step2"
               disabled={step < 2}
-              className={`flex items-start justify-start p-3 ${
-                step === 2
+              className={`flex items-start justify-start p-3 ${step === 2
                   ? "border-2 border-green-500 dark:border-green-500"
                   : ""
-              }`}
+                }`}
             >
               <div className="flex gap-2">
                 <div className="text-start">
@@ -130,9 +128,8 @@ export default function AddStudent() {
             <TabsTrigger
               value="step3"
               disabled={step < 3}
-              className={`flex items-start justify-start p-3 ${
-                step === 3 ? "border-2 border-sky-500 dark:border-sky-500" : ""
-              }`}
+              className={`flex items-start justify-start p-3 ${step === 3 ? "border-2 border-sky-500 dark:border-sky-500" : ""
+                }`}
             >
               <div className="flex gap-2">
                 <div className="text-start">
@@ -156,11 +153,10 @@ export default function AddStudent() {
             <TabsTrigger
               value="step4"
               disabled={step < 4}
-              className={`flex items-start justify-start p-3 ${
-                step === 4
+              className={`flex items-start justify-start p-3 ${step === 4
                   ? "border-2 border-teal-500 dark:border-teal-500"
                   : ""
-              }`}
+                }`}
             >
               <div className="flex gap-2">
                 <div className="text-start">
@@ -238,10 +234,12 @@ export default function AddStudent() {
                 </Button>
               ) : (
                 <Button
-                  onClick={handleSubmit}
+                  onClick={() => {
+                    handleSubmit().then(() => setStep(1));
+                  }}
                   className="w-40"
                   disabled={loading}
-                  
+
                 >
                   {loading ? (
                     <>
@@ -268,3 +266,4 @@ export default function AddStudent() {
     </Sheet>
   );
 }
+

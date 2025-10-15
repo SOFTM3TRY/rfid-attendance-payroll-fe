@@ -8,6 +8,7 @@ export default function PrimaryInfo({
   data: any;
   fullName: string;
 }) {
+  console.log(data);
   return (
     <div className="sticky top-0 shadow-lg dark:border-b-4 dark:border-black z-100 w-full py-5 flex justify-start rounded-md items-center px-5 gap-5 bg-zinc-100 dark:bg-zinc-900">
       <Avatar className="h-30 w-30 flex-shrink-0">
@@ -19,7 +20,7 @@ export default function PrimaryInfo({
           {fullName}
         </p>
         <p className="text-sm my-1">
-          LRN: {data.lrn}{" "}
+          LRN: {data.employee_number}{" "}
           <span className="ml-3 text-blue-800 font-medium dark:text-blue-200">
             SY: {data.school_year}
           </span>
