@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect, useState } from "react"; // <-- Added useState
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,16 @@ import { useAuth } from "@/context/AuthContext";
 import { useClientOnly } from "@/hooks/useClientOnly";
 import { useTeacherDetails } from "@/hooks/useTeacher";
 import { useParams } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu";
 
 import SF2Table from "./table";
 
 export default function SF2Page() {
-  const pdfRef = useRef<HTMLDivElement>(null);
 
   const { token } = useAuth();
   const isClient = useClientOnly();
@@ -33,47 +38,108 @@ export default function SF2Page() {
   const students = teacherDetails?.data?.students || [];
 
   const fullName = teacher
-    ? `${teacher?.last_name}, ${teacher?.first_name} ${
-        teacher?.middle_name || ""
-      } ${teacher?.suffix || ""}`
+    ? `${teacher?.last_name}, ${teacher?.first_name} ${teacher?.middle_name || ""
+    } ${teacher?.suffix || ""}`
     : "Unknown";
+
+  // Fix: Add months and selectedMonth hook here
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ];
+  const [selectedMonth, setSelectedMonth] = useState<number>(0);
 
   useEffect(() => {
     const root = document.documentElement;
 
-    // Override ShadCN/Tailwind theme CSS vars to safe hex values
-    root.style.setProperty("--foreground", "0 0% 0%"); // black
-    root.style.setProperty("--background", "0 0% 100%"); // white
-    root.style.setProperty("--card-foreground", "0 0% 0%"); // black
-    root.style.setProperty("--card", "0 0% 100%"); // white
-    root.style.setProperty("--border", "0 0% 80%"); // light gray
-    root.style.setProperty("--input", "0 0% 90%"); // lighter gray
-    root.style.setProperty("--ring", "0 0% 50%"); // mid gray
-    // Add overrides for all theme vars used in your area if you find more via DevTools
+    root.style.setProperty("--foreground", "0 0% 0%");
+    root.style.setProperty("--background", "0 0% 100%");
+    root.style.setProperty("--card-foreground", "0 0% 0%");
+    root.style.setProperty("--card", "0 0% 100%");
+    root.style.setProperty("--border", "0 0% 80%");
+    root.style.setProperty("--input", "0 0% 90%");
+    root.style.setProperty("--ring", "0 0% 50%");
   }, []);
 
   const handleDownload = async () => {
-    const element = pdfRef.current;
+    const element = document.getElementById("pdf-content");
     if (!element) return;
 
     try {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const canvas = await html2canvas(element, {
         backgroundColor: "#ffffff",
         scale: 2,
         useCORS: true,
+        scrollY: -window.scrollY,
       });
+
       const imgData = canvas.toDataURL("image/png");
+
       const pdf = new jsPDF({
         orientation: "landscape",
         unit: "px",
-        format: [1123, 794],
+        format: "a4", // Use A4 landscape format for standardization
       });
-      pdf.addImage(imgData, "PNG", 0, 0, 1123, 794);
+
+      const pageWidth = pdf.internal.pageSize.getWidth();  // 842px (landscape A4)
+      const pageHeight = pdf.internal.pageSize.getHeight(); // 595px
+
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+
+      const imgRatio = canvasWidth / canvasHeight;
+      const pdfRatio = pageWidth / pageHeight;
+
+      // Resize image to fit the PDF width
+      const pdfImgWidth = pageWidth;
+      const pdfImgHeight = pageWidth / imgRatio;
+
+      let position = 0;
+      let pageCount = 0;
+
+      while (position < canvasHeight) {
+        const pageCanvas = document.createElement("canvas");
+        const pageCtx = pageCanvas.getContext("2d");
+
+        const sliceHeight = Math.min(canvasHeight - position, canvasHeight); // Avoid overflow
+        pageCanvas.width = canvasWidth;
+        pageCanvas.height = sliceHeight;
+
+        if (pageCtx) {
+          pageCtx.drawImage(
+            canvas,
+            0,
+            position,
+            canvasWidth,
+            sliceHeight,
+            0,
+            0,
+            canvasWidth,
+            sliceHeight
+          );
+
+          const img = pageCanvas.toDataURL("image/png");
+          const heightOnPage = (sliceHeight * pdfImgWidth) / canvasWidth;
+
+          if (pageCount > 0) {
+            pdf.addPage();
+          }
+
+          pdf.addImage(img, "PNG", 0, 0, pdfImgWidth, heightOnPage);
+        }
+
+        position += sliceHeight;
+        pageCount++;
+      }
+
       pdf.save("sf2-report.pdf");
     } catch (error) {
       console.error("PDF generation error:", error);
     }
   };
+
 
   return (
     <div
@@ -87,22 +153,44 @@ export default function SF2Page() {
         alignItems: "center",
       }}
     >
-      <Button
-        size="sm"
-        className="bg-zinc-800 text-white hover:bg-zinc-700"
-        style={{
-          marginBottom: "20px",
-        }}
-        onClick={handleDownload}
-      >
-        Download PDF
-      </Button>
+      <div className="flex items-center justify-center gap-5">
+        <Button
+          size="sm"
+          className="bg-zinc-800 text-white hover:bg-zinc-700"
+          style={{ marginBottom: "20px" }}
+          onClick={handleDownload}
+        >
+          Download PDF
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              size="sm"
+              className="bg-zinc-800 text-white hover:bg-zinc-700"
+              style={{ marginBottom: "20px" }}
+            >
+              Select Month
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent sideOffset={5}>
+            {months.map((month, index) => (
+              <DropdownMenuCheckboxItem
+                key={index}
+                checked={selectedMonth === index}
+                onCheckedChange={() => setSelectedMonth(index)}
+              >
+                {month}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       <div
-        ref={pdfRef}
         style={{
           width: "1123px",
-          height: "794px",
+          minHeight: "794px",
           backgroundColor: "#ffffff",
           color: "#000000",
           boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
@@ -111,6 +199,7 @@ export default function SF2Page() {
           border: "1px solid #d1d5db",
           position: "relative",
         }}
+        id="pdf-content"
       >
         <img
           src="/logo.png"
@@ -171,7 +260,14 @@ export default function SF2Page() {
                 readOnly
               />
             </div>
-            <div style={{ flex: 1, marginLeft: "-35px", display: "flex", alignItems: "center", }}>
+            <div
+              style={{
+                flex: 1,
+                marginLeft: "-35px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <label>School Year:</label>
               <input
                 type="text"
@@ -191,10 +287,11 @@ export default function SF2Page() {
                 type="text"
                 style={{
                   width: "50%",
-                 padding: "1px",
+                  padding: "1px",
                   border: "1px solid #000",
                   lineHeight: "2.5",
                 }}
+                value={months[selectedMonth]}
                 readOnly
               />
             </div>
@@ -231,16 +328,16 @@ export default function SF2Page() {
                   additional_info.grade === "1"
                     ? "Grade One"
                     : additional_info.grade === "2"
-                    ? "Grade Two"
-                    : additional_info.grade === "3"
-                    ? "Grade Three"
-                    : additional_info.grade === "4"
-                    ? "Grade Four"
-                    : additional_info.grade === "5"
-                    ? "Grade Five"
-                    : additional_info.grade === "6"
-                    ? "Grade Six"
-                    : additional_info.grade
+                      ? "Grade Two"
+                      : additional_info.grade === "3"
+                        ? "Grade Three"
+                        : additional_info.grade === "4"
+                          ? "Grade Four"
+                          : additional_info.grade === "5"
+                            ? "Grade Five"
+                            : additional_info.grade === "6"
+                              ? "Grade Six"
+                              : additional_info.grade
                 }
                 readOnly
               />
@@ -263,14 +360,13 @@ export default function SF2Page() {
         </div>
 
         <SF2Table />
-        
+
+        <div className="grid grid-cols-5 gap-5 mt-5">
+          <div className="col-span-2 bg-red-500 h-96"></div>
+          <div className="col-span-1 bg-blue-500 h-96"></div>
+          <div className="col-span-2 bg-green-500 h-96"></div>
+        </div>
       </div>
     </div>
   );
 }
-
-const cellStyle: React.CSSProperties = {
-  border: "1px solid #d1d5db",
-  padding: "5px",
-  textAlign: "center",
-};

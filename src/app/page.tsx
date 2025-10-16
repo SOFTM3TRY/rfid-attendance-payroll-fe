@@ -95,12 +95,12 @@ export default function Login() {
                 Remember me
               </label>
             </div>
-            <a
+            {/* <a
               href="#"
               className="text-sm font-normal mt-3 md:mt-0 text-blue-800 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
             >
               Forgot your password?
-            </a>
+            </a> */}
           </div>
 
           <button

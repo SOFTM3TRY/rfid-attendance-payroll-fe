@@ -115,7 +115,7 @@ export default function Step4({ formData }: any) {
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Section : </span>
-            <span className="text-sm font-light">{formData.section_name}</span>
+            <span className="text-sm font-light">{formData.section}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">School Year : </span>
