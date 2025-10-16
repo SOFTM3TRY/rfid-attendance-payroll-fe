@@ -36,8 +36,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { FilterTable } from "@/components/admin/manage-student/Filtertable";
-
+import { FilterTable } from "@/components/admin/manage-student/Filtertable"; 
+ 
 // Type from your API
 export type Student = {
   id: number;
