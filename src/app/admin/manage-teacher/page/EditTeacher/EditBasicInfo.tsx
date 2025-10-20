@@ -101,21 +101,21 @@ export default function EditBasicInfo({ data }: { data: any }) {
           <Label htmlFor="lrn">
             <span className="text-red-500 mr-[-0.3rem]">*</span>
             <KeyRound className="text-blue-500 h-3 w-3 inline" />
-            LRN
+            Employee No.
           </Label>
           <Input
-            id="lrn"
-            name="lrn"
+            id="employee_no"
+            name="employee_no"
             inputMode="numeric"
             pattern="\d{12}"
-            placeholder="Enter 12-digit LRN"
+            placeholder="Enter Employee No."
             maxLength={12}
             value={formData.lrn.replace(/\D/g, "")}
             onChange={(e) => {
               const onlyNumbers = e.target.value.replace(/\D/g, "");
               setFormData((prev) => ({ ...prev, lrn: onlyNumbers }));
               if (onlyNumbers && onlyNumbers.length !== 12) {
-                setErrors((prev) => ({ ...prev, lrn: "LRN must be 12 digits" }));
+                setErrors((prev) => ({ ...prev, lrn: "Employee No. must be 12 digits" }));
               } else {
                 setErrors((prev) => {
                   const updated = { ...prev };
@@ -135,7 +135,7 @@ export default function EditBasicInfo({ data }: { data: any }) {
           <Label htmlFor="grade">
             <span className="text-red-500 mr-[-0.3rem]">*</span>
             <GraduationCap className="text-green-500 h-3 w-3 inline" />
-            Grade
+            Advisory Grade
           </Label>
           <select
             id="grade"
@@ -162,7 +162,7 @@ export default function EditBasicInfo({ data }: { data: any }) {
           <Label htmlFor="section">
             <span className="text-red-500 mr-[-0.3rem]">*</span>
             <Book className="text-yellow-500 h-3 w-3 inline" />
-            Section
+            Advisory Section
           </Label>
           <select
             id="section"

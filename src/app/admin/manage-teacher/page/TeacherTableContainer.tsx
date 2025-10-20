@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
-import { TeacherTable } from "@/components/admin/manage-teacher/TeacherTable";
-import { Teacher, columns } from "@/components/admin/manage-teacher/columns";
+import { TeacherTable } from "@/app/admin/manage-teacher/page/TeacherTable";
+import { Teacher, columns } from "@/app/admin/manage-teacher/page/columns";
 import { useAllTeachers } from "@/hooks/useTeacher";
 import { useAuth } from "@/context/AuthContext";
-import AddTeacher from "@/components/admin/manage-teacher/AddTeacher/AddTeacher";
+import AddTeacher from "@/app/admin/manage-teacher/page/AddTeacher/AddTeacher";
 import { Table2 } from "lucide-react";
 
 export function TeacherTableContainer() {
@@ -28,8 +28,22 @@ export function TeacherTableContainer() {
       middle_name: teacher.middle_name,
       last_name: teacher.last_name,
       suffix: teacher.suffix,
-      grade_id: parseInt(teacher.grade_id),
-      section: teacher.section,
+      grade: teacher.additional_info?.grade
+        ? (teacher.additional_info.grade === "1"
+          ? "Grade One"
+          : teacher.additional_info.grade === "2"
+          ? "Grade Two"
+          : teacher.additional_info.grade === "3"
+          ? "Grade Three"
+          : teacher.additional_info.grade === "4"
+          ? "Grade Four"
+          : teacher.additional_info.grade === "5"
+          ? "Grade Five"
+          : teacher.additional_info.grade === "6"
+          ? "Grade Six"
+          : null)
+        : null,
+      section: teacher.additional_info?.section ? teacher.additional_info.section : null,
       status: teacher.status,
     }));
   }, [teacherList]);

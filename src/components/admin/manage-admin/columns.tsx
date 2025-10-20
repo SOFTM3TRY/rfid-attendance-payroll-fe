@@ -17,8 +17,6 @@ export type Teacher = {
   middle_name?: string;
   last_name: string;
   suffix?: string;
-  grade_id: number;
-  section: number;
   status: "Active" | "Inactive" | number;
 };
 
@@ -42,34 +40,6 @@ export const columns: ColumnDef<Teacher>[] = [
       const { last_name, first_name, middle_name, suffix } = row.original;
       return <span>{`${last_name} ${first_name} ${middle_name || ""} ${suffix || ""}`}</span>;
     },
-  },
-  {
-    accessorKey: "grade_id",
-    header: () => (
-      <Button variant="ghost" size="sm">
-        <GraduationCap className="text-green-500" /> Advisory Grade
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const gradeMap: Record<number, string> = {
-        1: "Grade One",
-        2: "Grade Two",
-        3: "Grade Three",
-        4: "Grade Four",
-        5: "Grade Five",
-        6: "Grade Six",
-      };
-      return <span>{gradeMap[row.original.grade_id] || "N/A"}</span>;
-    },
-  },
-  {
-    accessorKey: "section",
-    header: () => (
-      <Button variant="ghost" size="sm">
-        <BookAudio className="text-violet-500" /> Advisory Section
-      </Button>
-    ),
-    cell: ({ row }) => <span>{row.original.section}</span>,
   },
   {
     accessorKey: "status",

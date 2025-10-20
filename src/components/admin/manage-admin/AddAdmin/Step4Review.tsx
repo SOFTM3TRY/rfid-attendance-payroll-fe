@@ -92,7 +92,7 @@ export default function Step4({ formData }: any) {
   return (
     <div className="p-4 rounded-md text-sm overflow-auto max-h-auto">
       {/* Show JSON with address names */}
-      <pre className="whitespace-pre-wrap hidden">
+      <pre className="whitespace-pre-wrap">
         {JSON.stringify(displayData, null, 2)}
       </pre>
 
@@ -104,12 +104,10 @@ export default function Step4({ formData }: any) {
         </span>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">LRN : </span>
-            <span className="text-sm font-light">{formData.employeeNumber}</span>
-          </div>
-          <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Advisory Grade : </span>
-            <span className="text-sm font-light">{formData.grade}</span>
+            <span className="text-sm font-light">
+              {formData.grade === "1" ? "Grade One" : formData.grade === "2" ? "Grade Two" : formData.grade === "3" ? "Grade Three" : formData.grade === "4" ? "Grade Four" : formData.grade === "5" ? "Grade Five" : formData.grade === "6" ? "Grade Six" : formData.grade}
+            </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Advisory Section : </span>
@@ -161,18 +159,18 @@ export default function Step4({ formData }: any) {
             <span className="text-sm font-light">{formData.birth_date}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Student Status : </span>
+            <span className="text-sm font-semibold">Teacher Status : </span>
             <span className="text-sm font-light">
-              {formData.student_status}
+              {formData.status === "1" ? "Active" : "Inactive"}
             </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Email : </span>
-            <span className="text-sm font-light">{formData.personal_email}</span>
+            <span className="text-sm font-light">{formData.email}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Contact Number : </span>
-            <span className="text-sm font-light">{formData.contact_number}</span>
+            <span className="text-sm font-light">{formData.contact_no}</span>
           </div>
         </div>
       </div>

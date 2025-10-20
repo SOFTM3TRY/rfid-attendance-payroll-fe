@@ -1,4 +1,4 @@
-import { useAdminForm } from "@/hooks/useAdminForm";
+import { useTeacherForm } from "@/hooks/useTeacherForm";
 import Step1 from "@/components/admin/manage-admin/AddAdmin/Step1PrimaryInfo";
 import Step2 from "@/components/admin/manage-admin/AddAdmin/Step2PersonalInfo";
 import Step3 from "@/components/admin/manage-admin/AddAdmin/Step3AdditionalInfo";
@@ -13,12 +13,7 @@ import {
   SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import {
   PlusIcon,
@@ -35,15 +30,30 @@ import {
   Loader2,
 } from "lucide-react";
 
-export default function AddAdmin() {
+import { useEffect } from "react";
 
+export default function AddTeacher() {
   const {
-    step, setStep, open, setOpen, loading, errors,
-    handlePrevStep, handleNextStep, handleSubmit, setErrors,
-    formData, setFormData
-  } = useAdminForm();
+    step,
+    setStep,
+    open,
+    setOpen,
+    loading,
+    errors,
+    handlePrevStep,
+    handleNextStep,
+    handleSubmit,
+    setErrors,
+    formData,
+    setFormData,
+  } = useTeacherForm();
 
-  console.log("FormData", formData);
+  useEffect(() => {
+    if (formData === null) {
+      setStep(1);
+    }
+  }, [formData]);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -52,7 +62,7 @@ export default function AddAdmin() {
             strokeWidth={3}
             className="bg-white rounded-full text-teal-900 p-0.5 mr-1"
           />
-          Add Admin
+          Add Teacher
         </Button>
       </SheetTrigger>
 
@@ -63,10 +73,10 @@ export default function AddAdmin() {
         <SheetHeader className="text-zinc-900 mb-4">
           <SheetTitle className="flex items-center">
             <UserRoundPlus className="mr-2 w-5 h-5 text-teal-500" />
-            Add Admin
+            Add Teacher
           </SheetTitle>
           <SheetDescription>
-            Enter details to add a new admin to the system
+            Enter details to add a new teacher to the system
           </SheetDescription>
         </SheetHeader>
 
@@ -212,7 +222,11 @@ export default function AddAdmin() {
             />
           </TabsContent>
           <TabsContent value="step4" className="p-5 mt-5">
-            <Step4 formData={formData} />
+            <Step4
+              formData={formData}
+              onBack={() => setStep(1)}
+              hasData={Object.keys(formData).length > 0}
+            />
           </TabsContent>
         </Tabs>
 
@@ -239,10 +253,11 @@ export default function AddAdmin() {
                 </Button>
               ) : (
                 <Button
-                  onClick={handleSubmit}
+                  onClick={() => {
+                    handleSubmit().then(() => setStep(1));
+                  }}
                   className="w-40"
                   disabled={loading}
-                  
                 >
                   {loading ? (
                     <>

@@ -17,8 +17,8 @@ import {
   Rows4,
   Grip,
 } from "lucide-react";
-import EditProfile from "@/components/admin/manage-teacher/EditTeacher/EditTeacher";
-import Registration from "@/components/admin/manage-teacher/Registration/Registration";
+import EditProfile from "@/app/admin/manage-teacher/page/EditTeacher/EditTeacher";
+import Registration from "@/app/admin/manage-teacher/page/Registration/Registration";
 import { useState } from "react";
 
 import {
@@ -41,7 +41,7 @@ export type Teacher = {
   middle_name?: string;
   last_name: string;
   suffix?: string;
-  grade_id: number;
+  grade: number;
   section: string;
   status: "Active" | "Inactive";
 };
@@ -72,22 +72,14 @@ export const columns: ColumnDef<Teacher>[] = [
     },
   },
   {
-    accessorKey: "grade_id",
+    accessorKey: "grade",
     header: () => (
       <Button variant="outline" size="sm">
         <GraduationCap className="text-green-500" /> Advisory Grade
       </Button>
     ),
     cell: ({ row }) => {
-      const gradeMap: Record<number, string> = {
-        1: "Grade One",
-        2: "Grade Two",
-        3: "Grade Three",
-        4: "Grade Four",
-        5: "Grade Five",
-        6: "Grade Six",
-      };
-      return <span>{gradeMap[row.original.grade_id] || "N/A"}</span>;
+      return <span>{row.original.grade || "N/A"}</span>;
     },
   },
   {
@@ -178,20 +170,20 @@ export const columns: ColumnDef<Teacher>[] = [
                 Edit Profile
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={() => window.open(`/admin/manage-teacher/attendance-history/${teacherId}`, "_blank")}>
+              {/* <DropdownMenuItem onClick={() => window.open(`/admin/manage-teacher/attendance-history/${teacherId}`, "_blank")}>
                 <History className="w-4 h-4 text-indigo-700 dark:text-indigo-500" />
                 Attendance History
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
 
               <DropdownMenuItem onClick={() => window.open(`/admin/manage-teacher/advisory-class/${teacherId}`, "_blank")}>
                 <Rows4 className="w-4 h-4 text-violet-700 dark:text-violet-500" />
                 Advisory Class
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={() => setOpenRegister(true)}>
+              {/* <DropdownMenuItem onClick={() => setOpenRegister(true)}>
                 <FilePlus className="w-4 h-4 text-blue-700 dark:text-blue-500" />
                 Register
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
           <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />

@@ -24,7 +24,8 @@ export default function Step2({
 
   const suffixOptions = ["Jr.", "Sr.", "I", "II", "III", "IV", "V"];
   const genderOptions = ["Male", "Female", "Other"];
-  const studentStatusOptions = ["active", "inactive"];
+  const teacherStatusOption = ["active", "inactive"];
+  const teacherStatusValue = ["1", "0"];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-20">
@@ -192,44 +193,44 @@ export default function Step2({
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="student_status">
+        <Label htmlFor="status">
           <span className="text-red-500 mr-[-0.3rem]">*</span>Status
         </Label>
         <select
-          id="student_status"
-          name="student_status"
-          value={formData.student_status}
+          id="status"
+          name="status"
+          value={formData.status}
           onChange={handleChange}
           className={
-            errors.student_status
+            errors.status
               ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
               : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
           }
           disabled={loading}
         >
           <option value="">Select Status</option>
-          {studentStatusOptions.map((status) => (
-            <option key={status} value={status}>
+          {teacherStatusOption.map((status, i) => (
+            <option key={status} value={teacherStatusValue[i]}>
               {status}
             </option>
           ))}
         </select>
-        {errors.student_status && (
-          <span className="text-xs text-red-500">{errors.student_status}</span>
+        {errors.status && (
+          <span className="text-xs text-red-500">{errors.status}</span>
         )}
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="personal_email">
+        <Label htmlFor="email">
           <span className="text-red-500 mr-[-0.3rem]">*</span>Personal Email
         </Label>
         <Input
-          id="personal_email"
-          name="personal_email"
-          value={formData.personal_email}
+          id="email"
+          name="email"
+          value={formData.email}
           onChange={(e) => {
             const value = e.target.value;
-            setFormData((prev: any) => ({ ...prev, personal_email: value }));
+            setFormData((prev: any) => ({ ...prev, email: value }));
             setErrors((prev: any) => {
               const n = { ...prev };
               // Validate for @gmail.com
@@ -238,16 +239,16 @@ export default function Step2({
                 (!value.endsWith("@gmail.com") ||
                   value.length <= "@gmail.com".length)
               ) {
-                n.personal_email = "Email must end with @gmail.com";
+                n.email = "Email must end with @gmail.com";
               } else {
-                delete n.personal_email;
+                delete n.email;
               }
               return n;
             });
           }}
           placeholder="Enter Guardian Email"
           className={
-            errors.personal_email
+            errors.email
               ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
               : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
           }
@@ -255,23 +256,23 @@ export default function Step2({
           type="email"
           autoComplete="off"
         />
-        {errors.personal_email && (
-          <span className="text-xs text-red-500">{errors.personal_email}</span>
+        {errors.email && (
+          <span className="text-xs text-red-500">{errors.email}</span>
         )}
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="contact_number">
+        <Label htmlFor="contact_no">
           <span className="text-red-500 mr-[-0.3rem]">*</span>Contact Number
         </Label>
         <Input
-          id="contact_number"
-          name="contact_number"
+          id="contact_no"
+          name="contact_no"
           type="text"
           inputMode="numeric"
           pattern="\+639\d{9}"
           placeholder="+639_________"
-          value={formData.contact_number || "+639"}
+          value={formData.contact_no || "+639"}
           maxLength={13}
           onChange={(e) => {
             // Remove all non-digits except the leading '+'
@@ -283,11 +284,11 @@ export default function Step2({
             value = value.slice(0, 12);
             setFormData((prev: any) => ({
               ...prev,
-              contact_number: "+".concat(value),
+              contact_no: "+".concat(value),
             }));
             setErrors((prev: any) => {
               const n = { ...prev };
-              delete n.contact_number;
+              delete n.contact_no;
               return n;
             });
           }}
@@ -296,7 +297,7 @@ export default function Step2({
             if (!e.target.value || e.target.value === "+") {
               setFormData((prev: any) => ({
                 ...prev,
-                contact_number: "+639",
+                contact_no: "+639",
               }));
             }
           }}
@@ -323,15 +324,15 @@ export default function Step2({
             }
           }}
           className={
-            errors.contact_number
+            errors.contact_no
               ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
               : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
-        {errors.contact_number && (
+        {errors.contact_no && (
           <span className="text-xs text-red-500">
-            {errors.contact_number}
+            {errors.contact_no}
           </span>
         )}
       </div>

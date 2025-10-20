@@ -1,8 +1,8 @@
 import { useTeacherForm } from "@/hooks/useTeacherForm";
-import Step1 from "@/components/admin/manage-teacher/AddTeacher/Step1PrimaryInfo";
-import Step2 from "@/components/admin/manage-teacher/AddTeacher/Step2PersonalInfo";
-import Step3 from "@/components/admin/manage-teacher/AddTeacher/Step3AdditionalInfo";
-import Step4 from "@/components/admin/manage-teacher/AddTeacher/Step4Review";
+import Step1 from "@/app/admin/manage-teacher/page/AddTeacher/Step1PrimaryInfo";
+import Step2 from "@/app/admin/manage-teacher/page/AddTeacher/Step2PersonalInfo";
+import Step3 from "@/app/admin/manage-teacher/page/AddTeacher/Step3AdditionalInfo";
+import Step4 from "@/app/admin/manage-teacher/page/AddTeacher/Step4Review";
 import {
   Sheet,
   SheetTrigger,

@@ -18,10 +18,10 @@ import BasicInfo from "@/components/admin/manage-student/ShowProfile/BasicInfo";
 import AddressInfo from "@/components/admin/manage-student/ShowProfile/AddressInfo";
 import GuardianInfo from "@/components/admin/manage-student/ShowProfile/GuardianInfo";
 
-import EditBasicInfo from "@/components/admin/manage-student/EditStudent/EditBasicInfo";
-import EditPrimaryInfo from "@/components/admin/manage-student/EditStudent/EditPrimaryInfo";
-import EditAddressInfo from "@/components/admin/manage-student/EditStudent/EditAddressInfo";
-import EditGuardianInfo from "@/components/admin/manage-student/EditStudent/EditGuardianInfo";
+import EditBasicInfo from "@/app/admin/manage-teacher/page/EditTeacher/EditBasicInfo";
+import EditPrimaryInfo from "@/app/admin/manage-teacher/page/EditTeacher/EditPrimaryInfo";
+import EditAddressInfo from "@/app/admin/manage-teacher/page/EditTeacher/EditAddressInfo";
+import EditGuardianInfo from "@/app/admin/manage-teacher/page/EditTeacher/EditGuardianInfo";
 
 import  SplitText from "@/components/animata/text/split-text";
 

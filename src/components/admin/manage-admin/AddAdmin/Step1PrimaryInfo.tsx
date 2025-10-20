@@ -39,8 +39,6 @@ export default function Step1({
     SectionID
   );
 
-  console.log("Sectiondata", SectionsData);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -74,74 +72,8 @@ export default function Step1({
           Primary Information
         </h1>
       </span>
-
+      
       <div className="grid gap-2">
-        <Label htmlFor="employeeNumber">
-          <span className="text-red-500 mr-[-0.3rem]">*</span>
-          <KeyRound className="text-blue-500 h-3 w-3" />
-          Employee Number
-        </Label>
-        <div className="flex items-center">
-          <Input
-            id="employeeNumber"
-            name="employeeNumber"
-            type="text"
-            placeholder="Enter your employee number"
-            value={formData.employeeNumber}
-            onChange={(e) => {
-              setFormData((prev: any) => ({
-                ...prev,
-                employeeNumber: e.target.value,
-              }));
-
-              if (e.target.value && e.target.value.length !== 12) {
-                setErrors((prev: any) => ({
-                  ...prev,
-                  employeeNumber: "Employee Number must be 12 digits",
-                }));
-              } else {
-                setErrors((prev: any) => {
-                  const n = { ...prev };
-                  delete n.employeeNumber;
-                  return n;
-                });
-              }
-            }}
-            className={errors.employeeNumber ? "border border-red-500" : ""}
-            disabled={loading}
-          />
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                className="ml-2"
-                onClick={() => {
-                  setFormData((prev: any) => ({
-                    ...prev,
-                    employeeNumber: `CLAN${Math.floor(
-                      100000 + Math.random() * 900000
-                    )}`,
-                  }));
-                }}
-              >
-                <RefreshCw />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              align="center"
-              className="block group-data-[collapsible=icon]:hidden"
-            >
-              Generate Employee Number
-            </TooltipContent>
-          </Tooltip>
-        </div>
-        {errors.employeeNumber && (
-          <span className="text-xs text-red-500">{errors.employeeNumber}</span>
-        )}
-      </div>
-
-      {/* <div className="grid gap-2">
         <Label htmlFor="grade">
           <span className="text-red-500 mr-[-0.3rem]">*</span>
           <GraduationCap className="text-green-500 h-3 w-3" />
@@ -191,7 +123,7 @@ export default function Step1({
         >
           <option value="">Select Section</option>
           {SectionsData?.data.map((section: any) => (
-            <option key={section.id} value={section.id}>
+            <option key={section.id} value={section.section_name}>
               {section.section_name}
             </option>
           ))}
@@ -229,7 +161,8 @@ export default function Step1({
         {errors.school_year && (
           <span className="text-xs text-red-500">{errors.school_year}</span>
         )}
-      </div> */}
+      </div>
     </div>
   );
 }
+

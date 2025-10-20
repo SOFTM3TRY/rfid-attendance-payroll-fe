@@ -94,7 +94,7 @@ interface Props<TData> {
   totalRows: number;
 }
 
-export function TeacherTable<TData extends { status: string; last_name: string; first_name: string; middle_name?: string; suffix?: string; employee_number?: string }>({
+export function TeacherTable<TData extends {section: string; grade: number; status: string; last_name: string; first_name: string; middle_name?: string; suffix?: string; employee_number?: string }>({
   columns,
   data,
   pagination,
@@ -106,27 +106,30 @@ export function TeacherTable<TData extends { status: string; last_name: string; 
 
   // Filter data by status and search before passing to react-table
   const filteredData = useMemo(() => {
-    return data.filter((item) => {
-      // Filter by status
-      if (selectedStatus.length > 0 && !selectedStatus.includes(item.status)) {
-        return false;
-      }
+  const safeData = data ?? [];
 
-      // Filter by search
-      if (search.trim() !== "") {
-        const lowerSearch = search.toLowerCase();
-        const fullName = `${item.last_name} ${item.first_name} ${item.middle_name || ""} ${item.suffix || ""}`;
-        const employeeNo = item.employee_number || "";
+  return safeData.filter((item) => {
+    // Filter by status
+    if (selectedStatus.length > 0 && !selectedStatus.includes(item.status)) {
+      return false;
+    }
 
-        const matchesName = fullName.toLowerCase().includes(lowerSearch);
-        const matchesEmpNo = employeeNo.toLowerCase().includes(lowerSearch);
+    // Filter by search
+    if (search.trim() !== "") {
+      const lowerSearch = search.toLowerCase();
+      const fullName = `${item.last_name} ${item.first_name} ${item.middle_name || ""} ${item.suffix || ""}`;
+      const employeeNo = item.employee_number || "";
 
-        return matchesName || matchesEmpNo;
-      }
+      const matchesName = fullName.toLowerCase().includes(lowerSearch);
+      const matchesEmpNo = employeeNo.toLowerCase().includes(lowerSearch);
 
-      return true;
-    });
-  }, [data, selectedStatus, search]);
+      return matchesName || matchesEmpNo;
+    }
+
+    return true;
+  });
+}, [data, selectedStatus, search]);
+
 
 
   // Update totalRows after filtering
@@ -271,4 +274,5 @@ export function TeacherTable<TData extends { status: string; last_name: string; 
     </div>
   );
 }
+
 

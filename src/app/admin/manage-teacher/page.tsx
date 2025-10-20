@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useUserDetails } from "@/hooks/useUserDetails";
 import { useClientOnly } from "@/hooks/useClientOnly";
 import Loader from "@/components/Loader";
-import { TeacherTableContainer } from "@/components/admin/manage-teacher/TeacherTableContainer";
+import { TeacherTableContainer } from "@/app/admin/manage-teacher/page/TeacherTableContainer";
 import { Users } from "lucide-react";
 
 export default function ManageTeacher() {
