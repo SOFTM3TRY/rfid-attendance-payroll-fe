@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react"; // <-- Added useState
+import { useEffect, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,6 @@ import {
 import SF2Table from "./table";
 
 export default function SF2Page() {
-
   const { token } = useAuth();
   const isClient = useClientOnly();
   const params = useParams();
@@ -38,11 +37,9 @@ export default function SF2Page() {
   const students = teacherDetails?.data?.students || [];
 
   const fullName = teacher
-    ? `${teacher?.last_name}, ${teacher?.first_name} ${teacher?.middle_name || ""
-    } ${teacher?.suffix || ""}`
+    ? `${teacher?.last_name}, ${teacher?.first_name} ${teacher?.middle_name || ""} ${teacher?.suffix || ""}`
     : "Unknown";
 
-  // Fix: Add months and selectedMonth hook here
   const months = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December",
@@ -80,19 +77,16 @@ export default function SF2Page() {
       const pdf = new jsPDF({
         orientation: "landscape",
         unit: "px",
-        format: "a4", // Use A4 landscape format for standardization
+        format: "a4",
       });
 
-      const pageWidth = pdf.internal.pageSize.getWidth();  // 842px (landscape A4)
-      const pageHeight = pdf.internal.pageSize.getHeight(); // 595px
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
 
       const canvasWidth = canvas.width;
       const canvasHeight = canvas.height;
 
       const imgRatio = canvasWidth / canvasHeight;
-      const pdfRatio = pageWidth / pageHeight;
-
-      // Resize image to fit the PDF width
       const pdfImgWidth = pageWidth;
       const pdfImgHeight = pageWidth / imgRatio;
 
@@ -103,7 +97,7 @@ export default function SF2Page() {
         const pageCanvas = document.createElement("canvas");
         const pageCtx = pageCanvas.getContext("2d");
 
-        const sliceHeight = Math.min(canvasHeight - position, canvasHeight); // Avoid overflow
+        const sliceHeight = Math.min(canvasHeight - position, canvasHeight);
         pageCanvas.width = canvasWidth;
         pageCanvas.height = sliceHeight;
 
@@ -139,7 +133,6 @@ export default function SF2Page() {
       console.error("PDF generation error:", error);
     }
   };
-
 
   return (
     <div
@@ -233,19 +226,18 @@ export default function SF2Page() {
               fontStyle: "italic",
             }}
           >
-            (This replaces Form 1, Form 2 & STS Form 4 - Absenteeism and Dropout
-            Profile)
+            (This replaces Form 1, Form 2 & STS Form 4 - Absenteeism and Dropout Profile)
           </p>
         </div>
+
         <div
           style={{
             marginBottom: "40px",
-            fontFamily: "Arial, sans-serif",
             fontSize: "14px",
             paddingInline: "60px",
           }}
         >
-          {/* Row 1: School ID, School Year, Month */}
+          {/* Row 1 */}
           <div style={{ display: "flex", gap: "20px", marginBottom: "10px" }}>
             <div style={{ flex: 1, marginLeft: "40px" }}>
               <label>School ID:</label>
@@ -257,17 +249,11 @@ export default function SF2Page() {
                   border: "1px solid #000",
                   lineHeight: "2.5",
                 }}
+                value={""}
                 readOnly
               />
             </div>
-            <div
-              style={{
-                flex: 1,
-                marginLeft: "-35px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
+            <div style={{ flex: 1, marginLeft: "-35px", display: "flex", alignItems: "center" }}>
               <label>School Year:</label>
               <input
                 type="text"
@@ -277,7 +263,7 @@ export default function SF2Page() {
                   border: "1px solid #000",
                   lineHeight: "2.5",
                 }}
-                value={students?.length > 0 ? students[0].school_year : "N/A"}
+                value={students?.[0]?.school_year ?? "N/A"}
                 readOnly
               />
             </div>
@@ -291,13 +277,13 @@ export default function SF2Page() {
                   border: "1px solid #000",
                   lineHeight: "2.5",
                 }}
-                value={months[selectedMonth]}
+                value={months[selectedMonth] ?? ""}
                 readOnly
               />
             </div>
           </div>
 
-          {/* Row 3: Grade Level and Section */}
+          {/* Row 2 */}
           <div style={{ display: "flex", gap: "20px" }}>
             <div style={{ flex: 6 }}>
               <label>Name of School:</label>
@@ -325,23 +311,18 @@ export default function SF2Page() {
                   lineHeight: "2.5",
                 }}
                 value={
-                  additional_info.grade === "1"
-                    ? "Grade One"
-                    : additional_info.grade === "2"
-                      ? "Grade Two"
-                      : additional_info.grade === "3"
-                        ? "Grade Three"
-                        : additional_info.grade === "4"
-                          ? "Grade Four"
-                          : additional_info.grade === "5"
-                            ? "Grade Five"
-                            : additional_info.grade === "6"
-                              ? "Grade Six"
-                              : additional_info.grade
+                  additional_info.grade === "1" ? "Grade One" :
+                  additional_info.grade === "2" ? "Grade Two" :
+                  additional_info.grade === "3" ? "Grade Three" :
+                  additional_info.grade === "4" ? "Grade Four" :
+                  additional_info.grade === "5" ? "Grade Five" :
+                  additional_info.grade === "6" ? "Grade Six" :
+                  additional_info.grade ?? ""
                 }
                 readOnly
               />
             </div>
+
             <div style={{ flex: 3 }}>
               <label>Section:</label>
               <input
@@ -352,15 +333,17 @@ export default function SF2Page() {
                   border: "1px solid #000",
                   lineHeight: "2.5",
                 }}
-                value={additional_info.section}
+                value={additional_info.section ?? ""}
                 readOnly
               />
             </div>
           </div>
         </div>
 
+        {/* SF2 Table */}
         <SF2Table />
 
+        {/* Footer */}
         <div className="grid grid-cols-5 gap-5 mt-5">
           <div className="col-span-2 bg-red-500 h-96"></div>
           <div className="col-span-1 bg-blue-500 h-96"></div>
