@@ -24,6 +24,8 @@ import EditAddressInfo from "@/app/admin/manage-teacher/page/EditTeacher/EditAdd
 import EditGuardianInfo from "@/app/admin/manage-teacher/page/EditTeacher/EditGuardianInfo";
 
 import  SplitText from "@/components/animata/text/split-text";
+import { useTeacherDetails } from "@/hooks/useTeacher";
+import { useAuth } from "@/context/AuthContext";
 
 export default function EditStudent({
   open,
@@ -52,6 +54,16 @@ export default function EditStudent({
   } = useStudentForm();
 
   const data = row?.original || {}; // ✅ Extract data from row
+
+  const TeacherID = data?.id;
+  const { token } = useAuth();
+  const { data: TeacherData, isLoading: isLoadingTeacher } = useTeacherDetails(
+    token as string,
+    { id: TeacherID }
+  );
+
+  console.log("Teacher Data:", TeacherData);
+  
   const fullName = [
     data.last_name,
     data.first_name,
