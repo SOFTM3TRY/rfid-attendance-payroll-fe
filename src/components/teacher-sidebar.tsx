@@ -38,17 +38,17 @@ import { useClientOnly } from "@/hooks/useClientOnly";
 import SplitTextSide from "@/components/animata/text/split-text-side";
 
 const items = [
-  { title: "Dashboard", url: "/admin/dashboard", icon: Home },
-  { title: "Email", url: "/admin/email", icon: Inbox },
-  { title: "Calendar", url: "/admin/calendar", icon: Calendar },
-  { title: "Manage Student", url: "/admin/manage-student", icon: SquareUser },
-  {
-    title: "Manage Teacher",
-    url: "/admin/manage-teacher",
-    icon: IdCardLanyard,
-  },
-  { title: "Manage Admin", url: "/admin/manage-admin", icon: ShieldUser },
-  { title: "System Settings", url: "/admin/system-settings", icon: Settings },
+  { title: "Dashboard", url: "/teacher/dashboard", icon: Home },
+  // { title: "Email", url: "/teacher/email", icon: Inbox },
+  { title: "Calendar", url: "/teacher/calendar", icon: Calendar },
+  { title: "Manage Avisory Class", url: "/teacher/manage-student", icon: SquareUser },
+  // {
+  //   title: "Manage Teacher",
+  //   url: "/teacher/manage-teacher",
+  //   icon: IdCardLanyard,
+  // },
+  // { title: "Manage Admin", url: "/teacher/manage-admin", icon: ShieldUser },
+  // { title: "System Settings", url: "/teacher/system-settings", icon: Settings },
 ];
 
 export function AppSidebar() {

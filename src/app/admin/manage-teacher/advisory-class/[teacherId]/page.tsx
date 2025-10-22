@@ -29,9 +29,9 @@ import { User, TriangleAlert, UserCheck, UserX } from "lucide-react";
 
 import { useTeacherDetails } from "@/hooks/useTeacher";
 
-import BasicInfo from "./basic-info";
-import AddressInfo from "./address-info";
-import EmergencyInfo from "./emergency-info";
+// import BasicInfo from "./basic-info";
+// import AddressInfo from "./address-info";
+// import EmergencyInfo from "./emergency-info";
 import TeacherStudentTable from "./student-table";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -150,13 +150,13 @@ export default function TeacherProfile() {
                   </div>
                 </div>
 
-                {teacher && (
+                {/* {teacher && (
                   <>
                     <BasicInfo id={teacher.id} />
                     <AddressInfo id={teacher.id} />
                     <EmergencyInfo id={teacher.id} />
                   </>
-                )}
+                )} */}
               </div>
               <div className="col-span-1 md:col-span-2 rounded-md h-full bg-zinc-100 dark:bg-zinc-900 p-5">
                 <div className="sticky top-16 z-1">

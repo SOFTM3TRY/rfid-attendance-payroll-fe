@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebar";
+import { AppSidebar } from "@/components/teacher-sidebar";
 import { Navbar } from "@/components/navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
