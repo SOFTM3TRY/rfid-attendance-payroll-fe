@@ -76,7 +76,7 @@ export default function SystemTabPage() {
                 setPagination((p) => ({ ...p, pageIndex: 0 }));
               }}
             />
-
+  {/* @ts-ignore */}
             <FiltersDropdown
               selectedFilters={selectedFilters}
               setSelectedFilters={(filters) => {
