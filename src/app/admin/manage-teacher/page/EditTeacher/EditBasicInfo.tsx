@@ -16,6 +16,9 @@ import {
   CircleSmall,
   School,
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useTeacherDetails } from "@/hooks/useTeacher";
+import { useForm } from "react-hook-form";
 
 // Mocked data, replace with actual API/context
 const GradesData = {
@@ -35,7 +38,7 @@ function generateSections() {
   return ["A", "B", "C", "D"];
 }
 
-export default function EditBasicInfo({ data }: { data: any }) {
+export default function EditBasicInfo({ TeacherData }: { TeacherData: any }) {
   const [formData, setFormData] = useState({
     lrn: "",
     grade: "",
@@ -53,26 +56,22 @@ export default function EditBasicInfo({ data }: { data: any }) {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (data) {
-      setFormData({
-        lrn: data.lrn || "",
-        grade: data.grade_id || "",
-        section: data.section || "",
-        school_year: data.school_year || "",
-        first_name: data.first_name || "",
-        middle_name: data.middle_name || "",
-        last_name: data.last_name || "",
-        suffix: data.suffix || "",
-        birth_date: data.birth_date || "",
-        birth_place: data.birth_place || "",
-        gender: data.gender || "",
-        last_school_attend: data.last_school_attend || "",
-      });
-    }
-  }, [data]);
-
+    
+ 
+ console.log("Teacher Data in EditBasicInfo:", TeacherData);
+ console.log("Default Values:", {
+       employee_no: TeacherData?.data?.teacher?.[0]?.employee_no,
+        grade:  TeacherData?.data?.teacher?.[0]?.additional_info?.grade,
+    });
+const {register, handleSubmit, formState: { errors: formErrors }} = useForm({
+    defaultValues: {
+       employee_no: TeacherData?.data?.teacher?.[0]?.employee_no,
+        grade:  TeacherData?.data?.teacher?.[0]?.additional_info?.grade,
+        section: TeacherData?.data?.teacher?.[0]?.additional_info?.section,
+    },
+  });
+  
+ 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -83,7 +82,9 @@ export default function EditBasicInfo({ data }: { data: any }) {
       return updated;
     });
   };
-
+const onSubmit = (data: any) => {
+    console.log("Form Submitted Data:", data);
+  }
   return (
     <div className="flex flex-col gap-10 rounded-md bg-zinc-100 dark:bg-zinc-900 mt-10">
 
@@ -104,26 +105,15 @@ export default function EditBasicInfo({ data }: { data: any }) {
             Employee No.
           </Label>
           <Input
-            id="employee_no"
-            name="employee_no"
+           
+          
             inputMode="numeric"
             pattern="\d{12}"
             placeholder="Enter Employee No."
             maxLength={12}
-            value={formData.lrn.replace(/\D/g, "")}
-            onChange={(e) => {
-              const onlyNumbers = e.target.value.replace(/\D/g, "");
-              setFormData((prev) => ({ ...prev, lrn: onlyNumbers }));
-              if (onlyNumbers && onlyNumbers.length !== 12) {
-                setErrors((prev) => ({ ...prev, lrn: "Employee No. must be 12 digits" }));
-              } else {
-                setErrors((prev) => {
-                  const updated = { ...prev };
-                  delete updated.lrn;
-                  return updated;
-                });
-              }
-            }}
+            {...register("employee_no")}
+           
+      
             className={errors.lrn ? "border border-red-500" : ""}
             disabled={loading}
           />
@@ -137,16 +127,7 @@ export default function EditBasicInfo({ data }: { data: any }) {
             <GraduationCap className="text-green-500 h-3 w-3 inline" />
             Advisory Grade
           </Label>
-          <select
-            id="grade"
-            name="grade"
-            value={formData.grade}
-            onChange={handleChange}
-            className={`border dark:bg-zinc-900 py-1 px-3 rounded-sm ${
-              errors.grade ? "border-red-500" : ""
-            }`}
-            disabled={loading}
-          >
+          <select {...register("grade")} onChange={handleChange} className={`border dark:bg-zinc-900 py-1 px-3 rounded-sm ${errors.grade ? "border-red-500" : ""}`} disabled={loading}>
             <option value="">Select Grade</option>
             {GradesData.data.map((grade) => (
               <option key={grade.id} value={grade.id}>
@@ -165,21 +146,15 @@ export default function EditBasicInfo({ data }: { data: any }) {
             Advisory Section
           </Label>
           <select
-            id="section"
-            name="section"
-            value={formData.section}
+            {...register("section")}
             onChange={handleChange}
             className={`border dark:bg-zinc-900 py-1 px-3 rounded-sm ${
               errors.section ? "border-red-500" : ""
             }`}
-            disabled={loading || !formData.grade}
+            
+            
           >
-            <option value="">Select Section</option>
-            {generateSections().map((section) => (
-              <option key={section} value={section}>
-                Section {section}
-              </option>
-            ))}
+            
           </select>
           {errors.section && <span className="text-xs text-red-500">{errors.section}</span>}
         </div>

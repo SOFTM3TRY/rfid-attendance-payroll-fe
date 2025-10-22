@@ -55,14 +55,7 @@ export default function EditStudent({
 
   const data = row?.original || {}; // ✅ Extract data from row
 
-  const TeacherID = data?.id;
-  const { token } = useAuth();
-  const { data: TeacherData, isLoading: isLoadingTeacher } = useTeacherDetails(
-    token as string,
-    { id: TeacherID }
-  );
-
-  console.log("Teacher Data:", TeacherData);
+  
   
   const fullName = [
     data.last_name,
@@ -72,7 +65,15 @@ export default function EditStudent({
   ]
     .filter(Boolean)
     .join(" ");
-
+  const { token } = useAuth();
+     const TeacherID = data?.id;
+   console.log("Teacher ID:", TeacherID);
+ 
+  
+  const { data: TeacherData, isLoading: isLoadingTeacher } = useTeacherDetails(
+    token as string,
+    { id: TeacherID }
+  );
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
@@ -117,7 +118,7 @@ export default function EditStudent({
             <PrimaryInfo data={data} fullName={fullName} />
 
             <div className=" opacity-30 hover:opacity-100 transition duration-300 ease-in-out">
-              <BasicInfo data={data} />
+              <BasicInfo data={TeacherData} />
               <AddressInfo data={data.additional_info || {}} />
               <GuardianInfo data={data.additional_info || {}} />
             </div>
@@ -131,8 +132,8 @@ export default function EditStudent({
                 Student Profile
               </span>
             </div>
-            <EditBasicInfo data={data} />
-            <EditPrimaryInfo data={data} />
+            <EditBasicInfo TeacherData={TeacherData} />
+            <EditPrimaryInfo TeacherData={TeacherData} />
             <EditAddressInfo data={data.additional_info || {}} />
             <EditGuardianInfo data={data.additional_info || {}} />
           </div>

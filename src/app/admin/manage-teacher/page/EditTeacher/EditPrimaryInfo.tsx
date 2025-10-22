@@ -9,14 +9,15 @@ import {
   UserRound,
 
 } from "lucide-react";
+import { useForm } from "react-hook-form";
 
-export default function ViewBasicInfo({ data }: { data: any }) {
+export default function ViewBasicInfo({ TeacherData }: { TeacherData: any }) {
   const [formData, setFormData] = useState({
     lrn: "",
     grade: "",
     section: "",
     school_year: "",
-    first_name: "",
+    first_name: "d",
     middle_name: "",
     last_name: "",
     suffix: "",
@@ -30,25 +31,20 @@ export default function ViewBasicInfo({ data }: { data: any }) {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (data) {
-      setFormData({
-        lrn: data.lrn || "",
-        grade: data.grade_id || "",
-        section: data.section || "",
-        school_year: data.school_year || "",
-        first_name: data.first_name || "",
-        middle_name: data.middle_name || "",
-        last_name: data.last_name || "",
-        suffix: data.suffix || "",
-        birth_date: data.birth_date || "",
-        birth_place: data.birth_place || "",
-        gender: data.gender || "",
-        last_school_attend: data.last_school_attend || "",
-        status: data.status || "",
-      });
-    }
-  }, [data]);
+  const {register, handleSubmit, formState: { errors: formErrors }} = useForm({
+      defaultValues: {
+         first_name: TeacherData?.data?.teacher?.[0]?.first_name,
+          middle_name:  TeacherData?.data?.teacher?.[0]?.middle_name,
+          last_name:  TeacherData?.data?.teacher?.[0]?.last_name,
+          suffix:  TeacherData?.data?.teacher?.[0]?.suffix,
+          gender:  TeacherData?.data?.teacher?.[0]?.additional_info?.gender,
+          birth_date:  TeacherData?.data?.teacher?.[0]?.additional_info?.birth_date,
+          birth_place:  TeacherData?.data?.teacher?.[0]?.additional_info?.birth_place,
+          status:  TeacherData?.data?.teacher?.[0]?.status,
+           
+      },
+    });
+    
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -81,9 +77,8 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           First Name
         </Label>
         <Input
-          id="first_name"
-          name="first_name"
-          value={formData.first_name}
+         
+          {...register("first_name")}
           onChange={handleChange}
           placeholder="Enter First Name"
           className={
@@ -104,9 +99,8 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           Middle Name <small>(Optional)</small>
         </Label>
         <Input
-          id="middle_name"
-          name="middle_name"
-          value={formData.middle_name}
+      
+         {...register("middle_name")}
           onChange={handleChange}
           placeholder="Enter Middle Name"
           disabled={loading}
@@ -120,9 +114,8 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           Last Name
         </Label>
         <Input
-          id="last_name"
-          name="last_name"
-          value={formData.last_name}
+        
+         {...register("last_name")}
           onChange={handleChange}
           placeholder="Enter Last Name"
           className={
@@ -143,9 +136,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           Suffix <small>(Optional)</small>
         </Label>
         <select
-          id="suffix"
-          name="suffix"
-          value={formData.suffix}
+          {...register("suffix")}
           onChange={handleChange}
           className="border dark:bg-zinc-900 py-1 px-3 rounded-sm"
           disabled={loading}
@@ -164,9 +155,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           <span className="text-red-500 mr-[-0.3rem]">*</span>Gender
         </Label>
         <select
-          id="gender"
-          name="gender"
-          value={formData.gender}
+          {...register("gender")}
           onChange={handleChange}
           className={
             errors.gender
@@ -193,9 +182,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           Birth Place
         </Label>
         <Input
-          id="birth_place"
-          name="birth_place"
-          value={formData.birth_place}
+          {...register("birth_place")}
           onChange={handleChange}
           placeholder="Enter birth_place"
           className={
@@ -217,12 +204,11 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           Birth Date
         </Label>
         <Input
-          id="birth_date"
-          name="birth_date"
+          {...register("birth_date")}
+         
           type="date"
-          value={formData.birth_date}
           onChange={handleChange}
-          placeholder="YYYY-MM-DD"
+         
           disabled={loading}
         />
         {errors.birth_date && (
@@ -235,9 +221,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           <span className="text-red-500 mr-[-0.3rem]">*</span>Status
         </Label>
         <select
-          id="status"
-          name="status"
-          value={formData.status}
+          {...register("status")}
           onChange={handleChange}
           className={
             errors.status
@@ -255,31 +239,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
         )}
       </div>
 
-      <div className="grid gap-2">
-        <Label htmlFor="last_school_attend">
-          <span className="text-red-500 mr-[-0.3rem]">*</span>
-          <School className="text-blue-500 h-3 w-3" />
-          Last School Attended
-        </Label>
-        <Input
-          id="last_school_attend"
-          name="last_school_attend"
-          value={formData.last_school_attend}
-          onChange={handleChange}
-          placeholder="Enter Last School Attended"
-          className={
-            errors.last_school_attend
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-          }
-          disabled={loading}
-        />
-        {errors.last_school_attend && (
-          <span className="text-xs text-red-500">
-            {errors.last_school_attend}
-          </span>
-        )}
-      </div>
+       
     </div>
   );
 }
