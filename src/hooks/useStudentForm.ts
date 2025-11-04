@@ -1,6 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
 import { CreateStudent } from "@/services/Student_service";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useStudentDetails } from "./useStudentDetails";
 
@@ -11,6 +11,7 @@ export function useStudentForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { token } = useAuth();
   const { refetch: refetchStudent } = useStudentDetails(token as string);
+
   const [formData, setFormData] = useState<any>({
     lrn: "",
     grade: "",
@@ -21,6 +22,7 @@ export function useStudentForm() {
     last_name: "",
     suffix: "",
     role: "student",
+    email: "",
     gender: "",
     birth_place: "",
     birth_date: "",
@@ -40,10 +42,19 @@ export function useStudentForm() {
     guardian_email: "",
   });
 
+  // 🔹 Automatically generate email when first_name or last_name changes
+  useEffect(() => {
+    const { first_name, last_name } = formData;
+    if (first_name && last_name) {
+      const email = `${first_name.toLowerCase()}${last_name.toLowerCase()}@yga.edu.ph`;
+      setFormData((prev: any) => ({ ...prev, email }));
+    }
+  }, [formData.first_name, formData.last_name]);
+
   const stepFieldsMap: Record<number, string[]> = {
     1: ["lrn", "grade", "section", "school_year"],
     2: [
-      "first_name", "middle_name", "last_name", "suffix", "role", "gender",
+      "first_name", "middle_name", "last_name", "suffix", "role", "email", "gender",
       "birth_place", "birth_date", "student_status", "last_school_attend"
     ],
     3: [
@@ -57,9 +68,11 @@ export function useStudentForm() {
     const requiredFields = stepFieldsMap[step] || [];
     const newErrors: Record<string, string> = {};
     requiredFields.forEach(field => {
+      const value = formData[field];
       if (
-        !formData[field]?.trim() &&
-        !["middle_name", "suffix", "role", "guardian_middle_name"].includes(field)
+        typeof value === "string" &&
+        !value.trim() &&
+        !["middle_name", "suffix", "guardian_middle_name"].includes(field)
       ) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }
@@ -79,9 +92,8 @@ export function useStudentForm() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const response = await CreateStudent(token as any, formData);
+      await CreateStudent(token as any, formData);
       toast.success("Student created successfully");
-
       setFormData({
         lrn: "",
         grade: "",
@@ -92,6 +104,7 @@ export function useStudentForm() {
         last_name: "",
         suffix: "",
         role: "student",
+        email: "",
         gender: "",
         birth_place: "",
         birth_date: "",
@@ -110,11 +123,10 @@ export function useStudentForm() {
         guardian_contact: "",
         guardian_email: "",
       });
-
       refetchStudent();
       setOpen(false);
     } catch (error) {
-      toast.error("Student LRN already exists.");
+      toast.error(error instanceof Error ? error.message : "Failed to create student");
     }
     setTimeout(() => setLoading(false), 1000);
   };
@@ -125,6 +137,3 @@ export function useStudentForm() {
     formData, setFormData
   };
 }
-
-
-

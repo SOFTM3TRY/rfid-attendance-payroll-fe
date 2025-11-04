@@ -344,11 +344,11 @@ export default function SF2Page() {
         <SF2Table />
 
         {/* Footer */}
-        <div className="grid grid-cols-5 gap-5 mt-5">
+        {/* <div className="grid grid-cols-5 gap-5 mt-5">
           <div className="col-span-2 bg-red-500 h-96"></div>
           <div className="col-span-1 bg-blue-500 h-96"></div>
           <div className="col-span-2 bg-green-500 h-96"></div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

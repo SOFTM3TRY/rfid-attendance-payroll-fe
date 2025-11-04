@@ -39,7 +39,6 @@ import SplitTextSide from "@/components/animata/text/split-text-side";
 
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: Home },
-  { title: "Email", url: "/admin/email", icon: Inbox },
   { title: "Calendar", url: "/admin/calendar", icon: Calendar },
   { title: "Manage Student", url: "/admin/manage-student", icon: SquareUser },
   {
