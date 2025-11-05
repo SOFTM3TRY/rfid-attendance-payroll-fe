@@ -129,25 +129,6 @@ export default function Login() {
   );
 }
 
-// Fake login function for demo
-async function fakeLogin({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) {
-  return new Promise<{ success: boolean; message?: string }>((resolve) => {
-    setTimeout(() => {
-      if (email === "admin@example.com" && password === "password") {
-        resolve({ success: true });
-      } else {
-        resolve({ success: false, message: "Invalid credentials" });
-      }
-    }, 1500);
-  });
-}
-
 // Eye icons
 const EyeIcon = () => (
   <svg

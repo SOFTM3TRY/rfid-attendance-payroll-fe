@@ -19,8 +19,11 @@ export default function PrimaryInfo({
         <p className="text-xl font-semibold leading-none uppercase">
           {fullName}
         </p>
+        <p className="text-sm my-2 font-semibold leading-none">
+          {data.email}
+        </p>
         <p className="text-sm my-1">
-          LRN: {data.employee_number}{" "}
+          LRN: {data.lrn}{" "}
           <span className="ml-3 text-blue-800 font-medium dark:text-blue-200">
             SY: {data.school_year}
           </span>

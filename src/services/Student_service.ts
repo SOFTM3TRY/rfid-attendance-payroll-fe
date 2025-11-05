@@ -25,6 +25,7 @@ export const CreateStudent = async (token: string, studentData: any) => {
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       }
     );
