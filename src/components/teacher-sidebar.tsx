@@ -127,8 +127,8 @@ export function AppSidebar() {
               <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
                 {userDetails?.data.role_id === 1
                   ? "Admin"
-                  : userDetails?.data.role_id === 2
-                  ? "Teacher"
+                  : userDetails?.data.role_id === 3
+                  ? "Student"
                   : ""}
               </span>
             </p>

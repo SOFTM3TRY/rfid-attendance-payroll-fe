@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, Megaphone, Maximize, Shrink } from "lucide-react";
+import { Bell, Megaphone, Maximize, Shrink, User2 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -200,12 +200,12 @@ export function Navbar() {
 
             <ul className="flex flex-col mt-2">
               <li>
-                <Link href="/admin/profile">
+                <Link href={userDetails?.data.role_id === 1 ? "/admin/profile" : userDetails?.data.role_id === 2 ? "/teacher/profile" : "/student/profile"}>
                   <Button
                     variant="outline"
                     className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
                   >
-                    Profile
+                    <User2 />Profile {userDetails?.data.role_id}
                   </Button>
                 </Link>
               </li>

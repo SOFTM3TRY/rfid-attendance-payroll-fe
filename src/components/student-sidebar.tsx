@@ -38,10 +38,10 @@ import {
 import SplitTextSide from "@/components/animata/text/split-text-side";
 
 const items = [
-  { title: "Dashboard", url: "/teacher/dashboard", icon: Home },
+  { title: "Dashboard", url: "/student/dashboard", icon: Home },
   // { title: "Email", url: "/teacher/email", icon: Inbox },
-  { title: "Calendar", url: "/teacher/calendar", icon: Calendar },
-  { title: "Manage Avisory Class", url: "/teacher/manage-student", icon: SquareUser },
+  { title: "Calendar", url: "/student/calendar", icon: Calendar },
+  // { title: "Manage Avisory Class", url: "/teacher/manage-student", icon: SquareUser },
   // {
   //   title: "Manage Teacher",
   //   url: "/teacher/manage-teacher",
