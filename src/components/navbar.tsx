@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, Megaphone, Maximize, Shrink, User2 } from "lucide-react";
+import { Bell, Megaphone, Maximize, Shrink, User2, LogOut } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -205,7 +205,7 @@ export function Navbar() {
                     variant="outline"
                     className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
                   >
-                    <User2 />Profile {userDetails?.data.role_id}
+                    <User2 color="#00a887" strokeWidth={2.75} />Profile
                   </Button>
                 </Link>
               </li>
@@ -215,7 +215,7 @@ export function Navbar() {
                   onClick={handlelogout}
                   className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
                 >
-                  Logout
+                  <LogOut color="#ff0000" strokeWidth={2.75} /> Logout
                 </Button>
               </li>
             </ul>
