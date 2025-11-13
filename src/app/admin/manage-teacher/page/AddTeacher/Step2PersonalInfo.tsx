@@ -246,7 +246,7 @@ export default function Step2({
               return n;
             });
           }}
-          placeholder="Enter Guardian Email"
+          placeholder="Enter Personal Email"
           className={
             errors.email
               ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"

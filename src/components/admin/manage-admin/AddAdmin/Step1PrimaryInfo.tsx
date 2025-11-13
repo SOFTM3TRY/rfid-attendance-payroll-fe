@@ -73,7 +73,7 @@ export default function Step1({
         </h1>
       </span>
       
-      <div className="grid gap-2">
+      {/* <div className="grid gap-2">
         <Label htmlFor="grade">
           <span className="text-red-500 mr-[-0.3rem]">*</span>
           <GraduationCap className="text-green-500 h-3 w-3" />
@@ -131,7 +131,7 @@ export default function Step1({
         {errors.section && (
           <span className="text-xs text-red-500">{errors.section}</span>
         )}
-      </div>
+      </div> */}
 
       <div className="grid gap-2">
         <Label htmlFor="school_year">

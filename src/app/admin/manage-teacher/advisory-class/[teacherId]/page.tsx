@@ -36,7 +36,7 @@ import TeacherStudentTable from "./student-table";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export default function TeacherProfile() {
+export default function AdvisoryClass() {
   const { token } = useAuth();
   const isClient = useClientOnly();
   const params = useParams();
@@ -61,6 +61,21 @@ export default function TeacherProfile() {
 
   const router = useRouter();
 
+  const grade =
+    additional_info.grade === "1"
+      ? "Grade One"
+      : additional_info.grade === "2"
+      ? "Grade Two"
+      : additional_info.grade === "3"
+      ? "Grade Three"
+      : additional_info.grade === "4"
+      ? "Grade Four"
+      : additional_info.grade === "5"
+      ? "Grade Five"
+      : additional_info.grade === "6"
+      ? "Grade Six"
+      : "";
+
   return (
     <ProtectedRoute role="1">
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
@@ -71,10 +86,11 @@ export default function TeacherProfile() {
             <div className="flex items-center justify-between">
               <h1 className="text-lg font-medium flex">
                 <User className="mr-2 w-6 h-6 text-teal-500" />
-                Teacher Profile{" "}
-                <span className="text-teal-700 dark:text-teal-300 font-bold ml-2">
+                Teacher
+                <span className="text-teal-700 dark:text-teal-300 font-bold mx-2">
                   {fullName}
-                </span>
+                </span>{" "}
+                Advisory Class
               </h1>
               <Breadcrumb>
                 <BreadcrumbList>
@@ -91,11 +107,15 @@ export default function TeacherProfile() {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>Teacher Profile</BreadcrumbPage>
+                    <BreadcrumbPage>Advisory Class</BreadcrumbPage>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>{fullName}</BreadcrumbPage>
+                    <BreadcrumbPage>{grade}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>{additional_info.section}</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
@@ -109,43 +129,35 @@ export default function TeacherProfile() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-20 p-0 mt-10">
+            <div className="flex flex-col gap-2 mb-20 p-0 mt-10">
               <div className="col-span-1 rounded-md">
                 <div className="sticky top-16 shadow-lg dark:border-b-4 dark:border-black z-2 w-full py-5 flex justify-start rounded-md items-center px-5 gap-5 bg-zinc-100 dark:bg-zinc-900 mb-2">
                   <Avatar className="h-30 w-30 flex-shrink-0">
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src="https://github.com/shadcn.png" draggable="false" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-xl font-semibold leading-none uppercase">
                       {fullName}
                     </p>
+                    <p>{teacher?.email || "N/A"}</p>
                     <p className="text-sm my-1">
-                      LRN: {teacher?.employee_no || "N/A"}{" "}
+                      Employee No: {teacher?.employee_no || "N/A"}{" "}
                       <span className="ml-3 text-blue-800 font-medium dark:text-blue-200">
-                        SY: {teacher?.school_year || "N/A"}
+                        SY: {additional_info.school_year || "N/A"}
                       </span>
                     </p>
-                    <div className="flex gap-2 mt-2">
-                      <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
-                        Grade:{" "}
-                        {additional_info.grade === "1"
-                          ? "Grade One"
-                          : additional_info.grade === "2"
-                          ? "Grade Two"
-                          : additional_info.grade === "3"
-                          ? "Grade Three"
-                          : additional_info.grade === "4"
-                          ? "Grade Four"
-                          : additional_info.grade === "5"
-                          ? "Grade Five"
-                          : additional_info.grade === "6"
-                          ? "Grade Six"
-                          : additional_info.grade}
+                    <div className="flex gap-5 mt-10">
+                      <span className="uppercase font-medium text-sm px-3 py-2 h-auto flex items-center justify-center rounded-md bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
+                        Grade: {grade}
                       </span>
-                      <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
+                      <span className="uppercase font-medium text-sm px-3 py-2 h-auto flex items-center justify-center rounded-sm bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
                         Section: {additional_info.section || "N/A"}
                       </span>
+                      {/* <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
+                        School Year:{" "}
+                        {students?.length > 0 ? students[0].school_year : "N/A"}
+                      </span> */}
                     </div>
                   </div>
                 </div>
@@ -159,45 +171,16 @@ export default function TeacherProfile() {
                 )} */}
               </div>
               <div className="col-span-1 md:col-span-2 rounded-md h-full bg-zinc-100 dark:bg-zinc-900 p-5">
-                <div className="sticky top-16 z-1">
-                  <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full">
-                    <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
-                    Teacher{" "}
-                    <span className="text-teal-500 mx-2">{fullName}</span>{" "}
-                    Advisory Class
-                  </span>
-                </div>
-
-                <div className="mt-10 flex justify-between items-center">
-                  <div className="flex items-center justify-between gap-10">
-                    <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
-                      Grade:{" "}
-                      {additional_info.grade === "1"
-                        ? "Grade One"
-                        : additional_info.grade === "2"
-                        ? "Grade Two"
-                        : additional_info.grade === "3"
-                        ? "Grade Three"
-                        : additional_info.grade === "4"
-                        ? "Grade Four"
-                        : additional_info.grade === "5"
-                        ? "Grade Five"
-                        : additional_info.grade === "6"
-                        ? "Grade Six"
-                        : "N/A"}
-                    </span>
-                    <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
-                      Section: {additional_info.section}
-                    </span>
-                    <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
-                      School Year:{" "}
-                      {students?.length > 0 ? students[0].school_year : "N/A"}
-                    </span>
-                  </div>
+                <div className="flex justify-between items-center">
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => window.open(`/admin/manage-teacher/sf2/${teacherId}`, "_blank")}
+                    onClick={() =>
+                      window.open(
+                        `/admin/manage-teacher/sf2/${teacherId}`,
+                        "_blank"
+                      )
+                    }
                   >
                     Generate SF2
                   </Button>
@@ -207,14 +190,14 @@ export default function TeacherProfile() {
                   <TeacherStudentTable students={students} />
                 </div>
 
-                <hr className="mt-10" />
+                {/* <hr className="mt-10" />
                 <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
                   <TriangleAlert
                     strokeWidth={3}
                     className="mr-2 text-yellow-500 dark:text-yellow-400"
                   />
                   This Content Not available Now.
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

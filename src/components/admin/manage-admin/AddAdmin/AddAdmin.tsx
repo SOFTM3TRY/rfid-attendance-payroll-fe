@@ -1,4 +1,4 @@
-import { useTeacherForm } from "@/hooks/useTeacherForm";
+import { useTeacherForm } from "@/hooks/useAdminForm";
 import Step1 from "@/components/admin/manage-admin/AddAdmin/Step1PrimaryInfo";
 import Step2 from "@/components/admin/manage-admin/AddAdmin/Step2PersonalInfo";
 import Step3 from "@/components/admin/manage-admin/AddAdmin/Step3AdditionalInfo";
@@ -32,7 +32,7 @@ import {
 
 import { useEffect } from "react";
 
-export default function AddTeacher() {
+export default function AddAdmin() {
   const {
     step,
     setStep,
@@ -62,7 +62,7 @@ export default function AddTeacher() {
             strokeWidth={3}
             className="bg-white rounded-full text-teal-900 p-0.5 mr-1"
           />
-          Add Teacher
+          Add Admin
         </Button>
       </SheetTrigger>
 
@@ -73,10 +73,10 @@ export default function AddTeacher() {
         <SheetHeader className="text-zinc-900 mb-4">
           <SheetTitle className="flex items-center">
             <UserRoundPlus className="mr-2 w-5 h-5 text-teal-500" />
-            Add Teacher
+            Add Admin
           </SheetTitle>
           <SheetDescription>
-            Enter details to add a new teacher to the system
+            Enter details to add a new admin to the system
           </SheetDescription>
         </SheetHeader>
 

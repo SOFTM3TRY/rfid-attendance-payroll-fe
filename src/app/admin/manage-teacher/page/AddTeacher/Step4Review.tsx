@@ -92,9 +92,9 @@ export default function Step4({ formData }: any) {
   return (
     <div className="p-4 rounded-md text-sm overflow-auto max-h-auto">
       {/* Show JSON with address names */}
-      <pre className="whitespace-pre-wrap">
+      {/* <pre className="whitespace-pre-wrap">
         {JSON.stringify(displayData, null, 2)}
-      </pre>
+      </pre> */}
 
       {/* Primary Information */}
       <div className="flex flex-col gap-2 bg-zinc-100 dark:bg-zinc-900/50 rounded-md p-5 mb-10">

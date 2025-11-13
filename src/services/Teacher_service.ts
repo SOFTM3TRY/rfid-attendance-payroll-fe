@@ -35,6 +35,25 @@ export const CreateTeacher = async (token: string, teacherData: any) => {
   }
 }
 
+export const GetAllAdmin = async (token: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-all-admins`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+
 export const GetAllTeachers = async (token: string) => {
   try {
     const response = await axios.get(
@@ -56,6 +75,23 @@ export const GetTeacherDetails = async (token: string, id: string) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-teacher-by-id/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const GetTeacherProfile = async (token: string, id: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-teacher-profile/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

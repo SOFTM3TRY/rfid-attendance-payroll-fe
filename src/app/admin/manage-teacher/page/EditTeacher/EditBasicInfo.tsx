@@ -1,192 +1,140 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useSection } from "@/hooks/useSection";
+import { useGrade } from "@/hooks/useGrade";
+import { useAuth } from "@/context/AuthContext";
 import {
   ShieldUser,
   GraduationCap,
   Book,
   Calendar,
   KeyRound,
-  User,
-  UserLock,
-  CalendarDays,
-  MapPinHouse,
-  CircleSmall,
-  School,
 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
-import { useTeacherDetails } from "@/hooks/useTeacher";
-import { useForm } from "react-hook-form";
 
-// Mocked data, replace with actual API/context
-const GradesData = {
-  data: [
-    { id: "1", grade_level: "Grade 1" },
-    { id: "2", grade_level: "Grade 2" },
-    // Add more as needed
-  ],
-};
+interface EditBasicInfoProps {
+  TeacherData: any; // The teacher object from EditTeacher
+}
 
 function generateSchoolYears() {
   const currentYear = new Date().getFullYear();
-  return Array.from({ length: 5 }, (_, i) => `${currentYear - i}-${currentYear - i + 1}`);
+  return Array.from(
+    { length: 5 },
+    (_, i) => `${currentYear - i}-${currentYear - i + 1}`
+  );
 }
 
-function generateSections() {
-  return ["A", "B", "C", "D"];
-}
+export default function EditBasicInfo({ TeacherData }: EditBasicInfoProps) {
+  const { token } = useAuth();
+  const teacher = TeacherData;
 
-export default function EditBasicInfo({ TeacherData }: { TeacherData: any }) {
-  const [formData, setFormData] = useState({
-    lrn: "",
-    grade: "",
-    section: "",
-    school_year: "",
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    suffix: "",
-    birth_date: "",
-    birth_place: "",
-    gender: "",
-    last_school_attend: "",
-  });
-
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = useState(false);
-    
- 
- console.log("Teacher Data in EditBasicInfo:", TeacherData);
- console.log("Default Values:", {
-       employee_no: TeacherData?.data?.teacher?.[0]?.employee_no,
-        grade:  TeacherData?.data?.teacher?.[0]?.additional_info?.grade,
-    });
-const {register, handleSubmit, formState: { errors: formErrors }} = useForm({
+  // Setup form with default values
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
-       employee_no: TeacherData?.data?.teacher?.[0]?.employee_no,
-        grade:  TeacherData?.data?.teacher?.[0]?.additional_info?.grade,
-        section: TeacherData?.data?.teacher?.[0]?.additional_info?.section,
+      employee_no: teacher?.employee_no || "",
+      grade: teacher?.additional_info?.grade || "",
+      section: teacher?.additional_info?.section || "",
+      school_year: teacher?.additional_info?.school_year || "",
     },
   });
-  
- 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
 
-    setErrors((prev) => {
-      const updated = { ...prev };
-      delete updated[name];
-      return updated;
-    });
-  };
-const onSubmit = (data: any) => {
-    console.log("Form Submitted Data:", data);
-  }
+  const selectedGrade = watch("grade");
+
+  // Fetch Grades and Sections
+  const { data: gradesData } = useGrade(token);
+  const grades = gradesData?.data || [];
+
+  const { data: sectionsData } = useSection(token, selectedGrade);
+  const sections = sectionsData?.data || [];
+
+  // Reset section when grade changes
+  useEffect(() => {
+    setValue("section", "");
+  }, [selectedGrade, setValue]);
+
   return (
-    <div className="flex flex-col gap-10 rounded-md bg-zinc-100 dark:bg-zinc-900 mt-10">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 bg-zinc-100 dark:bg-zinc-900 rounded-md">
+      <div className="col-span-1 md:col-span-4 mb-3 mt-5">
+        <p className="text-sm font-medium flex items-center gap-1 bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-sm w-56">
+          <ShieldUser className="text-blue-500" /> Primary Information
+        </p>
+      </div>
 
-      {/* ========== Primary Information ========== */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-        <span className="col-span-1 md:col-span-4">
-          <h1 className="text-sm font-medium flex items-center text-zinc-800 dark:text-zinc-100 bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-sm w-56">
-            <ShieldUser className="text-blue-500 h-5 w-5 mr-1" />
-            Primary Information
-          </h1>
-        </span>
+      {/* Employee No */}
+      <div className="grid gap-2">
+        <Label htmlFor="employee_no">
+          <KeyRound className="text-blue-500 h-3 w-3 inline" /> Employee No.
+        </Label>
+        <Input
+          type="text"
+          maxLength={12}
+          {...register("employee_no")}
+          disabled
+        />
+      </div>
 
-        {/* LRN */}
-        <div className="grid gap-2">
-          <Label htmlFor="lrn">
-            <span className="text-red-500 mr-[-0.3rem]">*</span>
-            <KeyRound className="text-blue-500 h-3 w-3 inline" />
-            Employee No.
-          </Label>
-          <Input
-           
-          
-            inputMode="numeric"
-            pattern="\d{12}"
-            placeholder="Enter Employee No."
-            maxLength={12}
-            {...register("employee_no")}
-           
-      
-            className={errors.lrn ? "border border-red-500" : ""}
-            disabled={loading}
-          />
-          {errors.lrn && <span className="text-xs text-red-500">{errors.lrn}</span>}
-        </div>
+      {/* Grade */}
+      <div className="grid gap-2">
+        <Label htmlFor="grade">
+          <GraduationCap className="text-green-500 h-3 w-3 inline" /> Advisory
+          Grade
+        </Label>
+        <select
+          {...register("grade")}
+          className="border py-1 px-3 rounded-sm dark:bg-zinc-900"
+        >
+          <option value="">Select Grade</option>
+          {grades.map((grade: any) => (
+            <option key={grade.id} value={grade.id}>
+              {grade.grade_level}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        {/* Grade */}
-        <div className="grid gap-2">
-          <Label htmlFor="grade">
-            <span className="text-red-500 mr-[-0.3rem]">*</span>
-            <GraduationCap className="text-green-500 h-3 w-3 inline" />
-            Advisory Grade
-          </Label>
-          <select {...register("grade")} onChange={handleChange} className={`border dark:bg-zinc-900 py-1 px-3 rounded-sm ${errors.grade ? "border-red-500" : ""}`} disabled={loading}>
-            <option value="">Select Grade</option>
-            {GradesData.data.map((grade) => (
-              <option key={grade.id} value={grade.id}>
-                {grade.grade_level}
-              </option>
-            ))}
-          </select>
-          {errors.grade && <span className="text-xs text-red-500">{errors.grade}</span>}
-        </div>
+      {/* Section */}
+      <div className="grid gap-2">
+        <Label htmlFor="section">
+          <Book className="text-yellow-500 h-3 w-3 inline" /> Advisory Section
+        </Label>
+        <select
+          {...register("section")}
+          className="border py-1 px-3 rounded-sm dark:bg-zinc-900"
+          disabled={!selectedGrade}
+        >
+          <option value="">Select Section</option>
+          {sections.map((section: any) => (
+            <option key={section.id} value={section.section_name}>
+              {section.section_name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        {/* Section */}
-        <div className="grid gap-2">
-          <Label htmlFor="section">
-            <span className="text-red-500 mr-[-0.3rem]">*</span>
-            <Book className="text-yellow-500 h-3 w-3 inline" />
-            Advisory Section
-          </Label>
-          <select
-            {...register("section")}
-            onChange={handleChange}
-            className={`border dark:bg-zinc-900 py-1 px-3 rounded-sm ${
-              errors.section ? "border-red-500" : ""
-            }`}
-            
-            
-          >
-            
-          </select>
-          {errors.section && <span className="text-xs text-red-500">{errors.section}</span>}
-        </div>
-
-        {/* School Year */}
-        <div className="grid gap-2">
-          <Label htmlFor="school_year">
-            <span className="text-red-500 mr-[-0.3rem]">*</span>
-            <Calendar className="text-violet-500 h-3 w-3 inline" />
-            School Year
-          </Label>
-          <select
-            id="school_year"
-            name="school_year"
-            value={formData.school_year}
-            onChange={handleChange}
-            className={`border dark:bg-zinc-900 py-1 px-3 rounded-sm ${
-              errors.school_year ? "border-red-500" : ""
-            }`}
-            disabled={loading}
-          >
-            <option value="">Select School Year</option>
-            {generateSchoolYears().map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-          {errors.school_year && (
-            <span className="text-xs text-red-500">{errors.school_year}</span>
-          )}
-        </div>
+      {/* School Year */}
+      <div className="grid gap-2">
+        <Label htmlFor="school_year">
+          <Calendar className="text-violet-500 h-3 w-3 inline" /> School Year
+        </Label>
+        <select
+          {...register("school_year")}
+          className="border py-1 px-3 rounded-sm dark:bg-zinc-900"
+        >
+          <option value="">Select School Year</option>
+          {generateSchoolYears().map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );

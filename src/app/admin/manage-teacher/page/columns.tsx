@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/tooltip";
 
 export type Teacher = {
-  id: number;
+  id: string;
   employee_number: string;
   first_name: string;
   middle_name?: string;
@@ -159,7 +159,7 @@ export const columns: ColumnDef<Teacher>[] = [
             </Tooltip>
             <DropdownMenuContent>
               <DropdownMenuItem
-                onClick={() => window.open(`/admin/manage-teacher/teacher-profile/${teacherId}`, "_blank")}
+                onClick={() => router.push(`/admin/manage-teacher/teacher-profile/${teacherId}`)}
               >
                 <Eye className="w-4 h-4 text-teal-700 dark:text-teal-500" />
                 View Profile
@@ -175,7 +175,7 @@ export const columns: ColumnDef<Teacher>[] = [
                 Attendance History
               </DropdownMenuItem> */}
 
-              <DropdownMenuItem onClick={() => window.open(`/admin/manage-teacher/advisory-class/${teacherId}`, "_blank")}>
+              <DropdownMenuItem onClick={() => router.push(`/admin/manage-teacher/advisory-class/${teacherId}`)}>
                 <Rows4 className="w-4 h-4 text-violet-700 dark:text-violet-500" />
                 Advisory Class
               </DropdownMenuItem>
@@ -186,12 +186,8 @@ export const columns: ColumnDef<Teacher>[] = [
               </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
-          <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
-          <Registration
-            open={openRegister}
-            setOpen={setOpenRegister}
-            row={row}
-          />
+          <EditProfile open={openEdit} setOpen={setOpenEdit} id={teacherId} />
+          {/* <Registration open={openRegister} setOpen={setOpenRegister} teacherId={teacherId} /> */}
         </div>
       );
     },

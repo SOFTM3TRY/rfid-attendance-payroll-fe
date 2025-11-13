@@ -22,7 +22,7 @@ import {
   BadgeInfo,
   User,
   Calendar,
-  CircleSmall
+  CircleSmall,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,8 +36,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { FilterTable } from "@/components/admin/manage-student/Filtertable"; 
- 
+import { FilterTable } from "@/components/admin/manage-student/Filtertable";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 // Type from your API
 export type Student = {
   id: number;
@@ -64,7 +65,7 @@ const columns: ColumnDef<Student>[] = [
     accessorFn: (row) =>
       `${row.last_name}, ${row.first_name} ${row.middle_name || ""} ${
         row.suffix || ""
-      }`,
+      }`.trim(),
     header: () => (
       <div className="flex items-center">
         <User className="text-green-500 mr-1 w-4 h-4" /> Full Name
@@ -73,6 +74,13 @@ const columns: ColumnDef<Student>[] = [
     cell: ({ row }) => (
       <span className="uppercase font-medium">{row.getValue("full_name")}</span>
     ),
+    // Add custom filter function for full_name
+    filterFn: (row, columnId, filterValue) => {
+      const fullName = row.getValue(columnId) as string;
+      return fullName
+        .toLowerCase()
+        .includes((filterValue as string).toLowerCase());
+    },
   },
   {
     accessorKey: "gender",
@@ -98,8 +106,11 @@ export default function TeacherStudentTable({
   students: Student[];
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
@@ -140,7 +151,9 @@ export default function TeacherStudentTable({
         <FilterTable pagination={pagination} setPagination={setPagination} />
         <Input
           placeholder="Search full name..."
-          value={(table.getColumn("full_name")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("full_name")?.getFilterValue() as string) ?? ""
+          }
           onChange={(e) =>
             table.getColumn("full_name")?.setFilterValue(e.target.value)
           }
@@ -154,7 +167,7 @@ export default function TeacherStudentTable({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}  className="py-3">
+                  <TableHead key={header.id} className="py-3">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -171,15 +184,21 @@ export default function TeacherStudentTable({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}  className="py-5">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <TableCell key={cell.id} className="py-5">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-10 text-muted-foreground text-sm">
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-center py-10 text-muted-foreground text-sm"
+                >
                   No students assigned to this teacher.
                 </TableCell>
               </TableRow>
@@ -191,7 +210,8 @@ export default function TeacherStudentTable({
       {/* Pagination */}
       <div className="flex items-center justify-between px-5 py-4 space-x-2">
         <div className="text-sm text-muted-foreground flex-1">
-          Showing {totalRows ? start : 0} to {totalRows ? end : 0} of {totalRows} entries
+          Showing {totalRows ? start : 0} to {totalRows ? end : 0} of{" "}
+          {totalRows} entries
         </div>
 
         <div className="text-sm text-muted-foreground flex-1 text-center mr-3">

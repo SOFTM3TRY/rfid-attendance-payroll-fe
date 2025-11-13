@@ -28,8 +28,8 @@ import { useTeacherDetails } from "@/hooks/useTeacher";
 import BasicInfo from "./basic-info";
 import AddressInfo from "./address-info";
 import EmergencyInfo from "./emergency-info";
-// import { Attendance } from "./attendance";
-// import { TotalStatus } from "./total-status"; 
+import { Attendance } from "./attendance";
+import { TotalStatus } from "./total-status"; 
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
