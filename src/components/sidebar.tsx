@@ -63,7 +63,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        <SidebarGroup style={{ pointerEvents: "auto" }}>
+        <SidebarGroup >
           <div className="flex flex-col items-center justify-center gap-5 p-3 group-data-[collapsible=icon]:mt-3 group-data-[collapsible=icon]:mb-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0">
             <img
               src="/logo.png"
@@ -76,39 +76,113 @@ export function AppSidebar() {
               className="group-data-[collapsible=icon]:hidden"
             />
           </div>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+
+          {/* MAIN SECTION */}
+          <SidebarGroupLabel>Main</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-2">
-              {items.map(({ title, url, icon: Icon }) => (
-                <SidebarMenuItem key={title}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SidebarMenuButton
-                        asChild
-                        className={`h-10 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-2 ${
-                          url === pathname
-                            ? "bg-teal-600 h-10 text-white hover:bg-teal-800 hover:text-white"
-                            : ""
-                        }`}
-                      >
-                        <a href={url}>
-                          <Icon className="size-4" />
-                          <span className="block group-data-[collapsible=icon]:hidden">
-                            {title}
-                          </span>
-                        </a>
-                      </SidebarMenuButton>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="right"
-                      align="center"
-                      className="block group-data-[collapsible=icon]:hidden"
-                    >
-                      {title}
-                    </TooltipContent>
-                  </Tooltip>
-                </SidebarMenuItem>
-              ))}
+              {items
+                .filter((i) => ["Dashboard", "Calendar"].includes(i.title))
+                .map(({ title, url, icon: Icon }) => (
+                  <SidebarMenuItem key={title}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton
+                          asChild
+                          className={`h-10 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-2 ${
+                            pathname === url
+                              ? "bg-teal-600 text-white hover:bg-teal-800"
+                              : ""
+                          }`}
+                        >
+                          <a href={url}>
+                            <Icon className="size-4" />
+                            <span className="block group-data-[collapsible=icon]:hidden">
+                              {title}
+                            </span>
+                          </a>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" align="center">
+                        {title}
+                      </TooltipContent>
+                    </Tooltip>
+                  </SidebarMenuItem>
+                ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+
+          {/* USER MANAGEMENT SECTION */}
+          <SidebarGroupLabel className="mt-5">User Management</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="mt-2">
+              {items
+                .filter((i) =>
+                  ["Manage Student", "Manage Teacher", "Manage Admin"].includes(
+                    i.title
+                  )
+                )
+                .map(({ title, url, icon: Icon }) => (
+                  <SidebarMenuItem key={title}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton
+                          asChild
+                          className={`h-10 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-2 ${
+                            pathname === url
+                              ? "bg-teal-600 text-white hover:bg-teal-800"
+                              : ""
+                          }`}
+                        >
+                          <a href={url}>
+                            <Icon className="size-4" />
+                            <span className="block group-data-[collapsible=icon]:hidden">
+                              {title}
+                            </span>
+                          </a>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" align="center">
+                        {title}
+                      </TooltipContent>
+                    </Tooltip>
+                  </SidebarMenuItem>
+                ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+
+          {/* SETTINGS SECTION */}
+          <SidebarGroupLabel className="mt-5">Settings</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="mt-2">
+              {items
+                .filter((i) => ["System Settings"].includes(i.title))
+                .map(({ title, url, icon: Icon }) => (
+                  <SidebarMenuItem key={title}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton
+                          asChild
+                          className={`h-10 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-2 ${
+                            pathname === url
+                              ? "bg-teal-600 text-white hover:bg-teal-800"
+                              : ""
+                          }`}
+                        >
+                          <a href={url}>
+                            <Icon className="size-4" />
+                            <span className="block group-data-[collapsible=icon]:hidden">
+                              {title}
+                            </span>
+                          </a>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" align="center" className="">
+                        {title}
+                      </TooltipContent>
+                    </Tooltip>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

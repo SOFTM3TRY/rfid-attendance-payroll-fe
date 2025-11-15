@@ -41,41 +41,38 @@ import { RegisterRFIDToStudent } from "@/services/Student_service";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
 
-export default function FlipCard({
-  open,
-  setOpen,
-  row,
-}: {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  row: any;
-}) {
-  const data = row.original || {};
+import { useGetStudentDetailsById } from "@/hooks/useStudentDetails";
+
+export default function Registration({ open, setOpen, studentId }: { open: boolean; setOpen: (open: boolean) => void; studentId: number; }) {
+  const { token } = useAuth();
+  const { register, handleSubmit } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Always call hooks at top
+  const { data, isLoading: isLoadingStudent, isError } = useGetStudentDetailsById(
+    token,
+    Number(studentId)
+  );
+
+  // Extract student object safely
+  const student = data?.data;
+
   const fullName = [
-    data.last_name,
-    data.first_name,
-    data.middle_name,
-    data.suffix,
+    student?.last_name,
+    student?.first_name,
+    student?.middle_name,
+    student?.suffix,
   ]
     .filter(Boolean)
     .join(" ");
 
-  const { token } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const { register, handleSubmit } = useForm();
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (formData: any) => {
     setIsLoading(true);
     try {
-      const response = await RegisterRFIDToStudent(
-        token as string,
-        data.lrn,
-        data
-      );
-
+      await RegisterRFIDToStudent(token as string, formData.lrn, formData);
       toast.success("RFID Successfully Registered");
-      // reset input
       const input = document.getElementById("rfid_uid") as HTMLInputElement;
-      input.value = "";
+      if (input) input.value = "";
     } catch (error) {
       toast.error("RFID Registration Failed");
     } finally {
@@ -83,147 +80,73 @@ export default function FlipCard({
     }
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  // Conditional rendering AFTER hooks
+  if (isLoadingStudent || isLoading) return <Loader />;
+  if (!student) return <div className="p-5">No student data found.</div>;
+  if (isError) return <div className="p-5 text-red-500">Failed to load student</div>;
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent
-        className="bottom-0 h-full rounded-t-md overflow-y-auto p-3 overflow-x-hidden"
-        side="bottom"
-        style={{
-          pointerEvents: !data.rfid_uid ? "none" : "auto",
-        }}
-      >
+    <Sheet open={open} onOpenChange={setOpen} >
+      <SheetContent className="bottom-0 h-full rounded-t-md overflow-y-auto p-3 overflow-x-hidden" side="bottom" style={{ pointerEvents: student?.rfid_uid ? "auto" : "none" }}>
+        {/* Header */}
         <SheetHeader>
           <SheetDescription className="flex items-center text-center text-md">
             <User className="mr-1 w-4 h-4 text-teal-500" />
-            Student Attendance History
-            <span
-              className={`text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
-                data.status == 1
-                  ? "bg-green-200 text-green-900 dark:bg-green-100 dark:text-green-800"
-                  : "bg-red-200 text-red-900 dark:bg-red-100 dark:text-red-800"
-              }`}
-            >
-              {data.status == 1 ? "Active" : "Inactive"}
+            Student RFID Registration
+            <span className={`text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${student.status == 1 ? "bg-green-200 text-green-900" : "bg-red-200 text-red-900"}`}>
+              {student.status == 1 ? "Active" : "Inactive"}
               <span className="ml-1">
-                {data.status == 1 ? (
-                  <UserCheck className="w-4 h-4 text-green-800" />
-                ) : (
-                  <UserX className="w-4 h-4 text-red-800" />
-                )}
+                {student.status == 1 ? <UserCheck className="w-4 h-4 text-green-800" /> : <UserX className="w-4 h-4 text-red-800" />}
               </span>
             </span>
           </SheetDescription>
           <SheetTitle className="uppercase">{fullName}</SheetTitle>
-          <SheetDescription>S.Y : {data.school_year}</SheetDescription>
+          <SheetDescription>S.Y: {student.school_year}</SheetDescription>
         </SheetHeader>
 
-        <SplitText
-          text="Young Generation Academy"
-          className="absolute top-15 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 ">
-          <pre className="hidden">{JSON.stringify(data, null, 2)}</pre>
-          {/* Avatar + Primary */}
+        {/* Body */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20">
           <div className="col-span-1 rounded-md">
-            <PrimaryInfo data={data} fullName={fullName} />
-
-            <BasicInfo data={data} />
-            <AddressInfo data={data.additional_info || {}} />
-            <GuardianInfo data={data.additional_info || {}} />
+            <PrimaryInfo data={student} fullName={fullName} />
+            <BasicInfo data={student} />
+            <AddressInfo data={student.additional_info || {}} />
+            <GuardianInfo data={student.additional_info || {}} />
           </div>
 
           <div className="col-span-1 md:col-span-2 rounded-r-md p-7 h-full bg-zinc-100 dark:bg-zinc-900 border-l-4 border-zinc-300 dark:border-zinc-700">
-            <div className="sticky top-0 z-500 flex items-center justify-center">
-              <span
-                className={cn(
-                  "text-lg font-medium shadow-lg flex items-center",
-                  {
-                    "bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full animate-bounce scale-1.5 infinite ease-in-out":
-                      !data.rfid_uid,
-                  }
-                )}
-              >
-                <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
-                {data.rfid_uid ? (
-                  <>
-                    <span className="text-teal-500 mx-2 font-bold">
-                      {fullName}
-                    </span>{" "}
-                    is already registered hover the ID to view front nad Back
-                    side.
-                  </>
+            <div className=" z-500 flex items-center justify-center">
+              <span className={cn("text-lg font-medium shadow-lg flex items-center", { "bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full animate-bounce": !student.rfid_uid })}>
+                <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />
+                {!student.rfid_uid ? (
+                  <>Tap <span className="text-teal-500 mx-2 font-bold">IREF ID</span> to register attendance for <span className="text-teal-500 mx-2">{fullName}</span>.</>
                 ) : (
-                  <>
-                    Tap{" "}
-                    <span className="text-teal-500 mx-2 font-bold">
-                      IREF ID
-                    </span>{" "}
-                    to register attendance for{" "}
-                    <span className="text-teal-500 mx-2">{fullName}</span>.
-                  </>
+                  <>{fullName} is already registered.</>
                 )}
               </span>
             </div>
-            <div className="mt-10 p-5 flex justify-center items-center">
-              <FlipCardUI data={data} />
-            </div>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              onChange={(e) => {
-                e.currentTarget.requestSubmit();
-              }}
-              className={`${data.rfid_uid ? "hidden" : "block"}`}
-            >
-              <input type="hidden" value={`${data.lrn}`} {...register("lrn")} />
-              {/* RFID input */}
-              <input
-                type="text"
-                autoFocus
-                {...register("rfid_uid")}
-                className="text-zinc-200 dark:text-zinc-900 border-none focus:outline-none focus:ring-none focus:shadow-outline"
-                id="rfid_uid"
-              />
-            </form>
 
-            <hr className="mt-10" />
-            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
-              <TriangleAlert
-                strokeWidth={3}
-                className="mr-2 text-yellow-500 dark:text-yellow-400"
-              />
-              This Content Not available Now.
+            <div className="mt-10 p-5 flex justify-center items-center">
+              <FlipCardUI data={student} />
             </div>
-            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
-            <div className="mt-5 p-20 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
-            <div className="mt-5 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
-            <div className="mt-5 h-96 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
+
+            {!student.rfid_uid && (
+              <form onSubmit={handleSubmit(onSubmit)} onChange={(e) => e.currentTarget.requestSubmit()}>
+                <input type="hidden" value={student.lrn} {...register("lrn")} />
+                <input type="text" autoFocus {...register("rfid_uid")} id="rfid_uid" className="text-zinc-200 dark:text-zinc-900 border-none focus:outline-none" />
+              </form>
+            )}
           </div>
         </div>
 
+        {/* Footer */}
         <SheetFooter className="fixed bottom-5 right-5">
           <div className="flex items-center justify-end gap-5">
-            {data.rfid_uid && (
-              <Button onClick={() => window.print()} className="w-40">
-                <Printer className="mr-0" /> Print
-              </Button>
-            )}
-            <SheetClose asChild>
-              <Button
-                className="w-40"
-                variant="outline"
-                onClick={() => setOpen(false)}
-              >
-                <CircleX /> Close
-              </Button>
-            </SheetClose>
+            {student.rfid_uid && <Button onClick={() => window.print()} className="w-40"><Printer /> Print</Button>}
+            <SheetClose asChild><Button className="w-40" variant="outline"><CircleX /> Close</Button></SheetClose>
           </div>
         </SheetFooter>
       </SheetContent>
     </Sheet>
   );
 }
+

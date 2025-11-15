@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
 
@@ -46,7 +46,7 @@ import Loader from "@/components/Loader";
 import { useCountActiveStudents } from "@/hooks/useStudentDetails";
 import { useTeacherActiveCount } from "@/hooks/useTeacher";
 
-export default function Dashboard() {
+export default function Dashboard({ children }: { children: React.ReactNode }) {
   const { token } = useAuth();
   const isClient = useClientOnly();
 

@@ -10,9 +10,19 @@ interface FlipCardProps {
     suffix: string;
     lrn: string;
     school_year: string;
-    grade_id: string;
+    grade: string;
     section: string;
     rfid_uid: string;
+    additional_info: {
+      guardian_first_name: string;
+      guardian_middle_name: string;
+      guardian_last_name: string;
+      guardian_suffix: string;
+      guardian_contact: string;
+      guardian_email: string;
+      guardian_occupation: string;
+      relationship: string;
+    };
   };
   rotate?: "x" | "y";
 }
@@ -56,48 +66,80 @@ export default function FlipCardUI({ data, rotate = "y" }: FlipCardProps) {
 
           <div className="text-start mt-5 text-black px-3 ml-30">
             <p className="font-medium text-lg">
-              {data.first_name} {data.middle_name} {data.last_name} {data.suffix}
+              {data.first_name} {data.middle_name} {data.last_name}{" "}
+              {data.suffix}
             </p>
-            <p className="">
-              {data.school_year}
-            </p>
+            <p className="">{data.school_year}</p>
           </div>
 
           <div className="text-start mt-10 text-black px-10 flex items-center justify-between">
             <p className="font-medium text-lg text-center">
-              <span> Grade
-              {data.grade_id === "1"
-                ? " One"
-                : data.grade_id === "2"
-                ? " Two"
-                : data.grade_id === "3"
-                ? " Three"
-                : data.grade_id === "4"
-                ? " Four"
-                : data.grade_id === "5"
-                ? " Five"
-                : data.grade_id === "6"
-                ? " Six"
-                : ""}</span> <br />
-                <span className="text-sm">Grade</span>
+              <span>
+                {" "}
+                Grade
+                {data.grade === "1"
+                  ? " One"
+                  : data.grade === "2"
+                  ? " Two"
+                  : data.grade === "3"
+                  ? " Three"
+                  : data.grade === "4"
+                  ? " Four"
+                  : data.grade === "5"
+                  ? " Five"
+                  : data.grade === "6"
+                  ? " Six"
+                  : ""}
+              </span>{" "}
+              <br />
+              <span className="text-sm">Grade</span>
             </p>
             <p className="font-medium text-lg text-center">
-              <span>{data.section}</span> <br /> <span className="text-sm">section</span>
+              <span>{data.section}</span> <br />{" "}
+              <span className="text-sm">section</span>
             </p>
           </div>
-          
-            <div className="bg-gradient-to-r mt-9 from-teal-700 to-sky-700 w-full h-12 rounded-b-xl"></div>
+
+          <div className="bg-gradient-to-r mt-9 from-teal-700 to-sky-700 w-full h-12 rounded-b-xl"></div>
         </div>
 
         {/* Back */}
         <div
           className={cn(
-            "absolute h-full w-full rounded-2xl bg-white border shadow-lg p-4 [backface-visibility:hidden]",
+            "absolute h-full w-full rounded-2xl bg-white border shadow-lg p-1 [backface-visibility:hidden]",
             self[1]
           )}
         >
           <div className="flex min-h-full flex-col gap-2 text-black">
-            Back of the id
+            <div className="text-start text-black px-10 flex flex-col gap-2">
+              <p>
+                Guardian First Name:{" "}
+                {data?.additional_info.guardian_first_name ?? "N/A"}
+              </p>
+              <p>
+                Guardian Middle Name:{" "}
+                {data?.additional_info.guardian_middle_name ?? "N/A"}
+              </p>
+              <p>
+                Guardian Last Name:{" "}
+                {data?.additional_info.guardian_last_name ?? "N/A"}
+              </p>
+              <p>
+                Guardian Suffix:{" "}
+                {data?.additional_info.guardian_suffix ?? "N/A"}
+              </p>
+              <p>
+                Guardian Contact:{" "}
+                {data?.additional_info.guardian_contact ?? "N/A"}
+              </p>
+              <p>
+                Guardian Email: {data?.additional_info.guardian_email ?? "N/A"}
+              </p>
+              <p>
+                Guardian Occupation:{" "}
+                {data?.additional_info.guardian_occupation ?? "N/A"}
+              </p>
+            </div>
           </div>
         </div>
       </div>
