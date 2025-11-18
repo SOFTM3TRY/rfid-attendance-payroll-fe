@@ -1,45 +1,20 @@
-import { useStudentForm } from "@/hooks/useStudentForm";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet";
+import { useState } from "react";
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetDescription, } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import {
-  Eye,
-  User,
-  UserCheck,
-  UserX,
-  CircleX,
-  Loader2,
-  Send,
-  Printer,
-  TriangleAlert,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { User, UserCheck, UserX, CircleX, Printer, } from "lucide-react";
 
 import PrimaryInfo from "@/components/admin/manage-student/ShowProfile/PrimaryInfoStudent";
 import BasicInfo from "@/components/admin/manage-student/ShowProfile/BasicInfo";
 import AddressInfo from "@/components/admin/manage-student/ShowProfile/AddressInfo";
 import GuardianInfo from "@/components/admin/manage-student/ShowProfile/GuardianInfo";
 
-import SplitText from "@/components/animata/text/split-text";
 import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
-
-import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
-import { on } from "events";
 import { useAuth } from "@/context/AuthContext";
 import { RegisterRFIDToStudent } from "@/services/Student_service";
 import toast from "react-hot-toast";
-import Loader from "@/components/Loader";
 
 import { useGetStudentDetailsById } from "@/hooks/useStudentDetails";
 
@@ -49,15 +24,15 @@ export default function Registration({ open, setOpen, studentId }: { open: boole
   const [isLoading, setIsLoading] = useState(false);
 
   // Always call hooks at top
-  const { data, isLoading: isLoadingStudent, isError } = useGetStudentDetailsById(
+  const { data, isError } = useGetStudentDetailsById(
     token,
     Number(studentId)
   );
 
-  // Extract student object safely
+  // Extract student object safelyss
   const student = data?.data;
 
-  const fullName = [
+  const fullName = [ 
     student?.last_name,
     student?.first_name,
     student?.middle_name,
@@ -73,6 +48,8 @@ export default function Registration({ open, setOpen, studentId }: { open: boole
       toast.success("RFID Successfully Registered");
       const input = document.getElementById("rfid_uid") as HTMLInputElement;
       if (input) input.value = "";
+
+      window.location.reload();
     } catch (error) {
       toast.error("RFID Registration Failed");
     } finally {
@@ -81,8 +58,7 @@ export default function Registration({ open, setOpen, studentId }: { open: boole
   };
 
   // Conditional rendering AFTER hooks
-  if (isLoadingStudent || isLoading) return <Loader />;
-  if (!student) return <div className="p-5">No student data found.</div>;
+  if (!student) return <div></div>;
   if (isError) return <div className="p-5 text-red-500">Failed to load student</div>;
 
   return (

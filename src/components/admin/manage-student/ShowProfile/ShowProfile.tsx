@@ -1,4 +1,7 @@
-// ShowProfile.tsx
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAuth } from "@/context/AuthContext";
+import { useGetStudentDetailsById } from "@/hooks/useStudentDetails";
 import {
   Sheet,
   SheetClose,
@@ -11,8 +14,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, UserCheck, UserX, CircleX,  TriangleAlert, } from "lucide-react";
+import { User, UserCheck, UserX, CircleX } from "lucide-react";
 
 import PrimaryInfo from "@/components/admin/manage-student/ShowProfile/PrimaryInfoStudent";
 import BasicInfo from "@/components/admin/manage-student/ShowProfile/BasicInfo";
@@ -27,20 +29,31 @@ import SplitText from "@/components/animata/text/split-text";
 export default function ShowProfile({
   open,
   setOpen,
-  row,
   trigger,
+  studentId,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  row: any;
+  studentId: number;
   trigger?: React.ReactNode;
 }) {
-  const data = row.original || {};
+  const { token } = useAuth();
+  const { register, handleSubmit } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Always call hooks at top
+  const { data, isLoading: isLoadingStudent, isError } = useGetStudentDetailsById(
+    token,
+    Number(studentId)
+  );
+
+  // Extract student object safely
+  const student = data?.data;
   const fullName = [
-    data.last_name,
-    data.first_name,
-    data.middle_name,
-    data.suffix,
+    student?.last_name,
+    student?.first_name,
+    student?.middle_name,
+    student?.suffix,
   ]
     .filter(Boolean)
     .join(" ");
@@ -58,14 +71,14 @@ export default function ShowProfile({
             Student Profile
             <span
               className={`text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
-                data.status == 1
+                student?.status == 1
                   ? "bg-green-200 text-green-900 dark:bg-green-100 dark:text-green-800"
                   : "bg-red-200 text-red-900 dark:bg-red-100 dark:text-red-800"
               }`}
             >
-              {data.status == 1 ? "Active" : "Inactive"}
+              {student?.status == 1 ? "Active" : "Inactive"}
               <span className="ml-1">
-                {data.status == 1 ? (
+                {student?.status == 1 ? (
                   <UserCheck className="w-4 h-4 text-green-800" />
                 ) : (
                   <UserX className="w-4 h-4 text-red-800" />
@@ -74,7 +87,7 @@ export default function ShowProfile({
             </span>
           </SheetDescription>
           <SheetTitle className="uppercase">{fullName}</SheetTitle>
-          <SheetDescription>S.Y : {data.school_year}</SheetDescription>
+          <SheetDescription>S.Y : {student?.school_year}</SheetDescription>
         </SheetHeader>
 
         <SplitText
@@ -85,18 +98,18 @@ export default function ShowProfile({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 p-5">
           {/* Avatar + Primary */}
           <div className="col-span-1 rounded-md">
-            <PrimaryInfo data={data} fullName={fullName} />
+            <PrimaryInfo data={student} fullName={fullName} />
 
-            <BasicInfo data={data} />
-            <AddressInfo data={data.additional_info || {}} />
-            <GuardianInfo data={data.additional_info || {}} />
+            <BasicInfo data={student} />
+            <AddressInfo data={student?.additional_info || {}} />
+            <GuardianInfo data={student?.additional_info || {}} />
           </div>
           <div className="col-span-1 md:col-span-2 rounded-md h-full bg-zinc-100 dark:bg-zinc-900 p-5">
             <div className="sticky top-0 z-500">
               <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full">
                 <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
                 Student <span className="text-teal-500 mx-2">{fullName}</span>{" "}
-                Attendance S.Y {data.school_year}
+                Attendance S.Y {student?.school_year}
               </span>
             </div>
             <div className="mt-10">
@@ -104,21 +117,8 @@ export default function ShowProfile({
             </div>
 
             <div className="p-5">
-              <Attendance data={data.attendance || []} />
+              <Attendance data={student?.attendance || []} />
             </div>
-
-            <hr className="mt-10" />
-            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse">
-              <TriangleAlert
-                strokeWidth={3}
-                className="mr-2 text-yellow-500 dark:text-yellow-400"
-              />
-              This Content Not available Now.
-            </div>
-            <div className="mt-10 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
-            <div className="mt-5 p-20 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
-            <div className="mt-5 p-5 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
-            <div className="mt-5 h-96 flex justify-center items-center bg-zinc-200 dark:bg-zinc-800 rounded-md animate-pulse"></div>
           </div>
         </div>
 

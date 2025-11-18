@@ -78,7 +78,7 @@ export function AppSidebar() {
           </div>
 
           {/* MAIN SECTION */}
-          <SidebarGroupLabel>Main</SidebarGroupLabel>
+          <SidebarGroupLabel className="mt-5">Main</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-2">
               {items

@@ -187,7 +187,7 @@ export const columns: ColumnDef<Section>[] = [
           </DropdownMenu>
 
           {/* Pass student Id here */}
-          <ShowProfile open={openView} setOpen={setOpenView} row={row} />
+          <ShowProfile open={openView} setOpen={setOpenView} studentId={Id} />
           <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
           <ShowAttendanceHistory
             open={openHistory}

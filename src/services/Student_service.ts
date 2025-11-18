@@ -100,10 +100,7 @@ export const RegisterRFIDToStudent = async (token: string, studentlrn: string, d
 export const GetStudentDetailsById = async (token: string, studentId: number) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-student-by-id/${studentId}`;
-
-    console.log("📌 FETCH URL:", url);
-    console.log("📌 STUDENT ID:", studentId);
-
+    
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -113,9 +110,6 @@ export const GetStudentDetailsById = async (token: string, studentId: number) =>
     return response.data;
 
   } catch (error) {
-    console.log("🔗 FULL URL:", `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-student-by-id/${studentId}`);
-
-    console.error("❌ ERROR GetStudentDetailsById:", error);
     throw error;
   }
 };
