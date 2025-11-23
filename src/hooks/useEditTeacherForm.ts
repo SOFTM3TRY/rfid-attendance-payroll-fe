@@ -42,7 +42,7 @@ export function useEditTeacherForm(existingData?: any) {
 
   const [formData, setFormData] = useState<any>(defaultData);
 
-  // 🟡 Prefill form with existing data (edit mode)
+  //Prefill form with existing data (edit mode)
   useEffect(() => {
     if (existingData) {
       const flatData = {

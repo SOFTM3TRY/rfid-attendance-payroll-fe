@@ -12,7 +12,12 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsRight,
+  Pencil,
+  GraduationCap,
+  Dot,
 } from "lucide-react";
+
+import AddStudent from "./AddGrade/AddGrade";
 
 import {
   Table,
@@ -23,46 +28,147 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-interface Props<TData> {
-  columns: ColumnDef<TData>[];
-  data: TData[];
+import { FilterTable } from "@/components/admin/manage-student/Filtertable";
+import { useAuth } from "@/context/AuthContext";
+
+interface Grade {
+  id: number;
+  grade_level: string;
+  description: string | null;
+  status: "active" | "inactive";
+}
+
+interface Props {
+  data: Grade[];
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
   totalRows: number;
+  search: string;
+  selectedStatus: string[];
+  selectedFilters: string[];
 }
 
-export function ManageSectionTable<TData>({
-  columns,
+export function ManageGradeTable({
   data,
   pagination,
   setPagination,
-  totalRows,
-}: Props<TData>) {
+  search,
+  selectedStatus,
+  selectedFilters,
+}: Props) {
+  const columns: ColumnDef<Grade>[] = [
+    {
+      accessorKey: "grade_level",
+      header: () => (
+        <Button variant="outline" size="sm" className="font-normal text-sm">
+          <GraduationCap className="text-green-500" /> Grade Level
+        </Button>
+      ),
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "status",
+      header: () => (
+        <Button variant="outline" size="sm" className="font-normal text-sm">
+          <Dot strokeWidth={10} className="text-blue-500" />Available
+        </Button>
+      ),
+      cell: ({ row }) => {
+        return (
+          <span className="text-xs w-16 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
+            {/* @ts-ignore */}
+            {row.original.status == "active" ? "Yes" : "NO"}
+            
+          </span>
+        );
+      },
+    },
+    {
+      id: "action",
+      header: "Action",
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="sm"
+                className="h-7 w-7 p-0 bg-teal-700 hover:bg-teal-600 dark:bg-teal-500/30 dark:hover:bg-teal-500/50 text-white"
+                onClick={() => console.log("Edit", row.original)}
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              align="center"
+              className="block group-data-[collapsible=icon]:hidden"
+            >
+              Edit
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      ),
+    },
+  ];
+
+  const { token } = useAuth();
+
+  const filteredData = data.filter((row) => {
+    const searchMatch =
+      search === "" ||
+      row.grade_level.toLowerCase().includes(search.toLowerCase()) ||
+      row.description?.toLowerCase().includes(search.toLowerCase());
+
+    const statusMatch =
+      selectedStatus.length === 0 || selectedStatus.includes(row.status);
+
+    const sectionMatch =
+      selectedFilters.length === 0 || selectedFilters.includes(String(row.id)); // Replace if using actual section data
+
+    return searchMatch && statusMatch && sectionMatch;
+  });
+
+  const pagedData = filteredData.slice(
+    pagination.pageIndex * pagination.pageSize,
+    (pagination.pageIndex + 1) * pagination.pageSize
+  );
+
   const table = useReactTable({
-    data,
+    data: pagedData,
     columns,
     state: { pagination },
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
-    pageCount: Math.ceil(totalRows / pagination.pageSize),
+    pageCount: Math.ceil(filteredData.length / pagination.pageSize),
   });
 
   const start = pagination.pageIndex * pagination.pageSize + 1;
-  const end = Math.min(start + data.length - 1, totalRows);
-  const totalPages = Math.ceil(totalRows / pagination.pageSize);
+  const end = Math.min(start + pagedData.length - 1, filteredData.length);
+  const totalPages = Math.ceil(filteredData.length / pagination.pageSize);
 
   return (
     <div className="w-full">
-      <div className="rounded-md border">
+      <div className="rounded-md border p-5">
+        <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
+          <FilterTable pagination={pagination} setPagination={setPagination} />
+
+          <AddStudent token={token as string} />
+        </div>
+
         <Table>
-          <TableHeader>
+          <TableHeader> 
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id}  className="py-5">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -73,11 +179,11 @@ export function ManageSectionTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {data.length ? (
+            {pagedData.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-3">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -99,9 +205,9 @@ export function ManageSectionTable<TData>({
           </TableBody>
         </Table>
 
-        <div className="flex items-center justify-between px-5 py-4 space-x-2">
+        <div className="flex items-center justify-between py-4 space-x-2 mt-5">
           <div className="text-sm text-muted-foreground flex-1">
-            Showing {start} to {end} of {totalRows} entries
+            Showing {start} to {end} of {filteredData.length} entries
           </div>
 
           <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
@@ -118,7 +224,7 @@ export function ManageSectionTable<TData>({
               disabled={pagination.pageIndex === 0}
               className="w-24 h-8 font-normal text-xs"
             >
-              <ChevronsLeft className="h-4 w-4" /> First page
+              <ChevronsLeft className="h-4 w-4" /> First
             </Button>
 
             <Button
@@ -163,8 +269,7 @@ export function ManageSectionTable<TData>({
               disabled={pagination.pageIndex >= totalPages - 1}
               className="w-24 h-8 font-normal text-xs"
             >
-              Last Page
-              <ChevronsRight className="h-4 w-4" />
+              Last <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>
         </div>

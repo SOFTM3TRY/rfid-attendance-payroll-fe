@@ -13,12 +13,11 @@ import {
   ChevronRight,
   ChevronsRight,
   Pencil,
-  Trash2,
-  UserX,
-  UserCheck,
+  GraduationCap,
+  Dot,
 } from "lucide-react";
 
-import AddStudent from "@/components/admin/manage-system/AddGrade/AddGrade";
+import AddStudent from "./AddGrade/AddGrade";
 
 import {
   Table,
@@ -35,15 +34,18 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface Grade {
+import { FilterTable } from "@/components/admin/manage-student/Filtertable";
+
+interface Section {
   id: number;
   grade_level: string;
+  section_name: string;
   description: string | null;
-  status: "active" | "inactive";
+  status: "1" | "0";
 }
 
 interface Props {
-  data: Grade[];
+  data: Section[];
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
   totalRows: number;
@@ -52,62 +54,48 @@ interface Props {
   selectedFilters: string[];
 }
 
-export function ManageGradeTable({
+export function ManageSectionTable({
   data,
   pagination,
   setPagination,
-  totalRows,
   search,
   selectedStatus,
   selectedFilters,
 }: Props) {
-  const columns: ColumnDef<Grade>[] = [
-    {
-      accessorKey: "id",
-      header: "ID",
-      cell: (info) => info.getValue(),
-    },
+  const columns: ColumnDef<Section>[] = [
     {
       accessorKey: "grade_level",
-      header: "Grade Level",
+      header: () => (
+        <Button variant="outline" size="sm" className="font-normal text-sm">
+          <GraduationCap className="text-green-500" /> Grade Level
+        </Button>
+      ),
       cell: (info) => info.getValue(),
     },
     {
-      accessorKey: "description",
-      header: "Description",
-      cell: (info) => info.getValue() || "—",
+      accessorKey: "section_name",
+      header: () => (
+        <Button variant="outline" size="sm" className="font-normal text-sm">
+          <GraduationCap className="text-green-500" /> Section Name
+        </Button>
+      ),
+      cell: (info) => info.getValue(),
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: () => (
+        <Button variant="outline" size="sm" className="font-normal text-sm">
+          <Dot strokeWidth={10} className="text-blue-500" />Available
+        </Button>
+      ),
       cell: ({ row }) => {
         return (
-          <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
+          <span className="text-xs w-16 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
             {/* @ts-ignore */}
-            {row.original.status == "active" ? "Active" : "Inactive"}
-            <span
-              className={`ml-1 ${
-                // @ts-ignore
-                row.original.status == "active"
-                  ? "text-green-500"
-                  : "text-red-500"
-              }`}
-            >
-              {/* @ts-ignore */}
-              {row.original.status == "active" ? (
-                <UserCheck className="w-4 h-4" />
-              ) : (
-                <UserX className="w-4 h-4" />
-              )}
-            </span>
+            {row.original.status == "1" ? "Yes" : "NO"}
+            
           </span>
         );
-      },
-      filterFn: (row, columnId, filterValue) => {
-        const status = row.original.status;
-        return filterValue === "1"
-          ? status === "active"
-          : status === "inactive";
       },
     },
     {
@@ -176,17 +164,19 @@ export function ManageGradeTable({
 
   return (
     <div className="w-full">
-      <div className="flex justify-end mb-4">
-        <AddStudent />
-      </div>
+      <div className="rounded-md border p-5">
+        <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
+          <FilterTable pagination={pagination} setPagination={setPagination} />
 
-      <div className="rounded-md border">
+          {/* <AddStudent /> */}
+        </div>
+
         <Table>
-          <TableHeader>
+          <TableHeader> 
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id}  className="py-5">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -201,7 +191,7 @@ export function ManageGradeTable({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-3">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -223,7 +213,7 @@ export function ManageGradeTable({
           </TableBody>
         </Table>
 
-        <div className="flex items-center justify-between px-5 py-4 space-x-2">
+        <div className="flex items-center justify-between py-4 space-x-2 mt-5">
           <div className="text-sm text-muted-foreground flex-1">
             Showing {start} to {end} of {filteredData.length} entries
           </div>

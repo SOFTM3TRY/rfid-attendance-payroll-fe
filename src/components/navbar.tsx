@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { ModeToggle } from "@/components/mode-toggle";
+// import { ModeToggle } from "@/components/mode-toggle";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Megaphone, Maximize, Shrink, User2, LogOut } from "lucide-react";
 import {
@@ -77,10 +78,13 @@ export function Navbar() {
   };
 
   return (
-    <nav className="p-3 flex z-50 justify-between bg-white dark:bg-background dark:border-gray-800 w-full sticky top-0" style={{ pointerEvents: "auto" }}>
+    <nav
+      className="p-3 flex z-50 justify-between bg-white dark:bg-background dark:border-gray-800 w-full sticky top-0"
+      style={{ pointerEvents: "auto" }}
+    >
       <SidebarTrigger />
 
-      <div className="flex items-center justify-center gap-1 mr-12">
+      <div className="flex items-center justify-center gap-1 mr-2">
         <Sheet>
           <SheetTrigger className="mr-3 relative hover:text-teal-600">
             <span className="h-4 w-4 bg-teal-600 text-white dark:bg-teal-700 rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
@@ -151,7 +155,7 @@ export function Navbar() {
 
         <button
           onClick={toggleFullscreen}
-          className="h-5 w-5 mr-5 hover:text-teal-600"
+          className="h-5 w-5  mr-2 hover:text-teal-600"
         >
           {isFullscreen ? (
             <Shrink className="h-4 w-4" />
@@ -160,9 +164,11 @@ export function Navbar() {
           )}
         </button>
 
+        <AnimatedThemeToggler />
+
         <Popover>
           <PopoverTrigger>
-            <div className="flex items-center gap-1 pr-5 pl-2 py-1 bg-teal-600 hover:bg-teal-700 dark:bg-teal-600 dark:hover:bg-teal-700 rounded-full">
+            <div className="flex items-center gap-1 pr-5 pl-2 py-1 ml-5 bg-teal-600 hover:bg-teal-700 dark:bg-teal-600 dark:hover:bg-teal-700 rounded-full">
               <Avatar className="h-8 w-8 flex-shrink-0">
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
@@ -188,9 +194,9 @@ export function Navbar() {
           <PopoverContent className="w-48 h-auto py-0 px-0 text-sm">
             <div className="px-2 py-2">
               <p className="font-semibold">
-               {userDetails?.data.first_name +
-                    " " +
-                    userDetails?.data.last_name}
+                {userDetails?.data.first_name +
+                  " " +
+                  userDetails?.data.last_name}
                 <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
                   Role
                 </span>
@@ -200,12 +206,21 @@ export function Navbar() {
 
             <ul className="flex flex-col mt-2">
               <li>
-                <Link href={userDetails?.data.role_id === 1 ? "/admin/profile" : userDetails?.data.role_id === 2 ? "/teacher/profile" : "/student/profile"}>
+                <Link
+                  href={
+                    userDetails?.data.role_id === 1
+                      ? "/admin/profile"
+                      : userDetails?.data.role_id === 2
+                      ? "/teacher/profile"
+                      : "/student/profile"
+                  }
+                >
                   <Button
                     variant="outline"
                     className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
                   >
-                    <User2 color="#00a887" strokeWidth={2.75} />Profile
+                    <User2 color="#00a887" strokeWidth={2.75} />
+                    Profile
                   </Button>
                 </Link>
               </li>
@@ -223,7 +238,7 @@ export function Navbar() {
         </Popover>
       </div>
 
-      <ModeToggle />
+      {/* <ModeToggle /> */}
     </nav>
   );
 }

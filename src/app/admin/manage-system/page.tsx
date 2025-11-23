@@ -24,7 +24,7 @@ import { useClientOnly } from "@/hooks/useClientOnly";
 
 import Loader from "@/components/Loader";
 
-import SystemTabPage from "@/components/admin/manage-system/SystemTabPage";
+import SystemTabPage from "./table/SystemTabPage";
 
 import { Users } from "lucide-react";
 

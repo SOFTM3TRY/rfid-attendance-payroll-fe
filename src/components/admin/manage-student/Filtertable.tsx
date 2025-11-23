@@ -28,8 +28,8 @@ export function FilterTable({ pagination, setPagination }: FilterTableProps) {
   const pageSizeOptions = [5, 10, 20, 50, 100];
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">Rows per page:</span>
+    <div className="flex flex-col items-center gap-2">
+      <span className="text-xs text-muted-foreground">Rows per page:</span>
       <Select
         value={String(pagination.pageSize)}
         onValueChange={(value) =>
