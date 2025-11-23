@@ -4,15 +4,9 @@ import * as React from "react";
 
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { PlusIcon, GraduationCap, Search, Table2 } from "lucide-react";
+import { GraduationCap, Search, Table2 } from "lucide-react";
 
-import { GradeOneTable } from "@/components/admin/manage-student/GradeOneTable";
-import { GradeTwoTable } from "@/components/admin/manage-student/GradeTwoTable";
-import { GradeThreeTable } from "@/components/admin/manage-student/GradeThreeTable";
-import { GradeFourTable } from "@/components/admin/manage-student/GradeFourTable";
-import { GradeFiveTable } from "@/components/admin/manage-student/GradeFiveTable";
-import { GradeSixTable } from "@/components/admin/manage-student/GradeSixTable";
+import { StudentTable } from "@/components/admin/manage-student/StudentTable";
 
 import { columns } from "@/components/admin/manage-student/columns";
 import { FiltersDropdown } from "@/components/admin/manage-student/FiltersDropdown";
@@ -27,8 +21,6 @@ import { useStudentDetails } from "@/hooks/useStudentDetails";
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
 
-
-
 interface Section {
   Grade: string;
   Section: string;
@@ -42,42 +34,42 @@ interface Section {
   section: string;
   grade_id: string;
   lrn: string;
-
 }
 
-
 export default function GradeTabsPage() {
-
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null); // Initialize the selectedGrade
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
 
   const { token } = useAuth();
-  const { data: studentDetails, isLoading: isLoadingStudent, isError } = useStudentDetails(token as string);
-  const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(token as string);
+  const {
+    data: studentDetails,
+    isLoading: isLoadingStudent,
+    isError,
+  } = useStudentDetails(token as string);
+  const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(
+    token as string
+  );
 
   // Pagination state here
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
-  const baseData: Section[] = Array.isArray(studentDetails?.data) ? studentDetails?.data : [];
-
-  const gradeComponents: Record<string, React.ElementType> = {
-    1: GradeOneTable,
-    2: GradeTwoTable,
-    3: GradeThreeTable,
-    4: GradeFourTable,
-    5: GradeFiveTable,
-    6: GradeSixTable,
-  };
+  const baseData: Section[] = Array.isArray(studentDetails?.data)
+    ? studentDetails?.data
+    : [];
 
   // Get filtered data WITHOUT applying section filter yet
   const filteredDataWithoutSectionFilter = React.useMemo(() => {
     return baseData.filter((row) => {
       const gradeMatch = String(row.grade_id) === String(selectedGrade);
-      const statusMatch = selectedStatus.length === 0 || selectedStatus.includes(row.status);
-      const fullName = `${row.first_name} ${row.middle_name || ''} ${row.last_name}`;
-      const searchMatch = search === "" ||
+      const statusMatch =
+        selectedStatus.length === 0 || selectedStatus.includes(row.status);
+      const fullName = `${row.first_name} ${row.middle_name || ""} ${
+        row.last_name
+      }`;
+      const searchMatch =
+        search === "" ||
         fullName.toLowerCase().includes(search.toLowerCase()) ||
         row.lrn.includes(search);
 
@@ -99,10 +91,16 @@ export default function GradeTabsPage() {
   const getFilteredData = (grade_id: any) => {
     return baseData.filter((row) => {
       const gradeMatch = String(row.grade_id) === String(grade_id);
-      const sectionMatch = selectedFilters.length === 0 || selectedFilters.includes(row.section?.trim());
-      const statusMatch = selectedStatus.length === 0 || selectedStatus.includes(row.status);
-      const fullName = `${row.first_name} ${row.middle_name || ''} ${row.last_name}`;
-      const searchMatch = search === "" ||
+      const sectionMatch =
+        selectedFilters.length === 0 ||
+        selectedFilters.includes(row.section?.trim());
+      const statusMatch =
+        selectedStatus.length === 0 || selectedStatus.includes(row.status);
+      const fullName = `${row.first_name} ${row.middle_name || ""} ${
+        row.last_name
+      }`;
+      const searchMatch =
+        search === "" ||
         fullName.toLowerCase().includes(search.toLowerCase()) ||
         row.lrn.includes(search);
 
@@ -134,7 +132,7 @@ export default function GradeTabsPage() {
         onValueChange={(value) => {
           setSelectedGrade(value);
           setSelectedFilters([]); // Reset section filters
-          setSelectedStatus([]);  // Reset status filters (optional)
+          setSelectedStatus([]); // Reset status filters (optional)
           setPagination((p) => ({ ...p, pageIndex: 0 }));
         }}
       >
@@ -147,20 +145,21 @@ export default function GradeTabsPage() {
                 className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
               >
                 <GraduationCap
-                  className={`mr-1 h-4 w-4 ${grade.id === 1
-                    ? "text-green-500 dark:text-green-300"
-                    : grade.id === 2
+                  className={`mr-1 h-4 w-4 ${
+                    grade.id === 1
+                      ? "text-green-500 dark:text-green-300"
+                      : grade.id === 2
                       ? "text-orange-500 dark:text-orange-300"
                       : grade.id === 3
-                        ? "text-indigo-500 dark:text-indigo-300"
-                        : grade.id === 4
-                          ? "text-blue-500 dark:text-blue-300"
-                          : grade.id === 5
-                            ? "text-red-500 dark:text-red-300"
-                            : grade.id === 6
-                              ? "text-yellow-500 dark:text-yellow-300"
-                              : ""
-                    }`}
+                      ? "text-indigo-500 dark:text-indigo-300"
+                      : grade.id === 4
+                      ? "text-blue-500 dark:text-blue-300"
+                      : grade.id === 5
+                      ? "text-red-500 dark:text-red-300"
+                      : grade.id === 6
+                      ? "text-yellow-500 dark:text-yellow-300"
+                      : ""
+                  }`}
                 />
                 {grade.grade_level}
               </TabsTrigger>
@@ -201,19 +200,19 @@ export default function GradeTabsPage() {
         </div>
 
         {GradesData?.data.map((grade: any) => {
-          const TableComponent = gradeComponents[grade.id];
+          const rows = getFilteredData(grade.id);
 
           return (
             <TabsContent key={grade.id} value={grade.id}>
-              <TableComponent
+              <StudentTable
                 columns={columns}
-                data={getFilteredData(grade.id).slice(
+                data={rows.slice(
                   pagination.pageIndex * pagination.pageSize,
                   (pagination.pageIndex + 1) * pagination.pageSize
                 )}
                 pagination={pagination}
                 setPagination={setPagination}
-                totalRows={getFilteredData(grade.id).length}
+                totalRows={rows.length}
               />
             </TabsContent>
           );
@@ -221,5 +220,4 @@ export default function GradeTabsPage() {
       </Tabs>
     </main>
   );
-};
-
+}

@@ -32,7 +32,7 @@ interface Props<TData> {
   totalRows: number;
 }
 
-export function GradeFiveTable<TData>({
+export function StudentTable<TData>({
   columns,
   data,
   pagination,
