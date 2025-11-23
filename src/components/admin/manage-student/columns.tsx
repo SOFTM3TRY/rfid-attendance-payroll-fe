@@ -37,18 +37,7 @@ import {
   Grip,
 } from "lucide-react";
 
-export type Section = {
-  id: number;
-  LRN: string;
-  FullName: string;
-  grade_id: string;
-  first_name: string;
-  middle_name: string;
-  last_name: string;
-  suffix: string;
-  section: number;
-  status: "Active" | "Inactive";
-};
+import  { Section } from "@/types/Section";
 
 export const columns: ColumnDef<Section>[] = [
   {

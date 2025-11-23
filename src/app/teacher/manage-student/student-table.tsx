@@ -274,7 +274,7 @@ const columns: ColumnDef<Student>[] = [
               </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
-          <ShowProfile open={openView} setOpen={setOpenView} row={row} />
+          {/* <ShowProfile open={openView} setOpen={setOpenView} row={row} /> */}
           {/* <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} /> */}
           <ShowAttendanceHistory open={openHistory} setOpen={setOpenHistory} row={row} />
           {/* <Registration open={openRegister} setOpen={setOpenRegister} row={row} /> */}

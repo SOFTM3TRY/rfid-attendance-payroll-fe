@@ -78,6 +78,7 @@ export default function AddGradeModal({ token }: { token: string }) {
               placeholder="Enter grade level"
               value={formData.grade_level}
               onChange={handleChange}
+              required
             />
           </div>
           <div>

@@ -20,21 +20,7 @@ import AddStudent from "@/components/admin/manage-student/AddStudent/AddStudent"
 import { useStudentDetails } from "@/hooks/useStudentDetails";
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
-
-interface Section {
-  Grade: string;
-  Section: string;
-  FullName: string;
-  status: string;
-  id: number;
-  first_name: string;
-  middle_name: string;
-  last_name: string;
-  grade: string;
-  section: string;
-  grade_id: string;
-  lrn: string;
-}
+import { Section } from "@/types/Section";
 
 export default function GradeTabsPage() {
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null); // Initialize the selectedGrade

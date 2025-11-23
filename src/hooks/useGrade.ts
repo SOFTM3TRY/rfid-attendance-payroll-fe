@@ -24,7 +24,7 @@ export const useCreateGrade = () => {
     },
     onError: (error) => {
       if (error instanceof Error) {
-        toast.error("Grade already exists");
+        toast.error(error.message);
       } else {
         toast.error("Failed to create new grade");
       }

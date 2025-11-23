@@ -46,7 +46,7 @@ import Loader from "@/components/Loader";
 import { useCountActiveStudents } from "@/hooks/useStudentDetails";
 import { useTeacherActiveCount } from "@/hooks/useTeacher";
 
-export default function Dashboard({ children }: { children: React.ReactNode }) {
+export default function Dashboard() {
   const { token } = useAuth();
   const isClient = useClientOnly();
 
