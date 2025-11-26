@@ -1,9 +1,9 @@
+import { useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   flexRender,
-  ColumnDef,
   PaginationState,
 } from "@tanstack/react-table";
 
@@ -12,12 +12,9 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsRight,
-  Pencil,
-  GraduationCap,
-  Dot,
 } from "lucide-react";
 
-import AddStudent from "./AddGrade/AddGrade";
+import AddStudent from "@/components/admin/manage-system/grade/AddGrade";
 
 import {
   Table,
@@ -27,22 +24,15 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
 import { FilterTable } from "@/components/admin/manage-student/Filtertable";
-import { useAuth } from "@/context/AuthContext";
 
-interface Grade {
-  id: number;
-  grade_level: string;
-  description: string | null;
-  status: "active" | "inactive";
-}
+import { useAuth } from "@/context/AuthContext";
+import { Grade } from "@/types/grade";
+import { GradeColumns } from "./GradeColumns";
+
+import EditGradeModal from "@/components/admin/manage-system/grade/EditGrade";
 
 interface Props {
   data: Grade[];
@@ -62,62 +52,11 @@ export function ManageGradeTable({
   selectedStatus,
   selectedFilters,
 }: Props) {
-  const columns: ColumnDef<Grade>[] = [
-    {
-      accessorKey: "grade_level",
-      header: () => (
-        <Button variant="outline" size="sm" className="font-normal text-sm">
-          <GraduationCap className="text-green-500" /> Grade Level
-        </Button>
-      ),
-      cell: (info) => info.getValue(),
-    },
-    {
-      accessorKey: "status",
-      header: () => (
-        <Button variant="outline" size="sm" className="font-normal text-sm">
-          <Dot strokeWidth={10} className="text-blue-500" />Available
-        </Button>
-      ),
-      cell: ({ row }) => {
-        return (
-          <span className="text-xs w-16 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
-            {/* @ts-ignore */}
-            {row.original.status == "active" ? "Yes" : "NO"}
-            
-          </span>
-        );
-      },
-    },
-    {
-      id: "action",
-      header: "Action",
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="sm"
-                className="h-7 w-7 p-0 bg-teal-700 hover:bg-teal-600 dark:bg-teal-500/30 dark:hover:bg-teal-500/50 text-white"
-                onClick={() => console.log("Edit", row.original)}
-              >
-                <Pencil className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              align="center"
-              className="block group-data-[collapsible=icon]:hidden"
-            >
-              Edit
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      ),
-    },
-  ];
-
   const { token } = useAuth();
+
+  const [selectedGrade, setSelectedGrade] = useState<Grade | null>(null);
+
+  const columns = GradeColumns((row) => setSelectedGrade(row));
 
   const filteredData = data.filter((row) => {
     const searchMatch =
@@ -129,7 +68,7 @@ export function ManageGradeTable({
       selectedStatus.length === 0 || selectedStatus.includes(row.status);
 
     const sectionMatch =
-      selectedFilters.length === 0 || selectedFilters.includes(String(row.id)); // Replace if using actual section data
+      selectedFilters.length === 0 || selectedFilters.includes(String(row.id));
 
     return searchMatch && statusMatch && sectionMatch;
   });
@@ -163,12 +102,21 @@ export function ManageGradeTable({
           <AddStudent token={token as string} />
         </div>
 
+        {selectedGrade && token && (
+          <EditGradeModal
+            token={token}
+            gradeId={selectedGrade.id.toString()}
+            open={!!selectedGrade}
+            onClose={() => setSelectedGrade(null)}
+          />
+        )}
+
         <Table>
-          <TableHeader> 
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}  className="py-5">
+                  <TableHead key={header.id} className="py-5">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -178,6 +126,7 @@ export function ManageGradeTable({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {pagedData.length ? (
               table.getRowModel().rows.map((row) => (

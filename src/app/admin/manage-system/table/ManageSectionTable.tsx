@@ -17,7 +17,7 @@ import {
   Dot,
 } from "lucide-react";
 
-import AddStudent from "./AddGrade/AddGrade";
+import AddStudent from "@/components/admin/manage-system/grade/AddGrade";
 
 import {
   Table,

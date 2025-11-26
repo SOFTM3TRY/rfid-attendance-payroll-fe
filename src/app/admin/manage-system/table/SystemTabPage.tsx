@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PlusIcon, GraduationCap, CalendarDays, BookText, LayoutPanelTop } from "lucide-react";
 
-import { ManageGradeTable } from "./ManageGradeTable";
+import { ManageGradeTable } from "./grade/GradeTable";
 import { ManageSectionTable } from "./ManageSectionTable";
 
 import { useAuth } from "@/context/AuthContext";
