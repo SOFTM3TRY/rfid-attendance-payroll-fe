@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { GetallGrades, createGrade, GetGradeById, EditGrade } from "@/services/Grade_service";
+import { GetallGrades, CreateGrade, GetGradeById, EditGrade } from "@/services/Grade_service";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 
@@ -17,7 +17,7 @@ export const useCreateGrade = () => {
 
   return useMutation({
     mutationFn: ({ token, data }: { token: string; data: any }) =>
-      createGrade(token, data),
+      CreateGrade(token, data),
     onSuccess: () => {
       toast.success("Grade created successfully");
       queryClient.invalidateQueries({ queryKey: ["grade-details"] });

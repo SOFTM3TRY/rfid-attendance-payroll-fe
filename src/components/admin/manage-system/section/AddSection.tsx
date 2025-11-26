@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useCreateGrade } from "@/hooks/useGrade";
+import { useCreateSection } from "@/hooks/useSection";
+import { useGrade } from "@/hooks/useGrade";
 
 import {
   Dialog,
@@ -14,19 +15,29 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { PlusIcon, GraduationCap , CircleX, Send, Loader2 } from "lucide-react";
+import { PlusIcon, UserRoundPlus, CircleX, Send, Loader2 } from "lucide-react";
 
-export default function AddGradeModal({ token }: { token: string }) {
-  const createGradeMutation = useCreateGrade();
+export default function AddSectionModal({ token }: { token: string }) {
+  const createGradeMutation = useCreateSection();
+  const { data: grades, isLoading } = useGrade(token);
 
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    grade_level: "",
+    grade_id: "",
+    section_name: "",
     description: "",
-    status: "active",
+    status: "1",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,15 +48,17 @@ export default function AddGradeModal({ token }: { token: string }) {
   };
 
   const handleSubmit = () => {
+    console.log(formData);
     createGradeMutation.mutate(
       { token, data: formData },
       {
         onSuccess: () => {
-          setOpen(false); // Close modal
+          setOpen(false); 
           setFormData({
-            grade_level: "",
+            grade_id: "",
+            section_name: "",
             description: "",
-            status: "active",
+            status: "1",
           });
         },
       }
@@ -57,32 +70,60 @@ export default function AddGradeModal({ token }: { token: string }) {
       <DialogTrigger asChild>
         <Button className="flex items-center rounded-full justify-center text-xs h-8 bg-teal-700 text-white hover:bg-teal-800">
           <PlusIcon strokeWidth={3} size={10} className="text-white -mr-2" />
-          Add Grade
+          Add Section
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg w-full p-6">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <GraduationCap className="w-5 h-5 text-teal-500" />
-            Add Grade
+            <UserRoundPlus className="w-5 h-5 text-teal-500" />
+            Add Section
           </DialogTitle>
-          <DialogDescription>Add New Grade</DialogDescription>
+          <DialogDescription>Add New Section</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-sm font-medium mb-3"> <span className="text-red-500 mr-1">*</span>Grade Level</label>
+            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Grade Level</label>
+
+            {isLoading ? (
+              <p className="text-sm text-gray-500">Loading...</p>
+            ) : (
+              <Select
+                onValueChange={(value) =>
+                  setFormData({ ...formData, grade_id: value })
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select grade level" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {grades?.data?.map((grade: any) => (
+                    <SelectItem key={grade.id} value={String(grade.id)}>
+                      {grade.grade_level}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+
+          <div>
+            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Section Name</label>
             <Input
-              name="grade_level"
-              placeholder="Enter grade level"
-              value={formData.grade_level}
+              name="section_name"
+              placeholder="Enter section name"
+              value={formData.section_name}
               onChange={handleChange}
               required
             />
           </div>
           <div>
-            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Description <small>(Optional)</small></label>
+            <label className="text-sm font-medium">
+              <span className="text-red-500 mr-1">*</span>Description <small>(Optional)</small>
+            </label>
             <Input
               name="description"
               placeholder="Enter description"
@@ -124,3 +165,4 @@ export default function AddGradeModal({ token }: { token: string }) {
     </Dialog>
   );
 }
+

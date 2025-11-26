@@ -1,9 +1,9 @@
+import { useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   flexRender,
-  ColumnDef,
   PaginationState,
 } from "@tanstack/react-table";
 
@@ -12,12 +12,9 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsRight,
-  Pencil,
-  GraduationCap,
-  Dot,
 } from "lucide-react";
 
-import AddStudent from "@/components/admin/manage-system/grade/AddGrade";
+import AddSectionModal from "@/components/admin/manage-system/section/AddSection";
 
 import {
   Table,
@@ -27,25 +24,18 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
+import { Button } from "@/components/ui/button";
 import { FilterTable } from "@/components/admin/manage-student/Filtertable";
 
-interface Section {
-  id: number;
-  grade_level: string;
-  section_name: string;
-  description: string | null;
-  status: "1" | "0";
-}
+import { useAuth } from "@/context/AuthContext";
+import { ClassSection } from "@/types/ClassSection";
+import { SectionColumns } from "./SectionColumns";
+
+import EditSectionMOdal from "@/components/admin/manage-system/section/EditSection";
 
 interface Props {
-  data: Section[];
+  data: ClassSection[];
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
   totalRows: number;
@@ -62,70 +52,11 @@ export function ManageSectionTable({
   selectedStatus,
   selectedFilters,
 }: Props) {
-  const columns: ColumnDef<Section>[] = [
-    {
-      accessorKey: "grade_level",
-      header: () => (
-        <Button variant="outline" size="sm" className="font-normal text-sm">
-          <GraduationCap className="text-green-500" /> Grade Level
-        </Button>
-      ),
-      cell: (info) => info.getValue(),
-    },
-    {
-      accessorKey: "section_name",
-      header: () => (
-        <Button variant="outline" size="sm" className="font-normal text-sm">
-          <GraduationCap className="text-green-500" /> Section Name
-        </Button>
-      ),
-      cell: (info) => info.getValue(),
-    },
-    {
-      accessorKey: "status",
-      header: () => (
-        <Button variant="outline" size="sm" className="font-normal text-sm">
-          <Dot strokeWidth={10} className="text-blue-500" />Available
-        </Button>
-      ),
-      cell: ({ row }) => {
-        return (
-          <span className="text-xs w-16 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
-            {/* @ts-ignore */}
-            {row.original.status == "1" ? "Yes" : "NO"}
-            
-          </span>
-        );
-      },
-    },
-    {
-      id: "action",
-      header: "Action",
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-7 w-7 p-0"
-                onClick={() => console.log("Edit", row.original)}
-              >
-                <Pencil className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              align="center"
-              className="block group-data-[collapsible=icon]:hidden"
-            >
-              Edit {row.original.id}
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      ),
-    },
-  ];
+  const { token } = useAuth();
+
+  const [selectedGrade, setSelectedGrade] = useState<ClassSection | null>(null);
+
+  const columns = SectionColumns((row) => setSelectedGrade(row));
 
   const filteredData = data.filter((row) => {
     const searchMatch =
@@ -137,7 +68,7 @@ export function ManageSectionTable({
       selectedStatus.length === 0 || selectedStatus.includes(row.status);
 
     const sectionMatch =
-      selectedFilters.length === 0 || selectedFilters.includes(String(row.id)); // Replace if using actual section data
+      selectedFilters.length === 0 || selectedFilters.includes(String(row.id));
 
     return searchMatch && statusMatch && sectionMatch;
   });
@@ -168,15 +99,24 @@ export function ManageSectionTable({
         <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
           <FilterTable pagination={pagination} setPagination={setPagination} />
 
-          {/* <AddStudent /> */}
+          <AddSectionModal token={token as string} />
         </div>
 
+        {selectedGrade && token && (
+          <EditSectionMOdal
+            token={token}
+            gradeId={selectedGrade.id.toString()}
+            open={!!selectedGrade}
+            onClose={() => setSelectedGrade(null)}
+          />
+        )}
+
         <Table>
-          <TableHeader> 
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}  className="py-5">
+                  <TableHead key={header.id} className="py-5">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -186,6 +126,7 @@ export function ManageSectionTable({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {pagedData.length ? (
               table.getRowModel().rows.map((row) => (

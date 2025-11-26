@@ -18,7 +18,7 @@ export const GetallGrades = async (token: string) => {
   }
 };
 
-export const createGrade = async (token: string, gradeData: any) => {
+export const CreateGrade = async (token: string, gradeData: any) => {
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL_API}/create-grade`,
