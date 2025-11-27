@@ -148,7 +148,61 @@
   }
 }
 
-::view-transition-old(root), ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.fc-col-header {
+  @apply bg-background text-foreground;
+}
+
+.fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
+  background-color: oklch(39.883% 0.07363 177.618);
+  border: 1px solid white;
+
+  &:hover {
+    background-color: oklch(52.112% 0.09674 176.911);
+  }
+}
+
+.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child) {
+  background-color: oklch(39.883% 0.07363 177.618);
+  border: 1px solid white;
+
+  &:hover {
+    background-color: oklch(52.112% 0.09674 176.911);
+  }
+}
+
+.fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+  background-color: oklch(39.883% 0.07363 177.618);
+  border: none;
+
+  &:hover {
+    background-color: oklch(52.112% 0.09674 176.911);
+  }
+}
+
+.fc .fc-toolbar-title {
+  font-size: 30px;
+  font-weight: 600;
+
+  @media (max-width: 600px) {
+    font-size: 15px;
+  }
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  @apply bg-accent text-accent-foreground;
+}
+
+.fc-h-event {
+  background-color: oklch(39.883% 0.07363 177.618);
+  border: none;
+
+  &:hover {
+    background-color: oklch(52.112% 0.09674 176.911);
+  }
 }

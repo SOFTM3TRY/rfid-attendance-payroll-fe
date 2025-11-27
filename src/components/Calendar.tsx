@@ -6,6 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid"
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
 import timeGridPlugin from "@fullcalendar/timegrid"
 
+
 import {
   Dialog,
   DialogContent,
@@ -19,7 +20,7 @@ type EventType = {
 }
 
 const eventList: EventType[] = [
-  { title: "Team Meeting", date: "2025-08-10" },
+  { title: "Team Meeting", date: "2025-11-10" },
   { title: "Doctor Appointment", date: "2025-08-10" },
   { title: "Project Deadline", date: "2025-08-12" },
   { title: "Birthday", date: "2025-08-15" },
@@ -41,6 +42,9 @@ export default function Calendar() {
 
   return (
     <div className="p-4">
+      <div className="w-full h-full py-5 flex items-center justify-center">
+        <h1 className="text-2xl lg:text-5xl uppercase font-bold">YGA Calendar</h1>
+      </div>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -49,8 +53,8 @@ export default function Calendar() {
         height="auto"
         headerToolbar={{
           left: "prev,next today",
-          center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay",
+          center: "",
+          right: "title",
         }}
       />
 
