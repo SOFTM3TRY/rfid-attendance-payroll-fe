@@ -8,10 +8,12 @@ import { PlusIcon, GraduationCap, CalendarDays, BookText, LayoutPanelTop } from 
 
 import { ManageGradeTable } from "./grade/GradeTable";
 import { ManageSectionTable } from "./section/SectionTable";
+import { ManageYearTable } from "./year/YearTable";
 
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
 import { useAllSections } from "@/hooks/useSection";
+import { useYear } from "@/hooks/useYear";
 
 export default function SystemTabPage() {
   const [selectedTab, setSelectedTab] = useState<string | null>(null);
@@ -23,6 +25,7 @@ export default function SystemTabPage() {
   const { token } = useAuth();
   const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(token as string);
   const { data: SectionsData, isLoading: isLoadingSectionsData } = useAllSections(token as string);
+  const { data: YearsData, isLoading: isLoadingYearsData } = useYear(token as string);
 
   useEffect(() => {
     if (GradesData?.data && !selectedTab) {
@@ -56,6 +59,18 @@ export default function SystemTabPage() {
         </div>
 
         {/* Tabs Content */}
+         <TabsContent key="1" value="1">
+          <ManageYearTable
+            data={YearsData?.data || []}
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={GradesData?.data?.length || 0}
+            search={search}
+            selectedStatus={selectedStatus}
+            selectedFilters={selectedFilters}
+          />
+        </TabsContent>
+
         <TabsContent key="2" value="2">
           <ManageGradeTable
             data={GradesData?.data || []}
