@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { GetallYears, CreateYear } from "@/services/Year-service";
+import { GetallYears, CreateYear, UpdateYear } from "@/services/Year-service";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 
@@ -27,6 +27,28 @@ export const useCreateYear = () => {
         toast.error(error.message);
       } else {
         toast.error("Failed to create new School Year");
+      }
+    },
+  });
+};
+
+export const useUpdateYear = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      token, yearId, data
+    }: {
+      token: string; yearId: string; data: any
+    }) => UpdateYear(token, yearId, data),
+    onSuccess: () => { 
+      toast.success("School Year updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["year-details"] });
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to update School Year");
       }
     },
   });

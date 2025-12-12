@@ -107,12 +107,6 @@ export default function GradeTabsPage() {
 
   return (
     <main>
-      <div className="flex justify-between items-center mb-10">
-        <p className="flex items-center gap-1">
-          <Table2 className="w-6 h-6 text-violet-500" />
-          Students Table
-        </p>
-      </div>
       <Tabs
         value={selectedGrade || ""}
         onValueChange={(value) => {
@@ -123,86 +117,84 @@ export default function GradeTabsPage() {
         }}
       >
         <div className="flex justify-between items-center mb-3">
-          <TabsList className="flex-wrap gap-3 bg-zinc-100 dark:bg-zinc-900 p-2 h-14">
+          <TabsList className="flex-wrap gap-3 h-auto text-muted-foreground bg-accent/50">
             {GradesData?.data.map((grade: any) => (
               <TabsTrigger
                 key={grade.id}
                 value={grade.id}
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10"
               >
-                <GraduationCap
-                  className={`mr-1 h-4 w-4 ${
-                    grade.id === 1
-                      ? "text-green-500 dark:text-green-300"
-                      : grade.id === 2
-                      ? "text-orange-500 dark:text-orange-300"
-                      : grade.id === 3
-                      ? "text-indigo-500 dark:text-indigo-300"
-                      : grade.id === 4
-                      ? "text-blue-500 dark:text-blue-300"
-                      : grade.id === 5
-                      ? "text-red-500 dark:text-red-300"
-                      : grade.id === 6
-                      ? "text-yellow-500 dark:text-yellow-300"
-                      : ""
-                  }`}
-                />
+                <GraduationCap className={`h-4 w-4 text-muted-foreground`} />
                 {grade.grade_level}
               </TabsTrigger>
             ))}
           </TabsList>
+        </div>
 
+        <div className="flex justify-between items-center my-5
+        ">
+          <div className="flex justify-between items-center">
+            <p className="flex items-center gap-1">
+              <Table2 className="w-6 h-6 text-violet-500" />
+              Students Table
+            </p>
+          </div>
           <AddStudent />
         </div>
 
-        {/* Header Actions */}
-        <div className="my-5 flex flex-wrap gap-4 justify-between items-center">
-          <FilterTable pagination={pagination} setPagination={setPagination} />
-
-          {/* Search */}
-          <div className="relative max-w-md w-80 mb-5">
-            <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
-            <Input
-              placeholder="Search Full Name or LRN..."
-              value={search}
-              onChange={handleFilterChange}
+        <div className="bg-accent/50 p-5 rounded-lg ">
+          {/* Header Actions */}
+          <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
+            <FilterTable
+              pagination={pagination}
+              setPagination={setPagination}
             />
-          </div>
 
-          <div className="flex gap-2">
-            <FiltersDropdownStatus
-              selectedFilters={selectedStatus}
-              setSelectedFilters={(filters) => {
-                setSelectedStatus(filters);
-                setPagination((p) => ({ ...p, pageIndex: 0 }));
-              }}
-            />
-            <FiltersDropdown
-              selectedFilters={selectedFilters}
-              setSelectedFilters={setSelectedFilters}
-              sectionTypes={sectionTypes}
-            />
-          </div>
-        </div>
-
-        {GradesData?.data.map((grade: any) => {
-          const rows = getFilteredData(grade.id);
-
-          return (
-            <TabsContent key={grade.id} value={grade.id}>
-              <StudentTable
-                columns={columns}
-                data={rows.slice(
-                  pagination.pageIndex * pagination.pageSize,
-                  (pagination.pageIndex + 1) * pagination.pageSize
-                )}
-                pagination={pagination}
-                setPagination={setPagination}
-                totalRows={rows.length}
+            {/* Search */}
+            <div className="relative max-w-md w-80">
+              <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
+              <Input
+                placeholder="Search Full Name or LRN..."
+                value={search}
+                onChange={handleFilterChange}
               />
-            </TabsContent>
-          );
-        })}
+            </div>
+
+            <div className="flex gap-2">
+              <FiltersDropdownStatus
+                selectedFilters={selectedStatus}
+                setSelectedFilters={(filters) => {
+                  setSelectedStatus(filters);
+                  setPagination((p) => ({ ...p, pageIndex: 0 }));
+                }}
+              />
+              <FiltersDropdown
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
+                sectionTypes={sectionTypes}
+              />
+            </div>
+          </div>
+
+          {GradesData?.data.map((grade: any) => {
+            const rows = getFilteredData(grade.id);
+
+            return (
+              <TabsContent key={grade.id} value={grade.id} className="roune-lg">
+                <StudentTable
+                  columns={columns}
+                  data={rows.slice(
+                    pagination.pageIndex * pagination.pageSize,
+                    (pagination.pageIndex + 1) * pagination.pageSize
+                  )}
+                  pagination={pagination}
+                  setPagination={setPagination}
+                  totalRows={rows.length}
+                />
+              </TabsContent>
+            );
+          })}
+        </div>
       </Tabs>
     </main>
   );

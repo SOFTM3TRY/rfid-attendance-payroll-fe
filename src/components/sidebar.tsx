@@ -10,11 +10,6 @@ import {
   ShieldUser,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -32,7 +27,6 @@ import {
 import { useAuth } from "@/context/AuthContext";
 // @ts-ignore
 import { useUserDetails } from "@/hooks/useUserDetails";
-import { useEffect, useState } from "react";
 import { useClientOnly } from "@/hooks/useClientOnly";
 
 import SplitTextSide from "@/components/animata/text/split-text-side";
@@ -63,7 +57,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        <SidebarGroup >
+        <SidebarGroup>
           <div className="flex flex-col items-center justify-center gap-5 p-3 group-data-[collapsible=icon]:mt-3 group-data-[collapsible=icon]:mb-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0">
             <img
               src="/logo.png"
@@ -85,35 +79,33 @@ export function AppSidebar() {
                 .filter((i) => ["Dashboard", "Calendar"].includes(i.title))
                 .map(({ title, url, icon: Icon }) => (
                   <SidebarMenuItem key={title}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <SidebarMenuButton
-                          asChild
-                          className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
-                            pathname === url
-                              ? "bg-teal-600 text-white hover:bg-teal-700"
-                              : ""
-                          }`}
-                        >
-                          <a href={url}>
-                            <Icon className="size-4" />
-                            <span className="block group-data-[collapsible=icon]:hidden">
-                              {title}
-                            </span>
-                          </a>
-                        </SidebarMenuButton>
-                      </TooltipTrigger>
-                      <TooltipContent side="right" align="center">
-                        {title}
-                      </TooltipContent>
-                    </Tooltip>
+                    <SidebarMenuButton
+                      asChild
+                      className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                        pathname === url
+                          ? "bg-teal-600 text-white hover:bg-teal-700"
+                          : ""
+                      }`}
+                      tooltip={title}
+                    >
+                      <a href={url}>
+                        <Icon className="size-4" />
+                        <span className="block group-data-[collapsible=icon]:hidden">
+                          {title}
+                        </span>
+                      </a>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
             </SidebarMenu>
           </SidebarGroupContent>
+        </SidebarGroup>
 
+        <SidebarGroup>
           {/* USER MANAGEMENT SECTION */}
-          <SidebarGroupLabel className="mt-5">User Management</SidebarGroupLabel>
+          <SidebarGroupLabel className="mt-5">
+            User Management
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-2 gap-3">
               {items
@@ -124,33 +116,29 @@ export function AppSidebar() {
                 )
                 .map(({ title, url, icon: Icon }) => (
                   <SidebarMenuItem key={title}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <SidebarMenuButton
-                          asChild
-                          className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
-                            pathname === url
-                              ? "bg-teal-600 text-white hover:bg-teal-700"
-                              : ""
-                          }`}
-                        >
-                          <a href={url}>
-                            <Icon className="size-4" />
-                            <span className="block group-data-[collapsible=icon]:hidden">
-                              {title}
-                            </span>
-                          </a>
-                        </SidebarMenuButton>
-                      </TooltipTrigger>
-                      <TooltipContent side="right" align="center">
-                        {title}
-                      </TooltipContent>
-                    </Tooltip>
+                    <SidebarMenuButton
+                      asChild
+                      className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                        pathname === url
+                          ? "bg-teal-600 text-white hover:bg-teal-700"
+                          : ""
+                      }`}
+                      tooltip={title}
+                    >
+                      <a href={url}>
+                        <Icon className="size-4" />
+                        <span className="block group-data-[collapsible=icon]:hidden">
+                          {title}
+                        </span>
+                      </a>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
             </SidebarMenu>
           </SidebarGroupContent>
+        </SidebarGroup>
 
+        <SidebarGroup>
           {/* SETTINGS SECTION */}
           <SidebarGroupLabel className="mt-5">System</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -159,28 +147,22 @@ export function AppSidebar() {
                 .filter((i) => ["Mange System"].includes(i.title))
                 .map(({ title, url, icon: Icon }) => (
                   <SidebarMenuItem key={title}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <SidebarMenuButton
-                          asChild
-                          className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
-                            pathname === url
-                              ? "bg-teal-600 text-white hover:bg-teal-700"
-                              : ""
-                          }`}
-                        >
-                          <a href={url}>
-                            <Icon className="size-4" />
-                            <span className="block group-data-[collapsible=icon]:hidden">
-                              {title}
-                            </span>
-                          </a>
-                        </SidebarMenuButton>
-                      </TooltipTrigger>
-                      <TooltipContent side="right" align="center" className="">
-                        {title}
-                      </TooltipContent>
-                    </Tooltip>
+                    <SidebarMenuButton
+                      asChild
+                      className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                        pathname === url
+                          ? "bg-teal-600 text-white hover:bg-teal-700"
+                          : ""
+                      }`}
+                      tooltip={title}
+                    >
+                      <a href={url}>
+                        <Icon className="size-4" />
+                        <span className="block group-data-[collapsible=icon]:hidden">
+                          {title}
+                        </span>
+                      </a>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
             </SidebarMenu>

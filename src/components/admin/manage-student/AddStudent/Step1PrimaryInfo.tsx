@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
 import { useSection } from "@/hooks/useSection";
+import { useYear } from "@/hooks/useYear";
 
 import {
   KeyRound,
@@ -28,6 +29,10 @@ export default function Step1({
   const SectionID=formData.grade
   const {data:SectionsData,isLoading:isLoadingSectionsData}=useSection(token as string,SectionID)
 
+  const { data: YearsData, isLoading: isLoadingYearsData } = useYear(
+    token as string
+  );
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -42,17 +47,6 @@ export default function Step1({
       delete n[name];
       return n;
     });
-  };
- 
- 
- 
-  const generateSchoolYears = () => {
-    const currentYear = new Date().getFullYear();
-    const startYear = 2024;
-    const years = [];
-    for (let i = startYear; i <= currentYear + 5; i++)
-      years.push(`${i}-${i + 1}`);
-    return years;
   };
 
   return (
@@ -183,9 +177,9 @@ export default function Step1({
           disabled={loading}
         >
           <option value="">Select School Year</option>
-          {generateSchoolYears().map((year) => (
-            <option key={year} value={year}>
-              {year}
+          {YearsData?.data.map((year: any) => (
+            <option key={year.id} value={year.years}>
+              {year.years}
             </option>
           ))}
         </select>

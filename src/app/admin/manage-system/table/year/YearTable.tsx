@@ -32,7 +32,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Year } from "@/types/year";
 import { YearColumns } from "./YearColumns";
 
-import EditGradeModal from "@/components/admin/manage-system/grade/EditGrade";
+import EditYearModal from "@/components/admin/manage-system/year/EditYear";
 
 interface Props {
   data: Year[];
@@ -102,9 +102,9 @@ export function ManageYearTable({
         </div>
 
         {selectedGrade && token && (
-          <EditGradeModal
+          <EditYearModal
             token={token}
-            gradeId={selectedGrade.id.toString()}
+            yearId={selectedGrade.id.toString()}
             open={!!selectedGrade}
             onClose={() => setSelectedGrade(null)}
           />
