@@ -40,7 +40,7 @@ export function FilterTable({ pagination, setPagination }: FilterTableProps) {
           }))
         }
       >
-        <SelectTrigger className="w-[100px]">
+        <SelectTrigger className="w-22 text-xs">
           <SelectValue placeholder="Select" />
         </SelectTrigger>
         <SelectContent>

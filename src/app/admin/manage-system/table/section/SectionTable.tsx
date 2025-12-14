@@ -155,11 +155,11 @@ export function ManageSectionTable({
         </Table>
 
         <div className="flex items-center justify-between py-4 space-x-2 mt-5">
-          <div className="text-sm text-muted-foreground flex-1">
+          <div className="text-xs text-muted-foreground flex-1">
             Showing {start} to {end} of {filteredData.length} entries
           </div>
 
-          <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
+          <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
             Page {pagination.pageIndex + 1} of {totalPages}
           </div>
 

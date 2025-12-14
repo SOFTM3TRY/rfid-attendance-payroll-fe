@@ -81,7 +81,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={title}>
                     <SidebarMenuButton
                       asChild
-                      className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                      className={`h-8 rounded-sm text-xs group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
                         pathname === url
                           ? "bg-teal-600 text-white hover:bg-teal-700"
                           : ""
@@ -90,9 +90,7 @@ export function AppSidebar() {
                     >
                       <a href={url}>
                         <Icon className="size-4" />
-                        <span className="block group-data-[collapsible=icon]:hidden">
-                          {title}
-                        </span>
+                        {title}
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -118,7 +116,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={title}>
                     <SidebarMenuButton
                       asChild
-                      className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                      className={`h-8 rounded-sm text-xs group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
                         pathname === url
                           ? "bg-teal-600 text-white hover:bg-teal-700"
                           : ""
@@ -127,9 +125,7 @@ export function AppSidebar() {
                     >
                       <a href={url}>
                         <Icon className="size-4" />
-                        <span className="block group-data-[collapsible=icon]:hidden">
-                          {title}
-                        </span>
+                        {title}
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -149,7 +145,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={title}>
                     <SidebarMenuButton
                       asChild
-                      className={`h-8 rounded-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                      className={`h-8 rounded-sm text-xs group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
                         pathname === url
                           ? "bg-teal-600 text-white hover:bg-teal-700"
                           : ""
@@ -158,9 +154,7 @@ export function AppSidebar() {
                     >
                       <a href={url}>
                         <Icon className="size-4" />
-                        <span className="block group-data-[collapsible=icon]:hidden">
-                          {title}
-                        </span>
+                        {title}
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -36,20 +36,23 @@ export const CreateYear = async (token: string, data: any) => {
   }
 };
 
-export const UpdateYear = async (token: string, yearId: string, data: any) => {
-  try {
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/update-year/${yearId}`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+export const UpdateYear = async (
+  token: string,
+  yearId: string,
+  data: { years: string }
+) => {
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_BASE_URL_API}/update-year/${yearId}`,
+    {
+      id: yearId,     
+      years: data.years,    
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
 };

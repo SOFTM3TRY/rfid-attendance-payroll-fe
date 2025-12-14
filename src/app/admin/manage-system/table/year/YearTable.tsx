@@ -54,17 +54,17 @@ export function ManageYearTable({
 }: Props) {
   const { token } = useAuth();
 
-  const [selectedGrade, setSelectedGrade] = useState<Year | null>(null);
+  const [selectedYear, setSelectedYear] = useState<Year | null>(null);
 
-  const columns = YearColumns((row) => setSelectedGrade(row));
+  const columns = YearColumns((row) => {
+    setSelectedYear(row);
+  });
 
   const filteredData = data.filter((row) => {
     const searchMatch =
-      search === "" ||
-      row.years.toLowerCase().includes(search.toLowerCase());
+      search === "" || row.years.toLowerCase().includes(search.toLowerCase());
 
-    const statusMatch =
-      selectedStatus.length === 0;
+    const statusMatch = selectedStatus.length === 0;
 
     const sectionMatch =
       selectedFilters.length === 0 || selectedFilters.includes(String(row.id));
@@ -101,12 +101,12 @@ export function ManageYearTable({
           <AddYearModal token={token as string} />
         </div>
 
-        {selectedGrade && token && (
+        {selectedYear && token && (
           <EditYearModal
             token={token}
-            yearId={selectedGrade.id.toString()}
-            open={!!selectedGrade}
-            onClose={() => setSelectedGrade(null)}
+            year={selectedYear}
+            open={true}
+            onClose={() => setSelectedYear(null)}
           />
         )}
 
@@ -154,11 +154,11 @@ export function ManageYearTable({
         </Table>
 
         <div className="flex items-center justify-between py-4 space-x-2 mt-5">
-          <div className="text-sm text-muted-foreground flex-1">
+          <div className="text-xs text-muted-foreground flex-1">
             Showing {start} to {end} of {filteredData.length} entries
           </div>
 
-          <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
+          <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
             Page {pagination.pageIndex + 1} of {totalPages}
           </div>
 

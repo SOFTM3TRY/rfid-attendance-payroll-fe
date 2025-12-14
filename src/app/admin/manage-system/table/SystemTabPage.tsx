@@ -39,20 +39,20 @@ export default function SystemTabPage() {
         {/* Tabs Header */}
         <div className="flex justify-between mb-3">
           <TabsList className="flex-wrap gap-3 bg-zinc-100 dark:bg-zinc-900 p-2 h-14">
-             <TabsTrigger key="1" value="1" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-sm">
-              <CalendarDays strokeWidth={2.5} size={22} className="text-violet-500 dark:text-violet-300" />
+             <TabsTrigger key="1" value="1" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-xs">
+              <CalendarDays strokeWidth={2.5} className="size-4 text-violet-500 dark:text-violet-300" />
               Manage Academic Year
             </TabsTrigger>
-            <TabsTrigger key="2" value="2" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-sm">
-              <GraduationCap strokeWidth={2.5} size={22} className="text-green-500 dark:text-green-300" />
+            <TabsTrigger key="2" value="2" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-xs">
+              <GraduationCap strokeWidth={2.5} className="size-4 text-green-500 dark:text-green-300" />
               Manage Grades
             </TabsTrigger>
-            <TabsTrigger key="3" value="3" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-sm">
-              <LayoutPanelTop strokeWidth={2.5} size={22} className="text-orange-500 dark:text-orange-300" />
+            <TabsTrigger key="3" value="3" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-xs">
+              <LayoutPanelTop strokeWidth={2.5} className="size-4 text-orange-500 dark:text-orange-300" />
               Manage Sections
             </TabsTrigger>
-            <TabsTrigger key="4" value="4" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-sm">
-              <BookText strokeWidth={2.5} size={22} className="text-blue-500 dark:text-blue-300" />
+            <TabsTrigger key="4" value="4" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-xs">
+              <BookText strokeWidth={2.5} className="size-4 text-blue-500 dark:text-blue-300" />
               Manage Subjects
             </TabsTrigger>
           </TabsList>

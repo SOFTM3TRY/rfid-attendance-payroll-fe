@@ -34,22 +34,25 @@ export const useCreateYear = () => {
 
 export const useUpdateYear = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({
-      token, yearId, data
+      token,
+      yearId,
+      data,
     }: {
-      token: string; yearId: string; data: any
+      token: string;
+      yearId: string;
+      data: { years: string };
     }) => UpdateYear(token, yearId, data),
-    onSuccess: () => { 
+
+    onSuccess: () => {
       toast.success("School Year updated successfully");
       queryClient.invalidateQueries({ queryKey: ["year-details"] });
     },
-    onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to update School Year");
-      }
+
+    onError: () => {
+      toast.error("Failed to update School Year");
     },
   });
 };

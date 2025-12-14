@@ -68,7 +68,7 @@ export default function AddYearModal({ token }: { token: string }) {
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-sm font-medium mb-3"> <span className="text-red-500 mr-1">*</span> School Year <small>(e.g. 2022-2023)</small></label>
+            <label className="text-xs font-medium mb-3"> <span className="text-red-500 mr-1">*</span> School Year <small>(e.g. 2022-2023)</small></label>
             <Input
               name="years"
               placeholder="Enter School Year"
@@ -100,7 +100,7 @@ export default function AddYearModal({ token }: { token: string }) {
           <DialogClose asChild>
             <Button
               variant="ghost"
-              className="w-32"
+              size="sm"
               disabled={createGradeMutation.isPending}
             >
               <CircleX className="mr-1" /> Cancel
