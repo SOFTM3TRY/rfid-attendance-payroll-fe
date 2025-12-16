@@ -1,31 +1,36 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Year } from "@/types/year";
+import { Subject } from "@/types/subject";
 import { Button } from "@/components/ui/button";
-import { Pencil, GraduationCap, Dot } from "lucide-react";
+import { Pencil, GraduationCap, Book } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
-export const YearColumns = (
-  onEdit: (year: Year) => void
-): ColumnDef<Year>[] => [
+export const SubjectColumns = (
+  onEdit: (row: Subject) => void
+): ColumnDef<Subject>[] => [
   {
-    accessorKey: "years",
+    accessorKey: "grade.grade_level",
     header: () => (
-      <Button variant="outline" size="sm" className="font-normal text-xs">
-        <GraduationCap className="text-green-500" />
-        School Year
+      <Button variant="outline" size="sm" className="font-normal text-sm">
+        <GraduationCap className="text-green-500" /> Grade Level
       </Button>
-    ),
-    cell: ({ getValue }) => (
-      <span className="text-xs">{getValue() as string}</span>
+    )
+  },
+  {
+    accessorKey: "name",
+    header: () => (
+      <Button variant="outline" size="sm" className="font-normal text-sm">
+        <Book className="text-green-500" /> Subject Name
+      </Button>
     ),
   },
   {
     id: "action",
-    header: () => <span className="font-normal text-xs">Actions</span>,
+    header: "Action",
     cell: ({ row }) => (
       <Tooltip>
         <TooltipTrigger asChild>
@@ -42,4 +47,3 @@ export const YearColumns = (
     ),
   },
 ];
-

@@ -9,11 +9,13 @@ import { PlusIcon, GraduationCap, CalendarDays, BookText, LayoutPanelTop } from 
 import { ManageGradeTable } from "./grade/GradeTable";
 import { ManageSectionTable } from "./section/SectionTable";
 import { ManageYearTable } from "./year/YearTable";
+import { ManageSubjectTable } from "./subject/SubjectTable";
 
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
 import { useAllSections } from "@/hooks/useSection";
 import { useYear } from "@/hooks/useYear";
+import { useSubject } from "@/hooks/useSubjects";
 
 export default function SystemTabPage() {
   const [selectedTab, setSelectedTab] = useState<string | null>(null);
@@ -26,6 +28,7 @@ export default function SystemTabPage() {
   const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(token as string);
   const { data: SectionsData, isLoading: isLoadingSectionsData } = useAllSections(token as string);
   const { data: YearsData, isLoading: isLoadingYearsData } = useYear(token as string);
+  const { data: SubjectsData, isLoading: isLoadingSubjectsData } = useSubject(token as string);
 
   useEffect(() => {
     if (GradesData?.data && !selectedTab) {
@@ -89,6 +92,18 @@ export default function SystemTabPage() {
             pagination={pagination}
             setPagination={setPagination}
             totalRows={GradesData?.data?.length || 0}
+            search={search}
+            selectedStatus={selectedStatus}
+            selectedFilters={selectedFilters}
+          />
+        </TabsContent>
+
+        <TabsContent key="4" value="4">
+          <ManageSubjectTable
+            data={SubjectsData?.data || []} // Placeholder
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={0}
             search={search}
             selectedStatus={selectedStatus}
             selectedFilters={selectedFilters}

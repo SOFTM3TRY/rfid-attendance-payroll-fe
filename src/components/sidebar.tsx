@@ -40,7 +40,7 @@ const items = [
     url: "/admin/manage-teacher",
     icon: IdCardLanyard,
   },
-  { title: "Manage Admin", url: "/admin/manage-admin", icon: ShieldUser },
+  // { title: "Manage Admin", url: "/admin/manage-admin", icon: ShieldUser },
   { title: "Mange System", url: "/admin/manage-system", icon: Settings },
 ];
 

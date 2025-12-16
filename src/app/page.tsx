@@ -7,29 +7,39 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import { User } from "@/types/Login";
 import toast from "react-hot-toast";
+import { useRememberMe } from "@/hooks/useRememberMe";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const [remember, setRemember] = useState(false);
+  const { remember, setRemember, saveEmail, clearEmail, getEmail } =
+    useRememberMe();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { register, handleSubmit, setValue } = useForm<User>();
 
-  const { register, setValue, handleSubmit } = useForm<User>();
-  const { login,user } = useAuth();
+  useEffect(() => {
+    const email = getEmail();
+    if (email) {
+      setValue("email", email);
+    }
+  }, [getEmail, setValue]);
+
+  const { login } = useAuth();
   const onSubmit = async (data: User) => {
     setLoading(true);
+
     try {
       const { email, password } = data;
-      await login({ email, password });   
+
+      await login({ email, password });
+
+      remember ? saveEmail(email) : clearEmail();
     } catch (error) {
       // @ts-ignore
       toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -89,7 +99,6 @@ export default function Login() {
                 type="checkbox"
                 checked={remember}
                 onChange={() => setRemember(!remember)}
-                className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-700"
               />
               <label htmlFor="remember" className="text-sm select-none">
                 Remember me
@@ -112,7 +121,11 @@ export default function Login() {
           </button>
         </form>
 
-        <img src="https://avatars.githubusercontent.com/u/221351242?s=200&v=4" alt="Avatar" className="absolute bottom-4 right-4 w-8 h-8 rounded-full"/>
+        <img
+          src="https://avatars.githubusercontent.com/u/221351242?s=200&v=4"
+          alt="Avatar"
+          className="absolute bottom-4 right-4 w-8 h-8 rounded-full"
+        />
       </div>
 
       <div className="hidden md:flex relative flex-1 overflow-hidden bg-cyan-900 dark:bg-black items-center justify-center p-8">
