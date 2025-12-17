@@ -13,7 +13,7 @@ interface AnimatedThemeTogglerProps
 
 export const AnimatedThemeToggler = ({
   className,
-  duration = 500,
+  duration = 300,
   ...props
 }: AnimatedThemeTogglerProps) => {
   const [isDark, setIsDark] = useState(false)
@@ -78,7 +78,7 @@ export const AnimatedThemeToggler = ({
       className={cn(className)}
       {...props}
     >
-      {isDark ? <Sun size={22}/> : <Moon size={22}/>}
+      {isDark ? <Sun size={22}className="size-4" /> : <Moon size={22}className="size-4" />}
       <span className="sr-only">Toggle theme</span>
     </button>
   )

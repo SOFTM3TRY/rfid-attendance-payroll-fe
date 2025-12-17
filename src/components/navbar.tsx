@@ -86,7 +86,7 @@ export function Navbar() {
 
       <div className="flex items-center justify-center gap-1 mr-2">
         <Sheet>
-          <SheetTrigger className="mr-3 relative hover:text-teal-600">
+          <SheetTrigger className="size-4 flex items-center relative mr-3 hover:text-teal-600">
             <span className="h-4 w-4 bg-teal-600 text-white dark:bg-teal-700 rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
               0
             </span>
@@ -146,9 +146,9 @@ export function Navbar() {
             <span className="h-4 w-4 bg-teal-600 text-white dark:bg-teal-700 rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
               0
             </span>
-            <Bell className="h-5 w-5" />
+            <Bell className="size-4" />
           </PopoverTrigger>
-          <PopoverContent className="w-72 h-auto text-sm">
+          <PopoverContent className="w-72 h-auto text-xs">
             Notification.
           </PopoverContent>
         </Popover>
@@ -158,9 +158,9 @@ export function Navbar() {
           className="h-5 w-5  mr-2 hover:text-teal-600"
         >
           {isFullscreen ? (
-            <Shrink className="h-4 w-4" />
+            <Shrink className="size-4" />
           ) : (
-            <Maximize className="h-4 w-4" />
+            <Maximize className="size-4" />
           )}
         </button>
 
@@ -191,14 +191,18 @@ export function Navbar() {
               </div>
             </div>
           </PopoverTrigger>
-          <PopoverContent className="w-48 h-auto py-0 px-0 text-sm">
+          <PopoverContent className="w-48 h-auto py-0 px-0 text-xs">
             <div className="px-2 py-2">
               <p className="font-semibold">
                 {userDetails?.data.first_name +
                   " " +
                   userDetails?.data.last_name}
-                <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
-                  Role
+                <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full ml-1">
+                  {userDetails?.data.role_id === 1
+                    ? "Admin"
+                    : userDetails?.data.role_id === 2
+                    ? "Teacher"
+                    : "Student"}
                 </span>
               </p>
               <p className="text-xs">{userDetails?.data.email}</p>
@@ -217,9 +221,9 @@ export function Navbar() {
                 >
                   <Button
                     variant="outline"
-                    className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
+                    className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-xs font-normal"
                   >
-                    <User2 color="#00a887" strokeWidth={2.75} />
+                    <User2 color="#00a887"  />
                     Profile
                   </Button>
                 </Link>
@@ -228,9 +232,9 @@ export function Navbar() {
                 <Button
                   variant="outline"
                   onClick={handlelogout}
-                  className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-sm font-normal"
+                  className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-xs font-normal"
                 >
-                  <LogOut color="#ff0000" strokeWidth={2.75} /> Logout
+                  <LogOut color="#ff0000" /> Logout
                 </Button>
               </li>
             </ul>

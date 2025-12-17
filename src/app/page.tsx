@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ModeToggle } from "@/components/mode-toggle";
+// import { ModeToggle } from "@/components/mode-toggle";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Boxes } from "@/components/ui/background-boxes";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import { User } from "@/types/Login";
 import toast from "react-hot-toast";
 import { useRememberMe } from "@/hooks/useRememberMe";
+import { Button } from "@/components/ui/button";
+import { LogIn } from "lucide-react";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -44,10 +47,13 @@ export default function Login() {
 
   return (
     <main className="min-h-screen flex flex-col md:flex-row-reverse">
-      <ModeToggle />
+      <div className="absolute top-5 right-5">
+        <AnimatedThemeToggler />
+      </div>
+
       <div className="flex flex-col justify-center items-center flex-1 p-8 bg-white shadow-lg dark:bg-black">
         <div className="w-full max-w-sm text-start">
-          <h1 className="text-3xl font-bold mb-2">Sign In to your account</h1>
+          <h1 className="text-3xl font-bold">Sign In to your account</h1>
           <p className="mb-6">to continue to the dashboard</p>
         </div>
 
@@ -56,14 +62,14 @@ export default function Login() {
           className="w-full max-w-sm space-y-6"
         >
           <div>
-            <label htmlFor="email" className="block mb-2 font-normal text-sm">
+            <label htmlFor="email" className="block mb-2 font-normal text-xs">
               Email
             </label>
             <input
               type="email"
               {...register("email", { required: true })}
               placeholder="email@gmail.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 text-sm"
+              className="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 text-xs"
               required
             />
           </div>
@@ -71,7 +77,7 @@ export default function Login() {
           <div className="relative">
             <label
               htmlFor="password"
-              className="block mb-2 font-normal text-sm"
+              className="block mb-2 font-normal text-xs"
             >
               Password
             </label>
@@ -79,13 +85,13 @@ export default function Login() {
               type={showPassword ? "text" : "password"}
               {...register("password", { required: true })}
               placeholder="Enter Password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 text-sm"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 text-xs"
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-9.5 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-8 text-muted-foreground hover:text-muted-foreground/50"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOffIcon /> : <EyeIcon />}
@@ -100,25 +106,26 @@ export default function Login() {
                 checked={remember}
                 onChange={() => setRemember(!remember)}
               />
-              <label htmlFor="remember" className="text-sm select-none">
+              <label htmlFor="remember" className="text-xs select-none">
                 Remember me
               </label>
             </div>
             {/* <a
               href="#"
-              className="text-sm font-normal mt-3 md:mt-0 text-blue-800 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
+              className="text-xs font-normal mt-3 md:mt-0 text-blue-800 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
             >
               Forgot your password?
             </a> */}
           </div>
 
-          <button
+          <Button
             type="submit"
+            variant="default"
             disabled={loading}
             className="w-full bg-cyan-800 text-white py-1 rounded-sm hover:bg-cyan-700 dark:bg-cyan-700 dark:hover:bg-cyan-600 transition disabled:opacity-60"
           >
-            {loading ? "Logging in..." : "Log In"}
-          </button>
+            {loading ? "Logging in..." : "Log In"} <LogIn />
+          </Button>
         </form>
 
         <img
