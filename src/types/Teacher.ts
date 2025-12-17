@@ -19,7 +19,7 @@ export interface TeacherData {
   suffix: string | null;
 
   contact_no: string;
-  status: "0" | "1"; // 👈 string, based on JSON
+  status: "0" | "1"; 
   role_id: number;
   email: string;
 
@@ -33,6 +33,7 @@ export interface AdditionalInfo {
   grade?: string;
   section?: string | number;
 
+  region: string;
   province: string;
   city: string;
   barangay: string;
@@ -47,4 +48,5 @@ export interface AdditionalInfo {
   emergency_fname: string;
   emergency_lname: string;
   emergency_mname: string;
+  emergency_relationship: string;
 }

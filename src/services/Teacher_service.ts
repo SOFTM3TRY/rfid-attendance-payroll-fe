@@ -104,3 +104,21 @@ export const GetTeacherProfile = async (token: string, id: string) => {
     throw error;
   }
 };
+
+export const EditTeacher = async (token: string, id: string, data: any) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/update-employee/${id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

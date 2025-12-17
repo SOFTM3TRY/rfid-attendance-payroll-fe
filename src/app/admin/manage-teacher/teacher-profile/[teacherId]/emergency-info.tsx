@@ -26,12 +26,12 @@ export default function EmergencyInfo({ id }: { id: string }) {
   return (
     <div className="w-full py-5 flex flex-col gap-4 px-5 mt-5 rounded-md bg-zinc-100 dark:bg-zinc-900">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <SectionHeader icon={<User className="text-teal-500 h-5 w-5" />} title="Guardian Information" />
+        <SectionHeader icon={<User className="text-teal-500 size-4" />} title="Guardian Information" />
 
         <InputField label="Guardian First Name" value={additional_info.emergency_fname} />
         <InputField label="Guardian Middle Name" value={additional_info.emergency_mname} />
         <InputField label="Guardian Last Name" value={additional_info.emergency_lname} />
-        <InputField label="Guardian Contact" value={additional_info.emergency_contact} icon={<Phone className="text-blue-500 h-4 w-4" />} />
+        <InputField label="Guardian Contact" value={additional_info.emergency_contact} icon={<Phone className="size-3 text-muted-foreground" />} />
 
       </div>
     </div>
@@ -49,8 +49,8 @@ function InputField({
 }) {
   return (
     <div className="mt-2">
-      <Label className="flex items-center gap-1">
-        {icon || <User className="text-green-500 h-4 w-4" />}
+      <Label className="flex items-center gap-1 mb-2">
+        {icon || <User className="size-3 text-muted-foreground" />}
         {label}
       </Label>
       <Input value={value || ""} disabled />
@@ -67,7 +67,7 @@ function SectionHeader({
 }) {
   return (
     <div className="col-span-1 md:col-span-2 mb-3">
-      <p className="text-sm font-medium flex items-center gap-1">
+      <p className="text-sm font-bold flex items-center gap-1">
         {icon} {title}
       </p>
     </div>
