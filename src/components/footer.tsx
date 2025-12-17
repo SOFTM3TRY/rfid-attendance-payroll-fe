@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="flex items-center justify-between h-12 w-full px-5">
       <div className="text-center">
-        <p className="text-sm">
+        <p className="text-xs">
           &copy; {currentYear} Young Generation Academy. All rights reserved.
         </p>
       </div>

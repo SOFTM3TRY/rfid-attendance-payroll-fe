@@ -44,6 +44,8 @@ import {
 
 import { FilterTable } from "@/components/admin/manage-student/Filtertable";
 
+import { TeacherData } from "@/types/Teacher";
+
 const statusTypes = [
   { value: "1", label: "Active", icon: <UserCheck className="text-green-500 mr-1 w-3 h-3" /> },
   { value: "0", label: "Inactive", icon: <UserX className="text-red-500 mr-1 w-3 h-3" /> },
@@ -94,13 +96,13 @@ interface Props<TData> {
   totalRows: number;
 }
 
-export function TeacherTable<TData extends {section: string; grade: number; status: string; last_name: string; first_name: string; middle_name?: string; suffix?: string; employee_number?: string }>({
+export function TeacherTable({
   columns,
   data,
   pagination,
   setPagination,
   totalRows,
-}: Props<TData>) {
+}: Props<TeacherData>) {
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
 
@@ -118,7 +120,7 @@ export function TeacherTable<TData extends {section: string; grade: number; stat
     if (search.trim() !== "") {
       const lowerSearch = search.toLowerCase();
       const fullName = `${item.last_name} ${item.first_name} ${item.middle_name || ""} ${item.suffix || ""}`;
-      const employeeNo = item.employee_number || "";
+      const employeeNo = item.employee_no || "";
 
       const matchesName = fullName.toLowerCase().includes(lowerSearch);
       const matchesEmpNo = employeeNo.toLowerCase().includes(lowerSearch);
@@ -214,11 +216,11 @@ export function TeacherTable<TData extends {section: string; grade: number; stat
         </Table>
 
         <div className="flex items-center justify-between px-5 py-4 space-x-2 mt-3">
-          <div className="text-sm text-muted-foreground flex-1">
+          <div className="text-xs text-muted-foreground flex-1">
             Showing {start} to {end} of {filteredTotalRows} entries
           </div>
 
-          <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
+          <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
             Page {pagination.pageIndex + 1} of {totalPages}
           </div>
 

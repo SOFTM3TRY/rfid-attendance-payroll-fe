@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useEffect, useState } from "react";
 import {
   fetchRegions,
@@ -5,24 +6,11 @@ import {
   fetchCities,
   fetchBarangays,
 } from "@/lib/psgc";
-
-import {
-  PlusIcon,
-  UserRoundPlus,
-  ChevronsRight,
-  ChevronsLeft,
-  CircleX,
-  ShieldUser,
-  CircleCheck,
-  UserLock,
-  ContactRound,
-  ScanEye,
-  Send,
-  User,
-  Map,
-} from "lucide-react";
+import { ShieldUser, UserLock, User, Map } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Step4({ formData }: any) {
+  const { token } = useAuth();
   const [regionName, setRegionName] = useState("");
   const [provinceName, setProvinceName] = useState("");
   const [cityName, setCityName] = useState("");
@@ -90,7 +78,7 @@ export default function Step4({ formData }: any) {
   };
 
   return (
-    <div className="p-4 rounded-md text-sm overflow-auto max-h-auto">
+    <div className="rounded-md text-xs overflow-auto max-h-auto">
       {/* Show JSON with address names */}
       {/* <pre className="whitespace-pre-wrap">
         {JSON.stringify(displayData, null, 2)}
@@ -104,18 +92,16 @@ export default function Step4({ formData }: any) {
         </span>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Advisory Grade : </span>
-            <span className="text-sm font-light">
-              {formData.grade === "1" ? "Grade One" : formData.grade === "2" ? "Grade Two" : formData.grade === "3" ? "Grade Three" : formData.grade === "4" ? "Grade Four" : formData.grade === "5" ? "Grade Five" : formData.grade === "6" ? "Grade Six" : formData.grade}
-            </span>
+            <span className="text-xs font-semibold">Advisory Grade : </span>
+            <span className="text-xs font-light">{formData.grade}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Advisory Section : </span>
-            <span className="text-sm font-light">{formData.section}</span>
+            <span className="text-xs font-semibold">Advisory Section : </span>
+            <span className="text-xs font-light">{formData.section}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">School Year : </span>
-            <span className="text-sm font-light">{formData.school_year}</span>
+            <span className="text-xs font-semibold">School Year : </span>
+            <span className="text-xs font-light">{formData.school_year}</span>
           </div>
         </div>
       </div>
@@ -127,50 +113,50 @@ export default function Step4({ formData }: any) {
         </span>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">First Name : </span>
-            <span className="text-sm font-light">{formData.first_name}</span>
+            <span className="text-xs font-semibold">First Name : </span>
+            <span className="text-xs font-light">{formData.first_name}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Middle Name : </span>
-            <span className="text-sm font-light">{formData.middle_name}</span>
+            <span className="text-xs font-semibold">Middle Name : </span>
+            <span className="text-xs font-light">{formData.middle_name}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Last Name : </span>
-            <span className="text-sm font-light">{formData.last_name}</span>
+            <span className="text-xs font-semibold">Last Name : </span>
+            <span className="text-xs font-light">{formData.last_name}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Suffix : </span>
-            <span className="text-sm font-light">{formData.suffix}</span>
+            <span className="text-xs font-semibold">Suffix : </span>
+            <span className="text-xs font-light">{formData.suffix}</span>
+          </div>
+          <div className="flex-col gap-1 hidden">
+            <span className="text-xs font-semibold">Role : </span>
+            <span className="text-xs font-light">{formData.role}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Role : </span>
-            <span className="text-sm font-light">{formData.role}</span>
+            <span className="text-xs font-semibold">Gender : </span>
+            <span className="text-xs font-light">{formData.gender}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Gender : </span>
-            <span className="text-sm font-light">{formData.gender}</span>
+            <span className="text-xs font-semibold">Birth Place : </span>
+            <span className="text-xs font-light">{formData.birth_place}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Birth Place : </span>
-            <span className="text-sm font-light">{formData.birth_place}</span>
+            <span className="text-xs font-semibold">Birth Date : </span>
+            <span className="text-xs font-light">{formData.birth_date}</span>
           </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Birth Date : </span>
-            <span className="text-sm font-light">{formData.birth_date}</span>
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Teacher Status : </span>
-            <span className="text-sm font-light">
+          <div className="flex-col gap-1 hidden">
+            <span className="text-xs font-semibold">Teacher Status : </span>
+            <span className="text-xs font-light">
               {formData.status === "1" ? "Active" : "Inactive"}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Email : </span>
-            <span className="text-sm font-light">{formData.email}</span>
+            <span className="text-xs font-semibold">Email : </span>
+            <span className="text-xs font-light">{formData.email}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Contact Number : </span>
-            <span className="text-sm font-light">{formData.contact_no}</span>
+            <span className="text-xs font-semibold">Contact Number : </span>
+            <span className="text-xs font-light">{formData.contact_no}</span>
           </div>
         </div>
       </div>
@@ -181,69 +167,71 @@ export default function Step4({ formData }: any) {
           Additional Information
         </span>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-          <small className="text-sm font-semibold col-span-1 md:col-span-4 flex item-center">
+          <small className="text-xs font-semibold col-span-1 md:col-span-4 flex item-center">
             <Map className="text-yellow-500 h-5 w-5 mr-2" />
             Address
           </small>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Region : </span>
-            <span className="text-sm font-light">
+            <span className="text-xs font-semibold">Region : </span>
+            <span className="text-xs font-light">
               {regionName || formData.region}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Province : </span>
-            <span className="text-sm font-light">
+            <span className="text-xs font-semibold">Province : </span>
+            <span className="text-xs font-light">
               {provinceName || formData.province}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">City : </span>
-            <span className="text-sm font-light">
+            <span className="text-xs font-semibold">City : </span>
+            <span className="text-xs font-light">
               {cityName || formData.city}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Barangay : </span>
-            <span className="text-sm font-light">
+            <span className="text-xs font-semibold">Barangay : </span>
+            <span className="text-xs font-light">
               {barangayName || formData.barangay}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Street : </span>
-            <span className="text-sm font-light">{formData.street}</span>
+            <span className="text-xs font-semibold">Street : </span>
+            <span className="text-xs font-light">{formData.street}</span>
           </div>
 
-          <small className="text-sm mt-10 font-semibold col-span-1 md:col-span-4 flex item-center">
+          <small className="text-xs mt-10 font-semibold col-span-1 md:col-span-4 flex item-center">
             <User className="text-green-500 h-5 w-5 mr-2" />
             Emergency Contact Information
           </small>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">
-              First Name :{" "}
-            </span>
-            <span className="text-sm font-light">
+            <span className="text-xs font-semibold">First Name : </span>
+            <span className="text-xs font-light">
               {formData.emergency_fname}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">
-              Middle Name :{" "}
-            </span>
-            <span className="text-sm font-light">
+            <span className="text-xs font-semibold">Middle Name : </span>
+            <span className="text-xs font-light">
               {formData.emergency_mname}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Last Name : </span>
-            <span className="text-sm font-light">
+            <span className="text-xs font-semibold">Last Name : </span>
+            <span className="text-xs font-light">
               {formData.emergency_lname}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Emergency Contact : </span>
-            <span className="text-sm font-light">
-              {formData. emergency_contact}
+            <span className="text-xs font-semibold">Relationship : </span>
+            <span className="text-xs font-light">
+              {formData.emergency_relation}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-semibold">Emergency Contact : </span>
+            <span className="text-xs font-light">
+              {formData.emergency_contact}
             </span>
           </div>
         </div>

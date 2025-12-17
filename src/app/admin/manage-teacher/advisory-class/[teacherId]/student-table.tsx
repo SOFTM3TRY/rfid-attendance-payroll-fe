@@ -197,7 +197,7 @@ export default function TeacherStudentTable({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-center py-10 text-muted-foreground text-sm"
+                  className="text-center py-10 text-muted-foreground text-xs"
                 >
                   No students assigned to this teacher.
                 </TableCell>
@@ -209,12 +209,12 @@ export default function TeacherStudentTable({
 
       {/* Pagination */}
       <div className="flex items-center justify-between px-5 py-4 space-x-2">
-        <div className="text-sm text-muted-foreground flex-1">
+        <div className="text-xs text-muted-foreground flex-1">
           Showing {totalRows ? start : 0} to {totalRows ? end : 0} of{" "}
           {totalRows} entries
         </div>
 
-        <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
+        <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
           Page {pageIndex + 1} of {totalPages || 1}
         </div>
 

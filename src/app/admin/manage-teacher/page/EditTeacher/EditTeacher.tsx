@@ -27,9 +27,9 @@ import EditAddressInfo from "@/app/admin/manage-teacher/page/EditTeacher/EditAdd
 import EditGuardianInfo from "@/app/admin/manage-teacher/page/EditTeacher/EditGuardianInfo";
 
 interface EditTeacherProps {
+  id: string;
   open: boolean;
   setOpen: (open: boolean) => void;
-  id: string;
   trigger?: React.ReactNode;
 }
 

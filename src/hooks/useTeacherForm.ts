@@ -17,7 +17,7 @@ export function useTeacherForm(existingData: any = null) {
     grade: "",
     section: "",
     school_year: "",
-    status: "",
+    status: "1",
     first_name: "",
     last_name: "",
     middle_name: "",
@@ -28,6 +28,7 @@ export function useTeacherForm(existingData: any = null) {
     birth_date: "",
     birth_place: "",
     gender: "",
+    region: "",
     province: "",
     city: "",
     barangay: "",
@@ -36,6 +37,7 @@ export function useTeacherForm(existingData: any = null) {
     emergency_fname: "",
     emergency_lname: "",
     emergency_mname: "",
+    emergency_relationship: "",
   };
 
   const [formData, setFormData] = useState<any>(defaultFormData);
@@ -61,8 +63,8 @@ export function useTeacherForm(existingData: any = null) {
       "birth_place", "birth_date", "gender", "status",
     ],
     3: [
-      "province", "city", "barangay", "street",
-      "emergency_fname", "emergency_mname", "emergency_lname", "emergency_contact"
+      "region", "province", "city", "barangay", "street",
+      "emergency_fname", "emergency_mname", "emergency_lname", "emergency_contact", "emergency_relationship",
     ],
   };
 
@@ -72,7 +74,7 @@ export function useTeacherForm(existingData: any = null) {
     requiredFields.forEach(field => {
       if (
         !formData[field]?.toString().trim() &&
-        !["middle_name", "suffix", "role_id", "emergency_mname"].includes(field)
+        !["middle_name", "suffix", "role_id", "status", "emergency_mname"].includes(field)
       ) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }

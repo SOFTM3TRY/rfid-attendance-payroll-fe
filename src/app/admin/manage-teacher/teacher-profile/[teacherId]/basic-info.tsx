@@ -26,15 +26,14 @@ export default function BasicInfo({ id }: { id: string }) {
   const { token } = useAuth();
   const isClient = useClientOnly();
 
-  const { data: teacherDetails } =
-    useTeacherDetails(token, { id });
+  const { data: teacherDetails } = useTeacherDetails(token, { id });
 
   const teacher = teacherDetails?.data?.teacher?.[0] || null;
   const additional_info = teacher?.additional_info || {};
 
   return (
-    <div className="w-full py-5 flex flex-col gap-4 px-5 rounded-md bg-zinc-100 dark:bg-zinc-900">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="w-full py-5 flex flex-col gap-4 px-5 rounded-xl bg-zinc-100 dark:bg-zinc-900">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <SectionHeader
           icon={<ShieldUser className="text-blue-500 h-5 w-5" />}
           title="Primary Information"
@@ -46,55 +45,19 @@ export default function BasicInfo({ id }: { id: string }) {
         />
         <InputField
           label="School Year"
-          value={teacher?.school_year || ""}
+          value={teacher?.additional_info?.school_year || ""}
           icon={<Calendar className="text-teal-500 h-4 w-4" />}
         />
-        {additional_info.grade === "1" ? (
-          <InputField
-            label="Grade"
-            value="Grade One"
-            icon={<GraduationCap className="text-teal-500 h-4 w-4" />}
-          />
-        ) : additional_info.grade === "2" ? (
-          <InputField
-            label="Grade"
-            value="Grade Two"
-            icon={<GraduationCap className="text-teal-500 h-4 w-4" />}
-          />
-        ) : additional_info.grade === "3" ? (
-          <InputField
-            label="Grade"
-            value="Grade Three"
-            icon={<GraduationCap className="text-teal-500 h-4 w-4" />}
-          />
-        ) : additional_info.grade === "4" ? (
-          <InputField
-            label="Grade"
-            value="Grade Four"
-            icon={<GraduationCap className="text-teal-500 h-4 w-4" />}
-          />
-        ) : additional_info.grade === "5" ? (
-          <InputField
-            label="Grade"
-            value="Grade Five"
-            icon={<GraduationCap className="text-teal-500 h-4 w-4" />}
-          />
-        ) : additional_info.grade === "6" ? (
-          <InputField
-            label="Grade"
-            value="Grade Six"
-            icon={<GraduationCap className="text-teal-500 h-4 w-4" />}
-          />
-        ) : (
-          <InputField
-            label="Grade"
-            value={additional_info.grade || ""}
-            icon={<GraduationCap className="text-teal-500 h-4 w-4" />}
-          />
-        )}
+
+        <InputField
+          label="Grade"
+          value={teacher?.grade?.grade_level || ""}
+          icon={<GraduationCap className="text-teal-500 h-4 w-4" />}
+        />
+
         <InputField
           label="Section"
-          value={additional_info.section || ""}
+          value={teacher?.section?.section_name || ""}
           icon={<Book className="text-teal-500 h-4 w-4" />}
         />
 
@@ -179,7 +142,7 @@ function SectionHeader({
   title: string;
 }) {
   return (
-    <div className="col-span-1 md:col-span-2 mb-3">
+    <div className="col-span-1 md:col-span-4 my-3">
       <p className="text-sm font-medium flex items-center gap-1">
         {icon} {title}
       </p>
