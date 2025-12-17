@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useTeacherDetails } from "@/hooks/useTeacher";
 import { useEditTeacherMutation } from "@/hooks/useTeacher";
