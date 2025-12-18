@@ -113,3 +113,19 @@ export const GetStudentDetailsById = async (token: string, studentId: number) =>
     throw error;
   }
 };
+
+export const GetStudentDetailsByLrn = async (
+  token: string,
+  lrn: string
+) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-student-by-lrn/${lrn}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.json();
+};

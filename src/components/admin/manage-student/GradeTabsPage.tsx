@@ -20,7 +20,7 @@ import AddStudent from "@/components/admin/manage-student/AddStudent/AddStudent"
 import { useStudentDetails } from "@/hooks/useStudentDetails";
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
-import { Section } from "@/types/Section";
+import { Student } from "@/types/Student";
 
 export default function GradeTabsPage() {
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null); // Initialize the selectedGrade
@@ -41,7 +41,7 @@ export default function GradeTabsPage() {
   // Pagination state here
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
-  const baseData: Section[] = Array.isArray(studentDetails?.data)
+  const baseData: Student[] = Array.isArray(studentDetails?.data)
     ? studentDetails?.data
     : [];
 
@@ -67,7 +67,7 @@ export default function GradeTabsPage() {
   const sectionTypes = React.useMemo(() => {
     const sectionsSet = new Set(
       filteredDataWithoutSectionFilter
-        .map((row) => row.section?.trim())
+        .map((row) => row.section?.section_name.trim())
         .filter(Boolean)
     );
     return Array.from(sectionsSet);
@@ -79,7 +79,7 @@ export default function GradeTabsPage() {
       const gradeMatch = String(row.grade_id) === String(grade_id);
       const sectionMatch =
         selectedFilters.length === 0 ||
-        selectedFilters.includes(row.section?.trim());
+        selectedFilters.includes(row.section?.section_name.trim());
       const statusMatch =
         selectedStatus.length === 0 || selectedStatus.includes(row.status);
       const fullName = `${row.first_name} ${row.middle_name || ""} ${

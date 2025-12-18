@@ -1,7 +1,5 @@
-/*************  ✨ Windsurf Command 🌟  *************/
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
@@ -19,41 +17,31 @@ import { Footer } from "@/components/footer";
 import { useAuth } from "@/context/AuthContext";
 import { useClientOnly } from "@/hooks/useClientOnly";
 import Loader from "@/components/Loader";
+import { useGetStudentDetailsByLrn } from "@/hooks/useStudentDetails";
 
-import { User, TriangleAlert, UserCheck, UserX } from "lucide-react";
-
-import { useTeacherDetails } from "@/hooks/useTeacher";
+import { User } from "lucide-react";
 
 import Profile from "./profile";
 import BasicInfo from "./basic-info";
-import AddressInfo from "./address-info";
-import EmergencyInfo from "./emergency-info";
-// import { Attendance } from "./attendance";
-// import { TotalStatus } from "./total-status";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-export default function TeacherProfile() {
+export default function StudentProfile() {
   const { token } = useAuth();
-  const isClient = useClientOnly();
   const params = useParams();
 
-  const teacherId = params?.teacherId;
+  const lrn = params?.lrn as string;
 
-  if (!teacherId || typeof teacherId !== "string") {
-    return <Loader />;
-  }
+  if (!lrn) return <Loader />;
 
-  const { data: teacherDetails } = useTeacherDetails(token, { id: teacherId });
+  const { data, isLoading, isError } = useGetStudentDetailsByLrn(token, lrn);
 
-  const teacher = teacherDetails?.data?.teacher?.[0] || null;
-  const additional_info = teacher?.additional_info || {};
+  if (isLoading) return <Loader />;
+  if (isError) return <div>Student not found</div>;
 
-  const fullName = teacher
-    ? `${teacher?.last_name}, ${teacher?.first_name} ${
-        teacher?.middle_name || ""
-      } ${teacher?.suffix || ""}`
-    : "Unknown";
+  const student = data?.data?.student;
+
+  const fullName = `${student.last_name}, ${student.first_name} ${
+    student.middle_name || ""
+  } ${student.suffix || ""}`;
 
   return (
     <ProtectedRoute role="1">
@@ -66,7 +54,7 @@ export default function TeacherProfile() {
               <div className="text-lg font-medium flex flex-col">
                 <span className="flex text-sm items-center">
                   <User className="size-4 mr-1 text-teal-500 " />
-                  Teacher Profile
+                  Student Profile
                 </span>
                 <span className="text-teal-700 dark:text-teal-300 font-bold">
                   {fullName}
@@ -82,12 +70,12 @@ export default function TeacherProfile() {
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbLink href="/admin/manage-teacher">
-                      Manage Teacher
+                      Manage Student
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>Teacher Profile</BreadcrumbPage>
+                    <BreadcrumbPage>Student Profile</BreadcrumbPage>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -101,17 +89,17 @@ export default function TeacherProfile() {
               </Breadcrumb>
             </div>
 
-            {!teacherDetails ? (
-              <div className="p-2 h-full mt-10 z-10">Loading...</div>
+            {!data ? (
+              <div>Loading...</div>
             ) : (
               <div className="p-2 h-full mt-10 z-10">
                 <div className="flex gap-5">
-                  <Profile id={teacher.id} />
-                  <BasicInfo id={teacher.id} />
+                  <Profile lrn={student.lrn} />
+                  <BasicInfo lrn={student.id} />
                 </div>
                 <div className="flex gap-5">
-                  <AddressInfo id={teacher.id} />
-                  <EmergencyInfo id={teacher.id} />
+                  {/* <AddressInfo id={teacher.id} />
+                  <EmergencyInfo id={teacher.id} /> */}
                 </div>
               </div>
             )}

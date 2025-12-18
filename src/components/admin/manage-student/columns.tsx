@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,9 +38,9 @@ import {
   Grip,
 } from "lucide-react";
 
-import  { Section } from "@/types/Section";
+import { Student } from "@/types/Student";
 
-export const columns: ColumnDef<Section>[] = [
+export const columns: ColumnDef<Student>[] = [
   {
     accessorKey: "lrn",
     header: () => (
@@ -56,9 +57,14 @@ export const columns: ColumnDef<Section>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <span>{`${row.original.last_name} ${row.original.first_name} ${
-        row.original.middle_name || ""
-      }  ${row.original.suffix || ""}`}</span>
+      <div className="flex flex-col">
+        <span className="font-semibold">{`${row.original.last_name} ${
+          row.original.first_name
+        } ${row.original.middle_name || ""}  ${
+          row.original.suffix || ""
+        }`}</span>
+        <span className="text-[10px]">{row.original.email || ""}</span>
+      </div>
     ),
   },
   {
@@ -68,22 +74,10 @@ export const columns: ColumnDef<Section>[] = [
         <GraduationCap className="text-green-500" /> Grade
       </Button>
     ),
-    cell: ({ row }) => {
-      const gradeMap = {
-        1: "Grade One",
-        2: "Grade Two",
-        3: "Grade Three",
-        4: "Grade Four",
-        5: "Grade Five",
-        6: "Grade Six",
-      };
-      // @ts-ignore
-
-      return <span>{gradeMap[row.original.grade_id]}</span>;
-    },
+    cell: ({ row }) => <span>{row.original.grade?.grade_level || "N/A"}</span>,
   },
   {
-    accessorKey: "section",
+    accessorKey: "section_id",
     header: () => (
       <Button variant="outline" size="sm" className="text-xs">
         <BookAudio className="text-violet-500" /> Section
@@ -91,7 +85,7 @@ export const columns: ColumnDef<Section>[] = [
     ),
     cell: ({ row }) => (
       <span className="flex justify-center items-center w-22 h-6">
-        {row.original.section}
+        {row.original.section?.section_name || "N/A"}
       </span>
     ),
   },
@@ -129,9 +123,10 @@ export const columns: ColumnDef<Section>[] = [
     accessorKey: "Actions",
     id: "actions",
     cell: ({ row }) => {
+      const router = useRouter();
       const Id = row.original.id;
+      const lrn = row.original.lrn;
 
-      const [openView, setOpenView] = useState(false);
       const [openEdit, setOpenEdit] = useState(false);
       const [openHistory, setOpenHistory] = useState(false);
       const [openRegister, setOpenRegister] = useState(false);
@@ -156,7 +151,11 @@ export const columns: ColumnDef<Section>[] = [
             </Tooltip>
 
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setOpenView(true)}>
+              <DropdownMenuItem
+                onClick={() =>
+                  router.push(`/admin/manage-student/student-profile/${lrn}`)
+                }
+              >
                 <Eye className="w-4 h-4 text-teal-700" />
                 View Profile
               </DropdownMenuItem>
@@ -175,13 +174,11 @@ export const columns: ColumnDef<Section>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Pass student Id here */}
-          <ShowProfile open={openView} setOpen={setOpenView} studentId={Id} />
           <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
           <ShowAttendanceHistory
             open={openHistory}
             setOpen={setOpenHistory}
-            row={row}  
+            row={row}
           />
           <Registration
             open={openRegister}

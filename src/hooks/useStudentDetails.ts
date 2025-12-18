@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { CountActiveStudents, CountByGradeStudents, GetStudentDetails, RegisterRFIDToStudent, GetStudentDetailsById } from '@/services/Student_service';
+import { CountActiveStudents, CountByGradeStudents, GetStudentDetails, RegisterRFIDToStudent, GetStudentDetailsById, GetStudentDetailsByLrn } from '@/services/Student_service';
 
 export const useStudentDetails = (token: string | null) => {
   return useQuery({
@@ -37,4 +37,13 @@ export const useGetStudentDetailsById = (token: string | null, studentId: number
   });
 };
 
- 
+export const useGetStudentDetailsByLrn = (
+  token: string | null,
+  lrn: string
+) => {
+  return useQuery({
+    queryKey: ["get-student-by-lrn", lrn],
+    queryFn: () => GetStudentDetailsByLrn(token as string, lrn),
+    enabled: !!token && !!lrn,
+  });
+};
