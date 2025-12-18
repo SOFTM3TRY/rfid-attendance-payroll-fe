@@ -1,7 +1,13 @@
 import AddressDropdowns from "@/components/admin/manage-student/AddStudent/AddressDropdown";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ContactRound, Map, User } from "lucide-react";
 
 export default function Step3({
@@ -22,6 +28,21 @@ export default function Step3({
       return n;
     });
   };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev: any) => ({ ...prev, [name]: value }));
+    setErrors((prev: any) => {
+      const n = { ...prev };
+      delete n[name];
+      return n;
+    });
+  };
+
+  const isEmailValid = (email: string) => {
+    return email.endsWith("@gmail.com") && email.length > "@gmail.com".length;
+  };
+
+  const emergencyRelationOptions = ["Parent", "Guardian", "Sibling", "Other"];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-20">
@@ -260,12 +281,7 @@ export default function Step3({
             setFormData((prev: any) => ({ ...prev, guardian_email: value }));
             setErrors((prev: any) => {
               const n = { ...prev };
-              // Validate for @gmail.com
-              if (
-                value &&
-                (!value.endsWith("@gmail.com") ||
-                  value.length <= "@gmail.com".length)
-              ) {
+              if (!isEmailValid(value)) {
                 n.guardian_email = "Email must end with @gmail.com";
               } else {
                 delete n.guardian_email;
@@ -292,41 +308,32 @@ export default function Step3({
         <Label htmlFor="relationship">
           <span className="text-red-500 mr-[-0.3rem]">*</span>Relationship
         </Label>
-        <select
-          id="relationship"
-          name="relationship"
-          value={formData.relationship}
-          onChange={(e) => {
-            const value = e.target.value;
-            setFormData((prev: any) => ({ ...prev, relationship: value }));
-            setErrors((prev: any) => {
-              const n = { ...prev };
-              if (!value) {
-                n.relationship = "Please select relationship";
-              } else {
-                delete n.relationship;
-              }
-              return n;
-            });
-          }}
-          className={
-            errors.relationship
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+        <Select
+          value={formData.relationship || ""}
+          onValueChange={(value) =>
+            handleSelectChange("relationship", value)
           }
           disabled={loading}
         >
-          <option value="" disabled hidden>
-            Select Relationship
-          </option>
-          <option value="Mother">Mother</option>
-          <option value="Father">Father</option>
-          <option value="Guardian">Guardian</option>
-        </select>
+          <SelectTrigger
+            className={
+              errors.relationship
+                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-full"
+                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-full"
+            }
+          >
+            <SelectValue placeholder="Select Relationship" />
+          </SelectTrigger>
+          <SelectContent>
+            {emergencyRelationOptions.map((relation) => (
+              <SelectItem key={relation} value={relation}>
+                {relation}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         {errors.relationship && (
-          <span className="text-xs text-red-500">
-            {errors.relationship}
-          </span>
+          <span className="text-xs text-red-500">{errors.relationship}</span>
         )}
       </div>
     </div>

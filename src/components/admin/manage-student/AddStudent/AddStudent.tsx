@@ -42,7 +42,7 @@ export default function AddStudent() {
     handlePrevStep, handleNextStep, handleSubmit, setErrors,
     formData, setFormData
   } = useStudentForm();
-
+  
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -60,10 +60,10 @@ export default function AddStudent() {
       >
         <SheetHeader className="text-zinc-900 mb-4">
           <SheetTitle className="flex items-center">
-            <UserRoundPlus className="mr-2 w-5 h-5 text-teal-500" />
+            <UserRoundPlus className="mr-1 size-5 text-teal-500" />
             Add Student
           </SheetTitle>
-          <SheetDescription>
+          <SheetDescription className="text-xs">
             Enter details to add a new student to the system
           </SheetDescription>
         </SheetHeader>
@@ -80,7 +80,7 @@ export default function AddStudent() {
             >
               <div className="flex gap-2">
                 <div className="text-start">
-                  <small className="text-sm text-blue-700 dark:text-blue-500 flex gap-1 items-center justify-center">
+                  <small className="text-xs text-blue-700 dark:text-blue-500 flex gap-1 items-center justify-center">
                     <ShieldUser className="mr-1" /> Primary Information
                   </small>
                   <h1 className="text-lg font-semibold ml-0 flex items-center justify-start">
@@ -107,7 +107,7 @@ export default function AddStudent() {
             >
               <div className="flex gap-2">
                 <div className="text-start">
-                  <small className="text-sm text-green-700 dark:text-green-500 flex gap-1 items-center justify-center">
+                  <small className="text-xs text-green-700 dark:text-green-500 flex gap-1 items-center justify-center">
                     <UserLock className="mr-1" /> Basic Information
                   </small>
                   <h1 className="text-lg font-semibold ml-0 flex items-center justify-start">
@@ -132,7 +132,7 @@ export default function AddStudent() {
             >
               <div className="flex gap-2">
                 <div className="text-start">
-                  <small className="text-sm text-yellow-700 dark:text-yellow-500 flex gap-1 items-center justify-center">
+                  <small className="text-xs text-yellow-700 dark:text-yellow-500 flex gap-1 items-center justify-center">
                     <ContactRound className="mr-1" /> Additional Information
                   </small>
                   <h1 className="text-lg font-semibold ml-0 flex items-center justify-start">
@@ -159,7 +159,7 @@ export default function AddStudent() {
             >
               <div className="flex gap-2">
                 <div className="text-start">
-                  <small className="text-sm text-teal-700 dark:text-teal-500 flex gap-1 items-center justify-center">
+                  <small className="text-xs text-teal-700 dark:text-teal-500 flex gap-1 items-center justify-center">
                     <ScanEye className="mr-1" /> Review Student details -{" "}
                     <small>Last Step</small>
                   </small>
@@ -178,7 +178,7 @@ export default function AddStudent() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="step1" className="p-5 mt-5">
+          <TabsContent value="step1" className="mt-5">
             <Step1
               formData={formData}
               setFormData={setFormData}
@@ -187,7 +187,7 @@ export default function AddStudent() {
               loading={loading}
             />
           </TabsContent>
-          <TabsContent value="step2" className="p-5 mt-5">
+          <TabsContent value="step2" className="mt-5">
             <Step2
               formData={formData}
               setFormData={setFormData}
@@ -196,7 +196,7 @@ export default function AddStudent() {
               loading={loading}
             />
           </TabsContent>
-          <TabsContent value="step3" className="p-5 mt-5">
+          <TabsContent value="step3" className="mt-5">
             <Step3
               formData={formData}
               setFormData={setFormData}
@@ -205,7 +205,7 @@ export default function AddStudent() {
               loading={loading}
             />
           </TabsContent>
-          <TabsContent value="step4" className="p-5 mt-5">
+          <TabsContent value="step4" className="mt-5">
             <Step4 formData={formData} />
           </TabsContent>
         </Tabs>
@@ -216,7 +216,7 @@ export default function AddStudent() {
               <Button
                 onClick={handlePrevStep}
                 disabled={loading}
-                className="w-40"
+                className="w-40 rounded-full dark:bg-red-900 dark:hover:bg-red-800 dark:text-white"
               >
                 <ChevronsLeft />
                 Back
@@ -226,7 +226,7 @@ export default function AddStudent() {
               {step < 4 ? (
                 <Button
                   onClick={handleNextStep}
-                  className="w-40"
+                  className="w-40 rounded-full"
                   disabled={loading}
                 >
                   Next <ChevronsRight />
@@ -236,7 +236,7 @@ export default function AddStudent() {
                   onClick={() => {
                     handleSubmit().then(() => setStep(1));
                   }}
-                  className="w-40"
+                  className="w-40 rounded-full"
                   disabled={loading}
 
                 >

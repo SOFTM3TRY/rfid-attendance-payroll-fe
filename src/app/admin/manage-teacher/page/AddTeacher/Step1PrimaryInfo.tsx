@@ -18,7 +18,7 @@ export default function Step1({
   formData,
   setFormData,
   errors,
-  setErrors,
+  setErrors, 
   loading,
 }: any) {
   const { token } = useAuth();

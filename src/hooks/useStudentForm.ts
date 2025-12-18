@@ -26,7 +26,7 @@ export function useStudentForm() {
     gender: "",
     birth_place: "",
     birth_date: "",
-    student_status: "",
+    student_status: "active",
     last_school_attend: "",
     street: "",
     region: "",
@@ -72,7 +72,7 @@ export function useStudentForm() {
       if (
         typeof value === "string" &&
         !value.trim() &&
-        !["middle_name", "suffix", "guardian_middle_name"].includes(field)
+        !["middle_name", "suffix", "guardian_middle_name", "student_status"].includes(field)
       ) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }
@@ -81,8 +81,23 @@ export function useStudentForm() {
     return Object.keys(newErrors).length === 0;
   };
 
+    const isEmailValid = (guardian_email: string) => {
+    return guardian_email.endsWith("@gmail.com") && guardian_email.length > "@gmail.com".length;
+  };
+
   const handleNextStep = () => {
-    if (validateStep() && step < 4) setStep(step + 1);
+    if (step === 3) {
+      // Check Step2 email
+      if (!isEmailValid(formData.guardian_email)) {
+        setErrors((prev: any) => ({
+          ...prev,
+          email: "Email must end with @gmail.com",
+        }));
+        return; // Stop moving forward
+      }
+    }
+
+    setStep(step + 1);
   };
 
   const handlePrevStep = () => {

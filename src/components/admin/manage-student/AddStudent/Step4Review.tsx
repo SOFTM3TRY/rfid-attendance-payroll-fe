@@ -110,7 +110,7 @@ export default function Step4({ formData }: any) {
           <div className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Grade : </span>
             <span className="text-sm font-light">
-              {formData.grade === "1" ? "Grade One" : formData.grade === "2" ? "Grade Two" : formData.grade === "3" ? "Grade Three" : formData.grade === "4" ? "Grade Four" : formData.grade === "5" ? "Grade Five" : formData.grade === "6" ? "Grade Six" : formData.grade}
+              {formData.grade}
             </span>
           </div>
           <div className="flex flex-col gap-1">
