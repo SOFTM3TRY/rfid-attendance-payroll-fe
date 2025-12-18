@@ -26,11 +26,11 @@ export function FiltersDropdown({ selectedFilters, setSelectedFilters, sectionTy
         <Button
           ref={buttonRef}
           variant="outline"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 text-xs"
         >
-          <TableIcon className="w-4 h-4 text-teal-500" />
+          <TableIcon className="size-3 text-teal-500" />
           Filters Section
-          <ChevronDownIcon className="w-4 h-4" />
+          <ChevronDownIcon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
 
@@ -45,6 +45,7 @@ export function FiltersDropdown({ selectedFilters, setSelectedFilters, sectionTy
             key={section}
             checked={selectedFilters.includes(section)}
             onCheckedChange={() => toggleFilter(section)}
+            className="text-xs"
           >
             {section}
           </DropdownMenuCheckboxItem>

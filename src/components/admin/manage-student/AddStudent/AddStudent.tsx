@@ -46,10 +46,9 @@ export default function AddStudent() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="flex items-center justify-center text-xs h-8 bg-teal-700 text-white hover:bg-teal-800">
+        <Button className="flex items-center justify-center text-xs h-6 rounded-full bg-teal-700 text-white hover:bg-teal-800">
           <PlusIcon
-            strokeWidth={3}
-            className="bg-white rounded-full text-teal-900 p-0.5 mr-1"
+            className="bg-white rounded-full text-teal-900 p-0.5 size-4"
           />
           Add Student
         </Button>

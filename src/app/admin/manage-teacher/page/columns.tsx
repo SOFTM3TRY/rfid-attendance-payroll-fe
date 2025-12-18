@@ -37,7 +37,7 @@ export const columns = (props: {
   {
     accessorKey: "employee_no",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <ShieldUser className="text-blue-500" /> Employee No.
       </Button>
     ),
@@ -47,7 +47,7 @@ export const columns = (props: {
   {
     id: "full_name",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <User className="text-yellow-500" /> Full Name
       </Button>
     ),
@@ -65,7 +65,7 @@ export const columns = (props: {
   {
     id: "grade",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <GraduationCap className="text-green-500" /> Advisory Grade
       </Button>
     ),
@@ -77,7 +77,7 @@ export const columns = (props: {
   {
     id: "section",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <BookAudio className="text-violet-500" /> Advisory Section
       </Button>
     ),
@@ -89,7 +89,7 @@ export const columns = (props: {
   {
     accessorKey: "status",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <UserCog className="text-teal-500" /> Status
       </Button>
     ),

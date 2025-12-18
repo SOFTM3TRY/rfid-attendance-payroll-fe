@@ -43,7 +43,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "lrn",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <ShieldUser className="text-blue-500" /> LRN
       </Button>
     ),
@@ -51,7 +51,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "FullName",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <User className="text-yellow-500" /> Full Name
       </Button>
     ),
@@ -64,7 +64,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "grade_id",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <GraduationCap className="text-green-500" /> Grade
       </Button>
     ),
@@ -85,7 +85,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "section",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <BookAudio className="text-violet-500" /> Section
       </Button>
     ),
@@ -98,7 +98,7 @@ export const columns: ColumnDef<Section>[] = [
   {
     accessorKey: "status",
     header: () => (
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="text-xs">
         <UserCog className="text-teal-500" /> Status
       </Button>
     ),

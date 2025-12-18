@@ -122,9 +122,9 @@ export default function GradeTabsPage() {
               <TabsTrigger
                 key={grade.id}
                 value={grade.id}
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-xs"
               >
-                <GraduationCap className={`h-4 w-4 text-muted-foreground`} />
+                <GraduationCap className={`size-4 text-muted-foreground`} />
                 {grade.grade_level}
               </TabsTrigger>
             ))}
@@ -134,8 +134,8 @@ export default function GradeTabsPage() {
         <div className="flex justify-between items-center my-5
         ">
           <div className="flex justify-between items-center">
-            <p className="flex items-center gap-1">
-              <Table2 className="w-6 h-6 text-violet-500" />
+            <p className="flex items-center gap-1 text-sm">
+              <Table2 className="size-4 text-violet-500" />
               Students Table
             </p>
           </div>
