@@ -23,6 +23,9 @@ import { User } from "lucide-react";
 
 import Profile from "./profile";
 import BasicInfo from "./basic-info";
+import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
+import AddressInfo from "./address-info";
+import EmergencyInfo from "./emergency-info";
 
 export default function StudentProfile() {
   const { token } = useAuth();
@@ -35,13 +38,18 @@ export default function StudentProfile() {
   const { data, isLoading, isError } = useGetStudentDetailsByLrn(token, lrn);
 
   if (isLoading) return <Loader />;
-  if (isError) return <div>Student not found</div>;
+  if (isError || !data?.data?.student) return <div>Student not found</div>;
 
-  const student = data?.data?.student;
+  const student = data.data.student;
 
-  const fullName = `${student.last_name}, ${student.first_name} ${
-    student.middle_name || ""
-  } ${student.suffix || ""}`;
+  const fullName = [
+    student.last_name,
+    student.first_name,
+    student.middle_name,
+    student.suffix,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <ProtectedRoute role="1">
@@ -94,12 +102,13 @@ export default function StudentProfile() {
             ) : (
               <div className="p-2 h-full mt-10 z-10">
                 <div className="flex gap-5">
-                  <Profile lrn={student.lrn} />
-                  <BasicInfo lrn={student.id} />
+                  {/* <Profile student={student} /> */}
+                  <FlipCardUI student={student} rotate="y" />
+                  <BasicInfo student={student} />
                 </div>
                 <div className="flex gap-5">
-                  {/* <AddressInfo id={teacher.id} />
-                  <EmergencyInfo id={teacher.id} /> */}
+                  <AddressInfo student={student} />
+                  <EmergencyInfo student={student} />
                 </div>
               </div>
             )}

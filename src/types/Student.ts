@@ -6,6 +6,7 @@ export interface Student {
   id: number;
   student_no: string | null;
   lrn: string;
+  rfid_uid: string | null;
 
   first_name: string;
   middle_name: string;

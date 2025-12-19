@@ -17,24 +17,21 @@ import {
 
 import { Camera } from "lucide-react";
 
-import { useAuth } from "@/context/AuthContext";
-import { useGetStudentDetailsByLrn } from "@/hooks/useStudentDetails";
 
-export default function Profile({ lrn }: { lrn: string }) {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
+export default function Profile({ student }: { student: any }) {
+  const fullName = [
+    student.last_name,
+    student.first_name,
+    student.middle_name,
+    student.suffix,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
-  const { data: studentDetails } = useGetStudentDetailsByLrn(token, lrn);
-
-  const student = studentDetails?.data?.student;
-
-  const fullName = `${student.last_name}, ${student.first_name} ${
-    student.middle_name || ""
-  } ${student.suffix || ""}`;
   const additional_info = student?.additional_info || {};
 
   return (
-    <div className="shadow-lg  z-2 w-120 py-5 flex flex-col justify-center rounded-xl items-center px-5 gap-5 bg-zinc-100 dark:bg-zinc-900">
+    <div className="shadow-lg  z-2 w-90 py-5 flex flex-col justify-center rounded-xl items-center px-5 gap-5 bg-zinc-100 dark:bg-zinc-900">
       <Dialog>
         <DialogTrigger asChild>
           <div className="relative group w-30 h-30">
@@ -78,14 +75,17 @@ export default function Profile({ lrn }: { lrn: string }) {
           <p className="text-center text-sm font-semibold leading-none uppercase">
             {fullName}{" "}
             <span
-              className={
-                `text-[10px] ${student?.status ? "text-green-500" : "text-red-500"}
+              className={`text-[10px] ${
+                student?.status ? "text-green-500" : "text-red-500"
+              }
               `}
             >
               {student?.status ? "Active" : "Inactive"}
             </span>
           </p>
-          <span className="text-xs">{student?.lrn || "N/A"} || {student?.email || "N/A"}</span>
+          <span className="text-xs">
+            {student?.lrn || "N/A"} || {student?.email || "N/A"}
+          </span>
         </span>
         <p className="text-sm my-1 flex flex-col items-center">
           <span className="text-[10px]">School Year</span>

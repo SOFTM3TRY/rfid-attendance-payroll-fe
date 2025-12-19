@@ -17,19 +17,7 @@ import {
   Mail,
 } from "lucide-react";
 
-import { useAuth } from "@/context/AuthContext";
-import { useGetStudentDetailsByLrn } from "@/hooks/useStudentDetails";
-
-export default function BasicInfo({ lrn }: { lrn: string }) {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const { data: studentDetails } = useGetStudentDetailsByLrn(token, lrn);
-
-  const student = studentDetails?.data?.student;
-
-  const additional_info = student?.additional_info || {};
-
+export default function BasicInfo({ student }: { student: any }) {
   return (
     <div className="w-full py-5 flex flex-col gap-4 px-5 rounded-xl bg-zinc-100 dark:bg-zinc-900">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -38,13 +26,13 @@ export default function BasicInfo({ lrn }: { lrn: string }) {
           title="Primary Information"
         />
         <InputField
-          label="Employee Number"
-          value={student?.employee_no || ""}
+          label="LRN"
+          value={student?.lrn || ""}
           icon={<ShieldUser className="size-3 text-muted-foreground" />}
         />
         <InputField
           label="School Year"
-          value={student?.additional_info?.school_year || ""}
+          value={student?.school_year || ""}
           icon={<Calendar className="size-3 text-muted-foreground" />}
         />
 
@@ -58,6 +46,13 @@ export default function BasicInfo({ lrn }: { lrn: string }) {
           label="Section"
           value={student?.section?.section_name || ""}
           icon={<Book className="size-3 text-muted-foreground" />}
+        />
+
+        <InputField
+          label="Email"
+          value={student?.email || ""}
+          title={student?.email || ""}
+          icon={<Mail className="size-3 text-muted-foreground" />}
         />
 
         <SectionHeader
@@ -86,28 +81,19 @@ export default function BasicInfo({ lrn }: { lrn: string }) {
         />
         <InputField
           label="Birth Date"
-          value={additional_info.birth_date || ""}
+          value={student?.birth_date || ""}
           icon={<CalendarDays className="size-3 text-muted-foreground" />}
+          type="date"
         />
         <InputField
           label="Birth Place"
-          value={additional_info.birth_place || ""}
+          value={student?.birth_place || ""}
           icon={<MapPinHouse className="size-3 text-muted-foreground" />}
         />
         <InputField
           label="Gender"
-          value={additional_info.gender || ""}
+          value={student?.gender || ""}
           icon={<CircleSmall className="size-3 text-muted-foreground" />}
-        />
-        <InputField
-          label="Contact No."
-          value={student?.contact_no || ""}
-          icon={<Phone className="size-3 text-muted-foreground" />}
-        />
-        <InputField
-          label="Email"
-          value={student?.email || ""}
-          icon={<Mail className="size-3 text-muted-foreground" />}
         />
       </div>
     </div>
@@ -117,10 +103,14 @@ export default function BasicInfo({ lrn }: { lrn: string }) {
 function InputField({
   label,
   value,
+  title,
+  type,
   icon,
 }: {
   label: string;
   value: string;
+  title?: string;
+  type?: string;
   icon: React.ReactNode;
 }) {
   return (
@@ -128,7 +118,7 @@ function InputField({
       <Label className="flex items-center gap-1 mb-2">
         {icon} {label}
       </Label>
-      <Input value={value || ""} disabled />
+      <Input value={value || ""} disabled title={title || ""} type={type} />
     </div>
   );
 }

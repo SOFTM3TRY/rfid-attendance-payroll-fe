@@ -13,7 +13,7 @@ import {
 import ShowProfile from "@/components/admin/manage-student/ShowProfile/ShowProfile";
 import EditProfile from "@/components/admin/manage-student/EditStudent/EditStudent";
 import ShowAttendanceHistory from "@/components/admin/manage-student/ShowAttendanceHistory/ShowAttendanceHistory";
-import Registration from "@/components/admin/manage-student/Registration/Registration";
+// import Registration from "@/components/admin/manage-student/Registration/Registration";
 
 import {
   Tooltip,
@@ -156,21 +156,21 @@ export const columns: ColumnDef<Student>[] = [
                   router.push(`/admin/manage-student/student-profile/${lrn}`)
                 }
               >
-                <Eye className="w-4 h-4 text-teal-700" />
+                <Eye className="size-4 text-muted-foreground" />
                 View Profile
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setOpenEdit(true)}>
-                <SquarePen className="w-4 h-4 text-sky-700" />
+                <SquarePen className="size-4 text-muted-foreground" />
                 Edit Profile
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setOpenHistory(true)}>
-                <History className="w-4 h-4 text-indigo-700" />
+                <History className="size-4 text-muted-foreground" />
                 Attendance History
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setOpenRegister(true)}>
+              {/* <DropdownMenuItem onClick={() => setOpenRegister(true)}>
                 <FilePlus className="w-4 h-4 text-blue-700" />
                 Register
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -180,11 +180,11 @@ export const columns: ColumnDef<Student>[] = [
             setOpen={setOpenHistory}
             row={row}
           />
-          <Registration
+          {/* <Registration
             open={openRegister}
             setOpen={setOpenRegister}
             studentId={Id}
-          />
+          /> */}
         </div>
       );
     },
