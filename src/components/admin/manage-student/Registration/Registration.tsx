@@ -8,7 +8,7 @@ import BasicInfo from "@/components/admin/manage-student/ShowProfile/BasicInfo";
 import AddressInfo from "@/components/admin/manage-student/ShowProfile/AddressInfo";
 import GuardianInfo from "@/components/admin/manage-student/ShowProfile/GuardianInfo";
 
-import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
+// import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
 
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
@@ -102,7 +102,7 @@ export default function Registration({ open, setOpen, studentId }: { open: boole
             </div>
 
             <div className="mt-10 p-5 flex justify-center items-center">
-              <FlipCardUI data={student} />
+              {/* <FlipCardUI data={student} /> */}
             </div>
 
             {!student.rfid_uid && (
