@@ -150,7 +150,7 @@ export default function FlipCardOLD({
             </div>
 
             <div className="mt-10 p-5 flex justify-center items-center">
-              <FlipCardUI data={data} />
+              {/* <FlipCardUI data={data} /> */}
             </div>
 
             <form
