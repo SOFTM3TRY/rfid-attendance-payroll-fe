@@ -70,19 +70,55 @@ export const CountByGradeStudents = async (token: string, grade: number) => {
   }
 }
 
-export async function UpdateStudent(token: string, studentId: string, data: any) {
-  const response = await axios.put(`/api/students/${studentId}`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-}
+// export async function UpdateStudent(token: string, studentId: string, data: any) {
+//   const response = await axios.put(`/api/update-student/${studentId}`, data, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+//   return response.data;
+// }
 
-export const RegisterRFIDToStudent = async (token: string, studentlrn: string, data: any) => {
+// export const EditStudent = async (token: string, id: any, data: any) => {
+//   try {
+//     const response = await axios.put(
+//       `${process.env.NEXT_PUBLIC_BASE_URL_API}/update-student/${id}`,
+//       data,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// };
+
+export const EditStudent = async (token: string, id: any, data: any) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/edit-student/${id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const RegisterRFIDToStudent = async (token: string, id: any, data: any) => {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/register-student-by-lrn/${studentlrn}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/register-student-by-lrn/${id}`,
       data,
       {
         headers: {
@@ -97,9 +133,9 @@ export const RegisterRFIDToStudent = async (token: string, studentlrn: string, d
   }
 }
 
-export const GetStudentDetailsById = async (token: string, studentId: number) => {
+export const GetStudentDetailsById = async (token: string, id: number) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-student-by-id/${studentId}`;
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-student-by-id/${id}`;
     
     const response = await axios.get(url, {
       headers: {

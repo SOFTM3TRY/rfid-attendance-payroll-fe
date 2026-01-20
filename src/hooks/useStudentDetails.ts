@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { CountActiveStudents, CountByGradeStudents, GetStudentDetails, RegisterRFIDToStudent, GetStudentDetailsById, GetStudentDetailsByLrn } from '@/services/Student_service';
+import { toast } from 'react-hot-toast';
+import { UseMutationResult, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { CountActiveStudents, CountByGradeStudents, GetStudentDetails, RegisterRFIDToStudent, GetStudentDetailsById, GetStudentDetailsByLrn, EditStudent } from '@/services/Student_service';
 
 export const useStudentDetails = (token: string | null) => {
   return useQuery({
@@ -28,11 +29,11 @@ export const useCountByGradeStudents = (token: string | null, grade: number) => 
   });
 }
 
-export const useGetStudentDetailsById = (token: string | null, studentId: number) => {
+export const useGetStudentDetailsById = (token: string | null, id: any) => {
   return useQuery({
-    queryKey: ['get-student-by-id', studentId],
-    queryFn: () => GetStudentDetailsById(token as string, studentId),
-    enabled: !!token && !!studentId,
+    queryKey: ['get-student-by-id', id],
+    queryFn: () => GetStudentDetailsById(token as string, id),
+    enabled: !!token && !!id,
     staleTime: 1000 * 60 * 5,
   });
 };
@@ -47,3 +48,22 @@ export const useGetStudentDetailsByLrn = (
     enabled: !!token && !!lrn,
   });
 };
+
+export const useEditStudnentMutation = (
+  token: string | null,
+  id: any
+): UseMutationResult<any, Error, any, unknown> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: any) => EditStudent(token as string, id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["student-details"] }); 
+      toast.success("Student updated successfully");
+    },
+    onError: () => {
+      toast.error("Update failed");
+    }
+  });
+};
+

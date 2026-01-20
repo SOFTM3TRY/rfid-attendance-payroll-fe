@@ -140,8 +140,9 @@ export function useStudentForm() {
       });
       refetchStudent();
       setOpen(false);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to create student");
+    } catch (error: any) {
+      const { response: { data: { message } } } = error;
+      toast.error(message);
     }
     setTimeout(() => setLoading(false), 1000);
   };

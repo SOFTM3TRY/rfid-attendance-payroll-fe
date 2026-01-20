@@ -39,8 +39,9 @@ import {
 } from "lucide-react";
 
 import { Student } from "@/types/Student";
-
-export const columns: ColumnDef<Student>[] = [
+export const columns = (props: {
+  onEdit: (id: string) => void;
+}): ColumnDef<Student>[] =>  [
   {
     accessorKey: "lrn",
     header: () => (
@@ -124,7 +125,7 @@ export const columns: ColumnDef<Student>[] = [
     id: "actions",
     cell: ({ row }) => {
       const router = useRouter();
-      const Id = row.original.id;
+      const studentId = row.original.id;
       const lrn = row.original.lrn;
 
       const [openEdit, setOpenEdit] = useState(false);
@@ -159,10 +160,11 @@ export const columns: ColumnDef<Student>[] = [
                 <Eye className="size-4 text-muted-foreground" />
                 View Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
-                <SquarePen className="size-4 text-muted-foreground" />
-                Edit Profile
-              </DropdownMenuItem>
+              <DropdownMenuItem
+              onClick={() => props.onEdit(studentId.toString())}
+            >
+              <SquarePen className="size-4" /> Edit Profile {studentId}
+            </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setOpenHistory(true)}>
                 <History className="size-4 text-muted-foreground" />
                 Attendance History
@@ -173,8 +175,6 @@ export const columns: ColumnDef<Student>[] = [
               </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
           <ShowAttendanceHistory
             open={openHistory}
             setOpen={setOpenHistory}

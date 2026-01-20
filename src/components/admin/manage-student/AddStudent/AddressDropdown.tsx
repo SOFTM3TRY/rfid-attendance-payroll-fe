@@ -40,7 +40,6 @@ export default function AddressDropdowns({
     const regionCode = getCodeByName(regions, formData.region);
 
     if (regionCode === NCR_CODE) {
-      // ✅ NCR FIX
       setProvinces([{ code: "NCR", name: METRO_MANILA }]);
       setFormData((p: any) => ({
         ...p,

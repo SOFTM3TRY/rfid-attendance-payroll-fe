@@ -16,6 +16,7 @@ import { FiltersDropdownStatus } from "@/components/admin/manage-student/Filters
 import { Input } from "@/components/ui/input";
 
 import AddStudent from "@/components/admin/manage-student/AddStudent/AddStudent";
+import EditStudent from "@/components/admin/manage-student/EditStudent/EditStudent";
 
 import { useStudentDetails } from "@/hooks/useStudentDetails";
 import { useAuth } from "@/context/AuthContext";
@@ -27,7 +28,10 @@ export default function GradeTabsPage() {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(
+    null,
+  );
   const { token } = useAuth();
   const {
     data: studentDetails,
@@ -35,7 +39,7 @@ export default function GradeTabsPage() {
     isError,
   } = useStudentDetails(token as string);
   const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(
-    token as string
+    token as string,
   );
 
   // Pagination state here
@@ -68,7 +72,7 @@ export default function GradeTabsPage() {
     const sectionsSet = new Set(
       filteredDataWithoutSectionFilter
         .map((row) => row.section?.section_name.trim())
-        .filter(Boolean)
+        .filter(Boolean),
     );
     return Array.from(sectionsSet);
   }, [filteredDataWithoutSectionFilter]);
@@ -97,6 +101,11 @@ export default function GradeTabsPage() {
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setPagination((p) => ({ ...p, pageIndex: 0 })); // reset page on search change
+  };
+
+  const handleEdit = (id: string) => {
+    setSelectedTeacherId(id);
+    setEditOpen(true);
   };
 
   React.useEffect(() => {
@@ -131,8 +140,10 @@ export default function GradeTabsPage() {
           </TabsList>
         </div>
 
-        <div className="flex justify-between items-center my-5
-        ">
+        <div
+          className="flex justify-between items-center my-5
+        "
+        >
           <div className="flex justify-between items-center">
             <p className="flex items-center gap-1 text-sm">
               <Table2 className="size-4 text-violet-500" />
@@ -182,15 +193,28 @@ export default function GradeTabsPage() {
             return (
               <TabsContent key={grade.id} value={grade.id} className="roune-lg">
                 <StudentTable
-                  columns={columns}
+                  columns={columns({
+                    onEdit: (teacherId: string) => {
+                      setSelectedTeacherId(teacherId);
+                      setEditOpen(true);
+                    },
+                  })}
                   data={rows.slice(
                     pagination.pageIndex * pagination.pageSize,
-                    (pagination.pageIndex + 1) * pagination.pageSize
+                    (pagination.pageIndex + 1) * pagination.pageSize,
                   )}
                   pagination={pagination}
                   setPagination={setPagination}
                   totalRows={rows.length}
                 />
+
+                {selectedTeacherId && (
+                  <EditStudent
+                    open={editOpen}
+                    setOpen={setEditOpen}
+                    id={selectedTeacherId}
+                  />
+                )}
               </TabsContent>
             );
           })}
