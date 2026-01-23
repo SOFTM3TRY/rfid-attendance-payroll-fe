@@ -151,6 +151,7 @@ export default function Step3({
           value={formData.emergency_lname}
           onChange={handleInputChange}
           placeholder="Enter Last Name"
+          required
           className={
             errors.emergency_lname
               ? "border-red-500 border py-1 px-3 rounded-sm"
@@ -172,6 +173,7 @@ export default function Step3({
           value={formData.emergency_relation || ""}
           onValueChange={(value) => handleSelectChange("emergency_relation", value)}
           disabled={loading}
+          required
         >
           <SelectTrigger
             className={
