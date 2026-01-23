@@ -8,6 +8,8 @@ import {
 } from "@/lib/psgc";
 import { ShieldUser, UserLock, User, Map } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useGetGradeById } from "@/hooks/useGrade";
+import { useGetSectionById } from "@/hooks/useSection";
 
 export default function Step4({ formData }: any) {
   const { token } = useAuth();
@@ -15,6 +17,9 @@ export default function Step4({ formData }: any) {
   const [provinceName, setProvinceName] = useState("");
   const [cityName, setCityName] = useState("");
   const [barangayName, setBarangayName] = useState("");
+
+  const { data: gradeData } = useGetGradeById(token as string, formData.grade);
+  const { data: sectionData } = useGetSectionById(token as string, formData.section);
 
   useEffect(() => {
     let isMounted = true;
@@ -36,7 +41,7 @@ export default function Step4({ formData }: any) {
         } else {
           const provinces = await fetchProvinces(formData.region);
           const province = provinces.find(
-            (p: any) => p.code === formData.province
+            (p: any) => p.code === formData.province,
           );
           if (isMounted) setProvinceName(province ? province.name : "");
         }
@@ -58,7 +63,7 @@ export default function Step4({ formData }: any) {
         const barangays = await fetchBarangays(formData.city);
         const barangay = barangays.find(
           (b: any) =>
-            b.name === formData.barangay || b.code === formData.barangay
+            b.name === formData.barangay || b.code === formData.barangay,
         );
         if (isMounted) setBarangayName(barangay ? barangay.name : "");
       }
@@ -85,7 +90,7 @@ export default function Step4({ formData }: any) {
       </pre> */}
 
       {/* Primary Information */}
-      <div className="flex flex-col gap-2 bg-zinc-100 dark:bg-zinc-900/50 rounded-md p-5 mb-10">
+      <div className="flex flex-col gap-2 bg-accent/20 rounded-md p-5 mb-10">
         <span className="text-lg font-semibold mb-5 flex items-center text-blue-700 dark:text-blue-500">
           <ShieldUser className="mr-2" />
           Primary Information
@@ -93,11 +98,13 @@ export default function Step4({ formData }: any) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col gap-1">
             <span className="text-xs font-semibold">Advisory Grade : </span>
-            <span className="text-xs font-light">{formData.grade}</span>
+            <span className="text-xs font-light">
+              {gradeData?.data?.grade_level || formData.grade}
+            </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-xs font-semibold">Advisory Section : </span>
-            <span className="text-xs font-light">{formData.section}</span>
+            <span className="text-xs font-light">{sectionData?.data?.section_name || formData.section}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-xs font-semibold">School Year : </span>
@@ -106,7 +113,7 @@ export default function Step4({ formData }: any) {
         </div>
       </div>
       {/* Personal Information */}
-      <div className="flex flex-col gap-2 bg-zinc-100 dark:bg-zinc-900/50 rounded-md p-5 mt-5 mb-10">
+      <div className="flex flex-col gap-2 bg-accent/20 rounded-md p-5 mt-5 mb-10">
         <span className="text-lg font-semibold mb-5 flex items-center text-green-700 dark:text-green-500">
           <UserLock className="mr-2" />
           Personal Information
@@ -161,7 +168,7 @@ export default function Step4({ formData }: any) {
         </div>
       </div>
       {/* Additional Information */}
-      <div className="flex flex-col gap-2 bg-zinc-100 dark:bg-zinc-900/50 rounded-md p-5 mt-5 mb-10">
+      <div className="flex flex-col gap-2 bg-accent/20 rounded-md p-5 mt-5 mb-10">
         <span className="text-lg font-semibold mb-5 flex items-center text-yellow-700 dark:text-yellow-500">
           <UserLock className="mr-2" />
           Additional Information

@@ -75,10 +75,11 @@ export default function Step3({
           value={formData.street}
           onChange={handleInputChange}
           placeholder="Enter Street Address"
+          required
           className={
             errors.street
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -105,10 +106,11 @@ export default function Step3({
           value={formData.emergency_fname}
           onChange={handleInputChange}
           placeholder="Enter First Name"
+          required
           className={
             errors.emergency_fname
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -128,8 +130,8 @@ export default function Step3({
           placeholder="Enter Middle Name"
           className={
             errors.emergency_mname
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -151,8 +153,8 @@ export default function Step3({
           placeholder="Enter Last Name"
           className={
             errors.emergency_lname
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -174,8 +176,8 @@ export default function Step3({
           <SelectTrigger
             className={
               errors.emergency_relation
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-full"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-full"
+                ? "border-red-500 border py-1 px-3 rounded-sm w-full"
+                : "border py-1 px-3 rounded-sm w-full"
             }
           >
             <SelectValue placeholder="Select Relationship" />
@@ -229,8 +231,8 @@ export default function Step3({
           disabled={loading}
           className={
             errors.emergency_contact
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
         />
         {errors.emergency_contact && (

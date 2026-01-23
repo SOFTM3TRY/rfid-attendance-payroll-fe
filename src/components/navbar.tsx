@@ -86,8 +86,8 @@ export function Navbar() {
 
       <div className="flex items-center justify-center gap-1 mr-2">
         <Sheet>
-          <SheetTrigger className="size-4 flex items-center relative mr-3 hover:text-teal-600">
-            <span className="h-4 w-4 bg-teal-600 text-white dark:bg-teal-700 rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
+          <SheetTrigger className="size-4 flex items-center relative mr-3 hover:text-primary">
+            <span className="h-4 w-4 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
               0
             </span>
             <Megaphone className="h-5 w-5" />
@@ -100,12 +100,12 @@ export function Navbar() {
               <SheetDescription className="mt-5">
                 <ul className="w-full">
                   <Dialog>
-                    <DialogTrigger className="h-auto w-full bg-gray-50 dark:bg-gray-900 text-start hover:bg-teal-100 dark:hover:bg-teal-700 text-black dark:text-white p-2 rounded-sm">
+                    <DialogTrigger className="h-auto w-full bg-gray-50 dark:bg-gray-900 text-start hover:bg-teal-100 dark:hover:bg-primary text-black dark:text-white p-2 rounded-sm">
                       <li className="">
                         <span className="font-bold">Announcement</span>
                         <p className="text-xs">
                           @username{" "}
-                          <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
+                          <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full">
                             role
                           </span>{" "}
                           - <span>date</span>
@@ -123,7 +123,7 @@ export function Navbar() {
                         <DialogTitle className="flex items-center">
                           <p className="text-xs">
                             @username{" "}
-                            <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
+                            <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full">
                               role
                             </span>{" "}
                             - <span>date</span>
@@ -141,9 +141,9 @@ export function Navbar() {
           </SheetContent>
         </Sheet>
 
-        <Popover>
-          <PopoverTrigger className="mr-4 relative hover:text-teal-600">
-            <span className="h-4 w-4 bg-teal-600 text-white dark:bg-teal-700 rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
+        {/* <Popover>
+          <PopoverTrigger className="mr-4 relative hover:text-primary">
+            <span className="h-4 w-4 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
               0
             </span>
             <Bell className="size-4" />
@@ -151,11 +151,11 @@ export function Navbar() {
           <PopoverContent className="w-72 h-auto text-xs">
             Notification.
           </PopoverContent>
-        </Popover>
+        </Popover> */}
 
         <button
           onClick={toggleFullscreen}
-          className="h-5 w-5  mr-2 hover:text-teal-600"
+          className="h-5 w-5  mr-2 hover:text-primary"
         >
           {isFullscreen ? (
             <Shrink className="size-4" />
@@ -168,7 +168,7 @@ export function Navbar() {
 
         <Popover>
           <PopoverTrigger>
-            <div className="flex items-center gap-1 pr-5 pl-2 py-1 ml-5 bg-teal-600 hover:bg-teal-700 dark:bg-teal-600 dark:hover:bg-teal-700 rounded-full">
+            <div className="flex items-center gap-1 pr-5 pl-2 py-1 ml-5 bg-primary/50 hover:bg-primary dark:bg-primary/50 dark:hover:bg-primary rounded-full">
               <Avatar className="h-8 w-8 flex-shrink-0">
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
@@ -197,7 +197,7 @@ export function Navbar() {
                 {userDetails?.data.first_name +
                   " " +
                   userDetails?.data.last_name}
-                <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full ml-1">
+                <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full ml-1">
                   {userDetails?.data.role_id === 1
                     ? "Admin"
                     : userDetails?.data.role_id === 2
@@ -221,9 +221,10 @@ export function Navbar() {
                 >
                   <Button
                     variant="outline"
-                    className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-xs font-normal"
+                    size="sm"
+                    className="w-full border-none flex justify-start rounded-none text-xs font-normal"
                   >
-                    <User2 color="#00a887"  />
+                    <User2 className="text-primary" />
                     Profile
                   </Button>
                 </Link>
@@ -231,10 +232,11 @@ export function Navbar() {
               <li>
                 <Button
                   variant="outline"
+                  size="sm"
                   onClick={handlelogout}
-                  className="w-full border-none flex items-start justify-start hover:bg-teal-100 dark:hover:bg-teal-800 rounded-none text-xs font-normal"
+                  className="w-full border-none flex justify-start rounded-none text-xs font-normal"
                 >
-                  <LogOut color="#ff0000" /> Logout
+                  <LogOut className="text-destructive" /> Logout
                 </Button>
               </li>
             </ul>

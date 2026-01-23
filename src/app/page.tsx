@@ -11,6 +11,9 @@ import toast from "react-hot-toast";
 import { useRememberMe } from "@/hooks/useRememberMe";
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -51,10 +54,10 @@ export default function Login() {
         <AnimatedThemeToggler />
       </div>
 
-      <div className="flex flex-col justify-center items-center flex-1 p-8 bg-white shadow-lg dark:bg-black">
+      <div className="flex flex-col justify-center items-center flex-1 p-8 shadow-lg">
         <div className="w-full max-w-sm text-start">
-          <h1 className="text-3xl font-bold">Sign In to your account</h1>
-          <p className="mb-6">to continue to the dashboard</p>
+          <Label className="text-xl font-bold">Sign In to your account</Label>
+          <Label className="text-sm mb-6">to continue to the dashboard</Label>
         </div>
 
         <form
@@ -62,37 +65,37 @@ export default function Login() {
           className="w-full max-w-sm space-y-6"
         >
           <div>
-            <label htmlFor="email" className="block mb-2 font-normal text-xs">
+            <Label htmlFor="email" className="block mb-2 font-normal text-xs">
               Email
-            </label>
-            <input
+            </Label>
+            <Input
               type="email"
               {...register("email", { required: true })}
               placeholder="email@gmail.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 text-xs"
+              className="w-full rounded-md text-xs"
               required
             />
           </div>
 
           <div className="relative">
-            <label
+            <Label
               htmlFor="password"
               className="block mb-2 font-normal text-xs"
             >
               Password
-            </label>
-            <input
+            </Label>
+            <Input
               type={showPassword ? "text" : "password"}
               {...register("password", { required: true })}
               placeholder="Enter Password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 text-xs"
+              className="w-ful rounded-md text-xs"
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-8 text-muted-foreground hover:text-muted-foreground/50"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-Label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOffIcon /> : <EyeIcon />}
             </button>
@@ -100,15 +103,13 @@ export default function Login() {
 
           <div className="flex flex-col md:flex-row justify-between">
             <div className="flex items-center space-x-2">
-              <input
-                id="remember"
-                type="checkbox"
-                checked={remember}
-                onChange={() => setRemember(!remember)}
-              />
-              <label htmlFor="remember" className="text-xs select-none">
-                Remember me
-              </label>
+                <Checkbox
+                  id="remember"
+                  name="check"
+                  onChange={() => setRemember(!remember)}
+                  checked={remember}
+                />
+                <span className="select-none text-xs">Remember me</span>
             </div>
             {/* <a
               href="#"
@@ -120,9 +121,9 @@ export default function Login() {
 
           <Button
             type="submit"
-            variant="default"
+            variant="outline"
             disabled={loading}
-            className="w-full bg-cyan-800 text-white py-1 rounded-sm hover:bg-cyan-700 dark:bg-cyan-700 dark:hover:bg-cyan-600 transition disabled:opacity-60"
+            className="w-full transition disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Log In"} <LogIn />
           </Button>
@@ -135,11 +136,11 @@ export default function Login() {
         />
       </div>
 
-      <div className="hidden md:flex relative flex-1 overflow-hidden bg-cyan-900 dark:bg-black items-center justify-center p-8">
+      <div className="hidden md:flex relative flex-1 overflow-hidden bg-cyan-900 dark:bg-accent items-center justify-center p-8">
         <div className="absolute inset-0 w-full h-full bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
         <div className="text-white z-25 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] flex justify-center items-center">
           <img src="/logo.png" alt="logo" className="w-26 h-26 mr-2" />
-          <h2 className="text-5xl mt-2 text-start font-bold mb-4 uppercase bg-gradient-to-r from-teal-300 to-sky-50 bg-clip-text text-transparent transition-colors duration-500">
+          <h2 className="text-5xl mt-2 text-start font-bold mb-4 uppercase bg-teal-300 bg-clip-text text-transparent transition-colors duration-500">
             Young Generation <br /> Academy
           </h2>
         </div>

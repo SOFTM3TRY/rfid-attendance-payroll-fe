@@ -86,28 +86,28 @@ export const columns = (props: {
   },
 
   // Status
-  {
-    accessorKey: "status",
-    header: () => (
-      <Button variant="outline" size="sm" className="text-xs">
-        <UserCog className="text-teal-500" /> Status
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const isActive = row.original.status === "1";
+  // {
+  //   accessorKey: "status",
+  //   header: () => (
+  //     <Button variant="outline" size="sm" className="text-xs">
+  //       <UserCog className="text-teal-500" /> Status
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => {
+  //     const isActive = row.original.status === "1";
 
-      return (
-        <span className="text-xs w-22 px-3 py-1 rounded-md flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800">
-          {isActive ? "Active" : "Inactive"}
-          {isActive ? (
-            <UserCheck className="size-4 text-green-500" />
-          ) : (
-            <UserX className="size-4 text-red-500" />
-          )}
-        </span>
-      );
-    },
-  },
+  //     return (
+  //       <span className="text-xs w-22 px-3 py-1 rounded-md flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800">
+  //         {isActive ? "Active" : "Inactive"}
+  //         {isActive ? (
+  //           <UserCheck className="size-4 text-green-500" />
+  //         ) : (
+  //           <UserX className="size-4 text-red-500" />
+  //         )}
+  //       </span>
+  //     );
+  //   },
+  // },
 
   // Actions
   {
@@ -123,7 +123,7 @@ export const columns = (props: {
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
-                  <Grip className="size-4 text-teal-700" />
+                  <Grip className="size-4 text-primary" />
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>

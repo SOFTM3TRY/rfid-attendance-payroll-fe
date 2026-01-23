@@ -4,7 +4,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectTrigger, 
+  SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 
@@ -18,15 +18,46 @@ export default function Step2({
   loading,
 }: any) {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
+
     setFormData((prev: any) => ({ ...prev, [name]: value }));
+
     setErrors((prev: any) => {
-      const n = { ...prev };
-      delete n[name];
-      return n;
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
     });
+
+    // --- Age Validation (18+) ---
+    if (name === "birth_date") {
+      const today = new Date();
+      const birth = new Date(value);
+
+      if (isNaN(birth.getTime())) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Invalid birth date.",
+        }));
+        return;
+      }
+
+      const age =
+        today.getFullYear() -
+        birth.getFullYear() -
+        (today <
+        new Date(today.getFullYear(), birth.getMonth(), birth.getDate())
+          ? 1
+          : 0);
+
+      if (age < 18) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Age must be 18 or above.",
+        }));
+      }
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -43,7 +74,7 @@ export default function Step2({
   };
 
   const suffixOptions = ["Jr.", "Sr.", "I", "II", "III", "IV", "V"];
-  const genderOptions = ["Male", "Female", "Other"];
+  const genderOptions = ["Male", "Female"];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-20">
@@ -68,8 +99,8 @@ export default function Step2({
           placeholder="Enter First Name"
           className={
             errors.first_name
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -107,8 +138,8 @@ export default function Step2({
           placeholder="Enter Last Name"
           className={
             errors.last_name
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -130,8 +161,8 @@ export default function Step2({
           <SelectTrigger
             className={
               errors.suffix
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border  py-1 px-3 rounded-sm w-56"
+                : "border  py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select Suffix" />
@@ -161,8 +192,8 @@ export default function Step2({
           <SelectTrigger
             className={
               errors.gender
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border  py-1 px-3 rounded-sm w-56"
+                : "border  py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select Gender" />
@@ -193,8 +224,8 @@ export default function Step2({
           placeholder="Enter birth_place"
           className={
             errors.birth_place
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -209,6 +240,7 @@ export default function Step2({
           <CalendarDays className="text-violet-500 h-3 w-3" />
           Birth Date
         </Label>
+
         <Input
           id="birth_date"
           name="birth_date"
@@ -218,6 +250,7 @@ export default function Step2({
           placeholder="YYYY-MM-DD"
           disabled={loading}
         />
+
         {errors.birth_date && (
           <span className="text-xs text-red-500">{errors.birth_date}</span>
         )}
@@ -227,7 +260,12 @@ export default function Step2({
         <Label htmlFor="status">
           <span className="text-red-500 mr-[-0.3rem]">*</span>Status
         </Label>
-        <Input type="hidden" value={formData.status} id="status" name="status" />
+        <Input
+          type="hidden"
+          value={formData.status}
+          id="status"
+          name="status"
+        />
       </div>
 
       <div className="grid gap-2">
@@ -254,8 +292,8 @@ export default function Step2({
           placeholder="Enter Personal Email"
           className={
             errors.email
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
           type="email"
@@ -330,8 +368,8 @@ export default function Step2({
           }}
           className={
             errors.contact_no
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />

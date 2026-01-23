@@ -153,7 +153,7 @@ export default function GradeTabsPage() {
           <AddStudent />
         </div>
 
-        <div className="bg-accent/50 p-5 rounded-lg ">
+        <div className="bg-accent/10 p-5 rounded-lg ">
           {/* Header Actions */}
           <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
             <FilterTable

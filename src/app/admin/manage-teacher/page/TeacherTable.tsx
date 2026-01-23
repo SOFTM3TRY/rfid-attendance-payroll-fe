@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useMemo } from "react";
 
@@ -47,8 +47,16 @@ import { FilterTable } from "@/components/admin/manage-student/Filtertable";
 import { TeacherData } from "@/types/Teacher";
 
 const statusTypes = [
-  { value: "1", label: "Active", icon: <UserCheck className="text-green-500 mr-1 w-3 h-3" /> },
-  { value: "0", label: "Inactive", icon: <UserX className="text-red-500 mr-1 w-3 h-3" /> },
+  {
+    value: "1",
+    label: "Active",
+    icon: <UserCheck className="text-green-500 mr-1 w-3 h-3" />,
+  },
+  {
+    value: "0",
+    label: "Inactive",
+    icon: <UserX className="text-red-500 mr-1 w-3 h-3" />,
+  },
 ];
 
 interface FiltersDropdownStatusProps {
@@ -56,10 +64,15 @@ interface FiltersDropdownStatusProps {
   setSelectedFilters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-function FiltersDropdownStatus({ selectedFilters, setSelectedFilters }: FiltersDropdownStatusProps) {
+function FiltersDropdownStatus({
+  selectedFilters,
+  setSelectedFilters,
+}: FiltersDropdownStatusProps) {
   const toggleFilter = (status: string) => {
     setSelectedFilters((prev) =>
-      prev.includes(status) ? prev.filter((t) => t !== status) : [...prev, status]
+      prev.includes(status)
+        ? prev.filter((t) => t !== status)
+        : [...prev, status],
     );
   };
 
@@ -108,31 +121,29 @@ export function TeacherTable({
 
   // Filter data by status and search before passing to react-table
   const filteredData = useMemo(() => {
-  const safeData = data ?? [];
+    const safeData = data ?? [];
 
-  return safeData.filter((item) => {
-    // Filter by status
-    if (selectedStatus.length > 0 && !selectedStatus.includes(item.status)) {
-      return false;
-    }
+    return safeData.filter((item) => {
+      // Filter by status
+      if (selectedStatus.length > 0 && !selectedStatus.includes(item.status)) {
+        return false;
+      }
 
-    // Filter by search
-    if (search.trim() !== "") {
-      const lowerSearch = search.toLowerCase();
-      const fullName = `${item.last_name} ${item.first_name} ${item.middle_name || ""} ${item.suffix || ""}`;
-      const employeeNo = item.employee_no || "";
+      // Filter by search
+      if (search.trim() !== "") {
+        const lowerSearch = search.toLowerCase();
+        const fullName = `${item.last_name} ${item.first_name} ${item.middle_name || ""} ${item.suffix || ""}`;
+        const employeeNo = item.employee_no || "";
 
-      const matchesName = fullName.toLowerCase().includes(lowerSearch);
-      const matchesEmpNo = employeeNo.toLowerCase().includes(lowerSearch);
+        const matchesName = fullName.toLowerCase().includes(lowerSearch);
+        const matchesEmpNo = employeeNo.toLowerCase().includes(lowerSearch);
 
-      return matchesName || matchesEmpNo;
-    }
+        return matchesName || matchesEmpNo;
+      }
 
-    return true;
-  });
-}, [data, selectedStatus, search]);
-
-
+      return true;
+    });
+  }, [data, selectedStatus, search]);
 
   // Update totalRows after filtering
   const filteredTotalRows = filteredData.length;
@@ -147,7 +158,10 @@ export function TeacherTable({
   });
 
   const start = pagination.pageIndex * pagination.pageSize + 1;
-  const end = Math.min(start + table.getRowModel().rows.length - 1, filteredTotalRows);
+  const end = Math.min(
+    start + table.getRowModel().rows.length - 1,
+    filteredTotalRows,
+  );
   const totalPages = Math.ceil(filteredTotalRows / pagination.pageSize);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,8 +173,6 @@ export function TeacherTable({
     <div className="w-full" style={{ pointerEvents: "auto" }}>
       <div>
         <div className="mt-5 mb-10 flex flex-wrap gap-4 justify-between items-center">
-          <FilterTable pagination={pagination} setPagination={setPagination} />
-
           {/* Search */}
           <div className="relative max-w-md w-80">
             <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
@@ -171,7 +183,9 @@ export function TeacherTable({
             />
           </div>
 
-          <div className="flex gap-2">
+          <FilterTable pagination={pagination} setPagination={setPagination} />
+
+          {/* <div className="flex gap-2">
             <FiltersDropdownStatus
               selectedFilters={selectedStatus}
               setSelectedFilters={(filters) => {
@@ -179,7 +193,7 @@ export function TeacherTable({
                 setPagination((p) => ({ ...p, pageIndex: 0 }));
               }}
             />
-          </div>
+          </div> */}
         </div>
 
         <Table className="rounded-md border">
@@ -188,7 +202,10 @@ export function TeacherTable({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id} className="py-3">
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -200,14 +217,20 @@ export function TeacherTable({
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-5">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-16 text-center text-red-500 dark:text-red-800">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-16 text-center text-red-500 dark:text-red-800"
+                >
                   No data found.
                 </TableCell>
               </TableRow>
@@ -228,7 +251,9 @@ export function TeacherTable({
             <Button
               variant="outline"
               size="icon"
-              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: 0 }))}
+              onClick={() =>
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+              }
               disabled={pagination.pageIndex === 0}
               className="w-24 h-8 font-normal text-xs"
             >
@@ -253,7 +278,12 @@ export function TeacherTable({
             <Button
               variant="outline"
               size="icon"
-              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }))}
+              onClick={() =>
+                setPagination((prev) => ({
+                  ...prev,
+                  pageIndex: prev.pageIndex + 1,
+                }))
+              }
               disabled={pagination.pageIndex >= totalPages - 1}
               className="w-24 h-8 font-normal text-xs"
             >
@@ -263,7 +293,12 @@ export function TeacherTable({
             <Button
               variant="outline"
               size="icon"
-              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: totalPages - 1 }))}
+              onClick={() =>
+                setPagination((prev) => ({
+                  ...prev,
+                  pageIndex: totalPages - 1,
+                }))
+              }
               disabled={pagination.pageIndex >= totalPages - 1}
               className="w-24 h-8 font-normal text-xs"
             >
@@ -276,5 +311,3 @@ export function TeacherTable({
     </div>
   );
 }
-
-

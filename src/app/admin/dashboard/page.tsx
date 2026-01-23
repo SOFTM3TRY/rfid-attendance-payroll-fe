@@ -273,68 +273,6 @@ console.log("Active Students Count:", countActiveStudents);
                 </Card>
               </div>
             </div>
-
-            <div className="my-5 px-5">
-              <TeacherChart />
-            </div>
-
-            <div>
-              <h1 className="text-xl mt-10 flex ">
-                <Sheet className="mr-2 w-7 h-7" />
-                Teacher Attendance Today
-              </h1>
-            </div>
-
-            <div className="mt-5 p-3 grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-              <div className="col-span-1 grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-                <Card className="bg-green-200 hover:bg-green-300 text-black dark:text-white dark:bg-green-400 dark:hover:bg-green-500">
-                  <CardHeader>
-                    <CardDescription className="flex items-center text-black dark:text-white ">
-                      <Users className="h-5 w-5 mr-2" />
-                      Present
-                    </CardDescription>
-
-                    <CardTitle className="text-4xl">0</CardTitle>
-                  </CardHeader>
-                </Card>
-
-                <Card className="bg-yellow-200 hover:bg-yellow-300 text-black dark:text-white dark:bg-yellow-400 dark:hover:bg-yellow-500">
-                  <CardHeader>
-                    <CardDescription className="flex items-center text-black dark:text-white ">
-                      <Users className="h-5 w-5 mr-2" />
-                      Late
-                    </CardDescription>
-
-                    <CardTitle className="text-4xl">0</CardTitle>
-                  </CardHeader>
-                </Card>
-
-                <Card className="bg-red-200 hover:bg-red-300 text-black dark:text-white dark:bg-red-400 dark:hover:bg-red-500">
-                  <CardHeader>
-                    <CardDescription className="flex items-center text-black dark:text-white ">
-                      <Users className="h-5 w-5 mr-2" />
-                      Absent
-                    </CardDescription>
-
-                    <CardTitle className="text-4xl">0</CardTitle>
-                  </CardHeader>
-                </Card>
-
-                <Card className="bg-gray-200 text-black dark:text-white dark:bg-gray-400">
-                  <CardHeader>
-                    <CardDescription className="flex items-center text-black dark:text-white ">
-                      <Users className="h-5 w-5 mr-2" />
-                      ---
-                    </CardDescription>
-
-                    <CardTitle className="text-4xl">0</CardTitle>
-                  </CardHeader>
-                </Card>
-              </div>
-              <div className="col-span-1 md:col-span-2">
-                <TeacherTable />
-              </div>
-            </div>
           </div>
           <Footer />
         </main>

@@ -28,6 +28,7 @@ import {
   ScanEye,
   Send,
   Loader2,
+  Contact,
 } from "lucide-react";
 
 import { useEffect } from "react";
@@ -58,8 +59,49 @@ export default function AddTeacher() {
   };
 
   const handleNextStep = () => {
+    // STEP 2 VALIDATIONS
+    if (step === 1) {
+      // --- Required fields ---
+      const requiredFields = [
+        "grade",
+        "section",
+        "school_year",
+      ]
+
+      for (const field of requiredFields) {
+        if (!formData[field]) {
+          setErrors((prev: any) => ({
+            ...prev,
+            [field]: "This field is required.",
+          }));
+          return; // Stop moving forward
+        }
+      }
+    }
+    // STEP 2 VALIDATIONS
     if (step === 2) {
-      // Check Step2 email
+      // --- Required fields ---
+      const requiredFields = [
+        "first_name",
+        "last_name",
+        "gender",
+        "birth_place",
+        "birth_date",
+        "email",
+        "contact_no",
+      ];
+
+      for (const field of requiredFields) {
+        if (!formData[field]) {
+          setErrors((prev: any) => ({
+            ...prev,
+            [field]: "This field is required.",
+          }));
+          return; // Stop moving forward
+        }
+      }
+
+      // --- Email validation ---
       if (!isEmailValid(formData.email)) {
         setErrors((prev: any) => ({
           ...prev,
@@ -67,18 +109,81 @@ export default function AddTeacher() {
         }));
         return; // Stop moving forward
       }
+
+      // --- Birthdate / Age Validation (Must be 18+) ---
+      if (!formData.birth_date) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Birth date is required.",
+        }));
+        return;
+      }
+
+      const today = new Date();
+      const birth = new Date(formData.birth_date);
+
+      if (isNaN(birth.getTime())) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Invalid birth date.",
+        }));
+        return;
+      }
+
+      const age =
+        today.getFullYear() -
+        birth.getFullYear() -
+        (today <
+        new Date(today.getFullYear(), birth.getMonth(), birth.getDate())
+          ? 1
+          : 0);
+
+      if (age < 18) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Age must be 18 or above.",
+        }));
+        return; // Stop moving forward
+      }
     }
 
+    // STEP 3 VALIDATIONS
+    if (step === 3) {
+      // --- Required fields ---
+      const requiredFields = [
+        "region",
+        "province",
+        "city",
+        "barangay",
+        "street",
+        "emergency_fname",
+        "emergency_lname",
+        "emergency_relation",
+        "emergency_contact",
+      ];
+
+      for (const field of requiredFields) {
+        if (!formData[field]) {
+          setErrors((prev: any) => ({
+            ...prev,
+            [field]: "This field is required.",
+          }));
+          return; // Stop moving forward
+        }
+      }
+    }
+
+    // Move to next step
     setStep(step + 1);
   };
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="flex items-center justify-center text-xs h-6 rounded-full bg-teal-700 text-white hover:bg-teal-800">
+        <Button variant="outline" size="sm" className="flex items-center justify-center text-xs  rounded-full">
           <PlusIcon
             strokeWidth={3}
-            className="bg-white rounded-full text-teal-900 p-0.5 size-4"
+            className="bg-primary rounded-full text-teal-900 p-0.5 size-4"
           />
           Add Teacher
         </Button>
@@ -98,8 +203,8 @@ export default function AddTeacher() {
           </SheetDescription>
         </SheetHeader>
 
-        <Tabs value={`step${step}`} className="w-full p-5">
-          <TabsList className="grid w-full grid-cols-4 mb-4 gap-5 h-20">
+        <Tabs value={`step${step}`} className="w-full p-5 rounded-xl">
+          <TabsList className="grid w-full grid-cols-4 mb-4 gap-5 h-20 bg-accent/20">
             <TabsTrigger
               value="step1"
               disabled={step < 1}
@@ -254,7 +359,9 @@ export default function AddTeacher() {
               <Button
                 onClick={handlePrevStep}
                 disabled={loading}
-                className="w-40 rounded-full dark:bg-red-900 dark:hover:bg-red-800 dark:text-white"
+                className="rounded-full"
+                size="sm"
+                variant="destructive"
               >
                 <ChevronsLeft />
                 Back
@@ -264,8 +371,9 @@ export default function AddTeacher() {
               {step < 4 ? (
                 <Button
                   onClick={handleNextStep}
-                  className="w-40 rounded-full"
+                  className="rounded-full"
                   disabled={loading}
+                  size="sm"
                 >
                   Next <ChevronsRight />
                 </Button>
@@ -274,8 +382,9 @@ export default function AddTeacher() {
                   onClick={() => {
                     handleSubmit().then(() => setStep(1));
                   }}
-                  className="w-40 rounded-full"
+                  className="rounded-full"
                   disabled={loading}
+                  size="sm"
                 >
                   {loading ? (
                     <>
@@ -293,8 +402,9 @@ export default function AddTeacher() {
             <SheetClose asChild>
               <Button
                 variant="ghost"
-                className="w-40 rounded-full"
+                className="rounded-full"
                 disabled={loading}
+                size="sm"
               >
                 <CircleX />
                 Cancel
