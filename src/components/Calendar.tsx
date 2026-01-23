@@ -41,10 +41,7 @@ export default function Calendar() {
   }, [selectedDate])
 
   return (
-    <div className="p-4">
-      <div className="w-full h-full py-2 flex items-center justify-center">
-        <h1 className="text-xl lg:text-xl uppercase font-bold">YGA Calendar</h1>
-      </div>
+    <div>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
