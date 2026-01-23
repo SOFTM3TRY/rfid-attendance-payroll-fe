@@ -23,6 +23,8 @@ import {
   SidebarMenuItem,
   SidebarFooter,
   SidebarGroupLabel,
+  SidebarHeader,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/context/AuthContext";
 // @ts-ignore
@@ -55,9 +57,9 @@ export function AppSidebar() {
   );
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" variant="floating">
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarHeader>
           <div className="flex flex-col items-center justify-center gap-5 p-3 group-data-[collapsible=icon]:mt-3 group-data-[collapsible=icon]:mb-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0">
             <img
               src="/logo.png"
@@ -70,9 +72,11 @@ export function AppSidebar() {
               className="group-data-[collapsible=icon]:hidden"
             />
           </div>
+        </SidebarHeader>
 
+        <SidebarGroup>
           {/* MAIN SECTION */}
-          <SidebarGroupLabel className="mt-5">Main</SidebarGroupLabel>
+          <SidebarGroupLabel>Main</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-2 gap-3">
               {items
@@ -101,7 +105,7 @@ export function AppSidebar() {
 
         <SidebarGroup>
           {/* USER MANAGEMENT SECTION */}
-          <SidebarGroupLabel className="mt-5">
+          <SidebarGroupLabel>
             User Management
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -136,7 +140,7 @@ export function AppSidebar() {
 
         <SidebarGroup>
           {/* SETTINGS SECTION */}
-          <SidebarGroupLabel className="mt-5">System</SidebarGroupLabel>
+          <SidebarGroupLabel >System</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-2 gap-3">
               {items

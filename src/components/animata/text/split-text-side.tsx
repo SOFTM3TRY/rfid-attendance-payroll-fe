@@ -18,7 +18,7 @@ export default function SplitTextSide({
   return (
     <div
       className={cn(
-        "relative mx-auto cursor-sword text-[13px] font-black uppercase text-teal-700 dark:text-teal-500",
+        "relative mx-auto cursor-sword text-[12px] font-black uppercase text-teal-700 dark:text-teal-500",
         className,
       )}
     >
