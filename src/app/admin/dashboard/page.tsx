@@ -16,6 +16,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
+import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardAction,
@@ -51,15 +53,13 @@ export default function Dashboard() {
   const isClient = useClientOnly();
 
   const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
-    token as string
+    token as string,
   );
-const {data: countActiveStudents, isLoading: isLoadingCountActiveStudents } = useCountActiveStudents(
-  token as string
-);
-const {data:CountActiveTeachers, isLoading: isLoadingCountActiveTeachers } = useTeacherActiveCount(
-  token as string
-);
-console.log("Active Students Count:", countActiveStudents);
+  const { data: countActiveStudents, isLoading: isLoadingCountActiveStudents } =
+    useCountActiveStudents(token as string);
+  const { data: CountActiveTeachers, isLoading: isLoadingCountActiveTeachers } =
+    useTeacherActiveCount(token as string);
+  console.log("Active Students Count:", countActiveStudents);
   if (!isClient || isLoadingUserDetails) {
     return <Loader />;
   }
@@ -73,7 +73,7 @@ console.log("Active Students Count:", countActiveStudents);
 
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl">Dashboard</h1>
+              <h1 className="text-sm">Dashboard</h1>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -84,52 +84,65 @@ console.log("Active Students Count:", countActiveStudents);
             </div>
 
             <div className="mt-10 p-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              <Card className="border border-yellow-200 hover:border-yellow-500">
+              <Card>
                 <CardHeader>
                   <CardDescription className="flex items-center">
-                    <Users className="h-5 w-5 text-yellow-500 mr-2" />
+                    <Users className="size-4 text-primary mr-2" />
                     Active Students
                   </CardDescription>
 
-                  <CardTitle className="text-4xl"> {countActiveStudents?.active_students_count}</CardTitle>
+                  <CardTitle className="text-4xl">
+                    {" "}
+                    {countActiveStudents?.active_students_count}
+                  </CardTitle>
 
-                  <CardAction className="text-white bg-blue-400 px-2 py-1 rounded-full hover:bg-blue-500 text-xs">
-                    <a href="#" className="flex items-center">
-                      Go to Page{" "}
-                      <SquareArrowOutUpRight className="h-3 w-3 ml-2" />
-                    </a>
+                  <CardAction>
+                    <Button variant="link" size="sm">
+                      <a href="/admin/manage-student">Go to Page</a>
+                      <SquareArrowOutUpRight className="size-3" />
+                    </Button>
                   </CardAction>
                 </CardHeader>
               </Card>
-              <Card className="border border-teal-200 hover:border-teal-500">
+              <Card>
                 <CardHeader>
                   <CardDescription className="flex items-center">
-                    <Users className="h-5 w-5 text-teal-500 mr-2" />
+                    <Users className="size-4 text-primary mr-2" />
                     Active Teachers
                   </CardDescription>
 
-                  <CardTitle className="text-4xl">{CountActiveTeachers?.count}</CardTitle>
+                  <CardTitle className="text-4xl">
+                    {CountActiveTeachers?.count}
+                  </CardTitle>
 
-                  <CardAction className="text-white bg-blue-400 px-2 py-1 rounded-full hover:bg-blue-500 text-xs">
-                    <a href="#" className="flex items-center">
-                      Go to Page{" "}
-                      <SquareArrowOutUpRight className="h-3 w-3 ml-2" />
-                    </a>
+                  <CardAction>
+                    <Button variant="link" size="sm">
+                      <a href="/admin/manage-teacher">Go to Page</a>
+                      <SquareArrowOutUpRight className="size-3" />
+                    </Button>
                   </CardAction>
                 </CardHeader>
               </Card>
-              <Card className="border border-blue-200 hover:border-blue-500">
+              <Card
+                className="bg-muted-foreground/30 cursor-not-allowed"
+                title="This Card is not available"
+              >
                 <CardHeader>
-                  <CardDescription className="flex items-center">
-                    <Users className="h-5 w-5 text-blue-500 mr-2" />
+                  <CardDescription className="flex items-center text-muted-foreground">
+                    <Users className="size-4 mr-2" />
                     Active Employees
                   </CardDescription>
 
-                  <CardTitle className="text-4xl">0</CardTitle>
+                  <CardTitle className="text-4xl text-muted-foreground/50">
+                    0
+                  </CardTitle>
 
-                  <CardAction className="text-white bg-blue-400 px-2 py-1 rounded-full hover:bg-blue-500 text-xs">
-                    <a href="#" className="flex items-center">
-                      Go to Page{" "}
+                  <CardAction className="bg-muted-foreground/50  px-2 py-1 rounded-full text-xs">
+                    <a
+                      href="#"
+                      className="flex items-center cursor-not-allowed"
+                    >
+                      Go to Page
                       <SquareArrowOutUpRight className="h-3 w-3 ml-2" />
                     </a>
                   </CardAction>
@@ -138,87 +151,19 @@ console.log("Active Students Count:", countActiveStudents);
             </div>
 
             <div>
-              <h1 className="text-xl mt-10 flex">
-                <Users className="mr-2 w-7 h-7" />
+              <h1 className="text-sm mt-10 flex">
+                <Users className="mr-2 size-4" />
                 Totol Student Per Grades
               </h1>
             </div>
 
-            <div className="mt-10 p-3 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5">
-              <Card className="bg-green-200 hover:bg-green-300 text-black dark:text-white dark:bg-green-400 dark:hover:bg-green-500">
-                <CardHeader>
-                  <CardDescription className="flex items-center text-black dark:text-white ">
-                    <Users className="h-5 w-5 mr-2" />
-                    Grade One
-                  </CardDescription>
-
-                  <CardTitle className="text-4xl">0</CardTitle>
-                </CardHeader>
-              </Card>
-
-              <Card className="bg-orange-200 hover:bg-orange-300 text-black dark:text-white dark:bg-orange-400 dark:hover:bg-orange-500">
-                <CardHeader>
-                  <CardDescription className="flex items-center text-black dark:text-white ">
-                    <Users className="h-5 w-5 mr-2" />
-                    Grade Two
-                  </CardDescription>
-
-                  <CardTitle className="text-4xl">0</CardTitle>
-                </CardHeader>
-              </Card>
-
-              <Card className="bg-indigo-200 hover:bg-indigo-300 text-black dark:text-white dark:bg-indigo-400 dark:hover:bg-indigo-500">
-                <CardHeader>
-                  <CardDescription className="flex items-center text-black dark:text-white ">
-                    <Users className="h-5 w-5 mr-2" />
-                    Grade Three
-                  </CardDescription>
-
-                  <CardTitle className="text-4xl">0</CardTitle>
-                </CardHeader>
-              </Card>
-
-              <Card className="bg-blue-200 hover:bg-blue-300 text-black dark:text-white dark:bg-blue-400 dark:hover:bg-blue-500">
-                <CardHeader>
-                  <CardDescription className="flex items-center text-black dark:text-white ">
-                    <Users className="h-5 w-5 mr-2" />
-                    Grade Four
-                  </CardDescription>
-
-                  <CardTitle className="text-4xl">0</CardTitle>
-                </CardHeader>
-              </Card>
-
-              <Card className="bg-red-200 hover:bg-red-300 text-black dark:text-white dark:bg-red-400 dark:hover:bg-red-500">
-                <CardHeader>
-                  <CardDescription className="flex items-center text-black dark:text-white ">
-                    <Users className="h-5 w-5 mr-2" />
-                    Grade Five
-                  </CardDescription>
-
-                  <CardTitle className="text-4xl">0</CardTitle>
-                </CardHeader>
-              </Card>
-
-              <Card className="bg-yellow-200 hover:bg-yellow-300 text-black dark:text-white dark:bg-yellow-400 dark:hover:bg-yellow-500">
-                <CardHeader>
-                  <CardDescription className="flex items-center text-black dark:text-white ">
-                    <Users className="h-5 w-5 mr-2" />
-                    Grade Six
-                  </CardDescription>
-
-                  <CardTitle className="text-4xl">0</CardTitle>
-                </CardHeader>
-              </Card>
-            </div>
-
-            <div className="my-5 px-5">
+            <div className="my-5">
               <ChartAreaInteractive />
             </div>
 
             <div>
-              <h1 className="text-xl mt-10 flex">
-                <Sheet className="mr-2 w-7 h-7" />
+              <h1 className="text-sm mt-10 flex">
+                <Sheet className="mr-2 size-4" />
                 Student Attendance Today
               </h1>
             </div>
@@ -228,10 +173,10 @@ console.log("Active Students Count:", countActiveStudents);
                 <StudentTable />
               </div>
               <div className="col-span-1 grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-                <Card className="bg-green-200 hover:bg-green-300 text-black dark:text-white dark:bg-green-400 dark:hover:bg-green-500">
+                <Card className="bg-green-500">
                   <CardHeader>
                     <CardDescription className="flex items-center text-black dark:text-white ">
-                      <Users className="h-5 w-5 mr-2" />
+                      <Users className="size-4 mr-2" />
                       Present
                     </CardDescription>
 
@@ -239,10 +184,10 @@ console.log("Active Students Count:", countActiveStudents);
                   </CardHeader>
                 </Card>
 
-                <Card className="bg-yellow-200 hover:bg-yellow-300 text-black dark:text-white dark:bg-yellow-400 dark:hover:bg-yellow-500">
+                <Card className="bg-yellow-500">
                   <CardHeader>
                     <CardDescription className="flex items-center text-black dark:text-white ">
-                      <Users className="h-5 w-5 mr-2" />
+                      <Users className="size-4 mr-2" />
                       Late
                     </CardDescription>
 
@@ -250,10 +195,10 @@ console.log("Active Students Count:", countActiveStudents);
                   </CardHeader>
                 </Card>
 
-                <Card className="bg-red-200 hover:bg-red-300 text-black dark:text-white dark:bg-red-400 dark:hover:bg-red-500">
+                <Card className="bg-red-500">
                   <CardHeader>
                     <CardDescription className="flex items-center text-black dark:text-white ">
-                      <Users className="h-5 w-5 mr-2" />
+                      <Users className="size-4 mr-2" />
                       Absent
                     </CardDescription>
 
@@ -261,14 +206,14 @@ console.log("Active Students Count:", countActiveStudents);
                   </CardHeader>
                 </Card>
 
-                <Card className="bg-gray-200 text-black dark:text-white dark:bg-gray-400">
+                <Card className="bg-muted-foreground/30 cursor-not-allowed">
                   <CardHeader>
-                    <CardDescription className="flex items-center text-black dark:text-white ">
-                      <Users className="h-5 w-5 mr-2" />
-                      ---
+                    <CardDescription className="flex items-center text-muted-foreground/50 ">
+                      <Users className="size-4 mr-2" />
+                      Total
                     </CardDescription>
 
-                    <CardTitle className="text-4xl">0</CardTitle>
+                    <CardTitle className="text-4xl text-muted-foreground/50">0</CardTitle>
                   </CardHeader>
                 </Card>
               </div>

@@ -177,7 +177,7 @@ export function AppSidebar() {
           <div className="px-2 py-2 block group-data-[collapsible=icon]:hidden">
             <p className="font-semibold text-xs">
               {userDetails?.data.first_name + " " + userDetails?.data.last_name}
-              <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
+              <span className="text-[10px] px-2 py-0 bg-accent rounded-full">
                 {userDetails?.data.role_id === 1
                   ? "Admin"
                   : userDetails?.data.role_id === 2
