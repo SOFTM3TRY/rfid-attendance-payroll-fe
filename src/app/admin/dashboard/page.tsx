@@ -5,7 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
 
-import { SquareArrowOutUpRight, Users, Sheet } from "lucide-react";
+import { SquareArrowOutUpRight, Users, Sheet, HouseIcon } from "lucide-react";
 
 import {
   Breadcrumb,
@@ -47,6 +47,7 @@ import { useClientOnly } from "@/hooks/useClientOnly";
 import Loader from "@/components/Loader";
 import { useCountActiveStudents } from "@/hooks/useStudentDetails";
 import { useTeacherActiveCount } from "@/hooks/useTeacher";
+import { Label } from "@/components/ui/label";
 
 export default function Dashboard() {
   const { token } = useAuth();
@@ -73,7 +74,7 @@ export default function Dashboard() {
 
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm">Dashboard</h1>
+              <Label className="text-sm"><HouseIcon className="size-4 text-primary" /> Dashboard</Label>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>

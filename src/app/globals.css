@@ -231,34 +231,37 @@
 }
 
 .fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
-  background-color: oklch(39.883% 0.07363 177.618);
-  border: 1px solid white;
+  background-color: var(--accent);
+  border: 0.5px solid white;
+  color: var(--accent-foreground);
 
   &:hover {
-    background-color: oklch(52.112% 0.09674 176.911);
+    background-color: var(--primary);
   }
 }
 
 .fc-direction-ltr .fc-button-group > .fc-button:not(:last-child) {
-  background-color: oklch(39.883% 0.07363 177.618);
-  border: 1px solid white;
+  background-color: var(--accent);
+  border: 0.5px solid white;
+  color: var(--accent-foreground);
 
   &:hover {
-    background-color: oklch(52.112% 0.09674 176.911);
+    background-color: var(--primary);
   }
 }
 
 .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
-  background-color: oklch(39.883% 0.07363 177.618);
+  background-color: var(--accent);
   border: none;
+  color: var(--accent-foreground);
 
   &:hover {
-    background-color: oklch(52.112% 0.09674 176.911);
+    background-color: var(--primary);
   }
 }
 
 .fc .fc-toolbar-title {
-  font-size: 30px;
+  font-size: large;
   font-weight: 600;
 
   @media (max-width: 600px) {
@@ -271,10 +274,12 @@
 }
 
 .fc-h-event {
-  background-color: oklch(39.883% 0.07363 177.618);
-  border: none;
+  background-color: var(--accent);
+  border: var(--accent) solid 1px;
+  color: var(--primary);
+  font-size: smaller;
 
   &:hover {
-    background-color: oklch(52.112% 0.09674 176.911);
+    background-color: var(--primary);
   }
 }

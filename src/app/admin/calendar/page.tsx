@@ -24,6 +24,8 @@ import { useUserDetails } from "@/hooks/useUserDetails";
 import { useClientOnly } from "@/hooks/useClientOnly";
 
 import Loader from "@/components/Loader";
+import { Label } from "@/components/ui/label";
+import { Calendar1 } from "lucide-react";
 
 export default function CalendarPage() {
   const { token } = useAuth();
@@ -46,7 +48,7 @@ export default function CalendarPage() {
 
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl">Calendar</h1>
+              <Label className="text-sm"><Calendar1 className="size-4 text-primary" /> Calendar</Label>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>

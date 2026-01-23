@@ -20,7 +20,7 @@ type EventType = {
 }
 
 const eventList: EventType[] = [
-  { title: "Team Meeting", date: "2025-11-10" },
+  { title: "Team Meeting", date: "2026-01-10" },
   { title: "Doctor Appointment", date: "2025-08-10" },
   { title: "Project Deadline", date: "2025-08-12" },
   { title: "Birthday", date: "2025-08-15" },
@@ -42,8 +42,8 @@ export default function Calendar() {
 
   return (
     <div className="p-4">
-      <div className="w-full h-full py-5 flex items-center justify-center">
-        <h1 className="text-2xl lg:text-5xl uppercase font-bold">YGA Calendar</h1>
+      <div className="w-full h-full py-2 flex items-center justify-center">
+        <h1 className="text-xl lg:text-xl uppercase font-bold">YGA Calendar</h1>
       </div>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -61,15 +61,15 @@ export default function Calendar() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Events on {selectedDate}</DialogTitle>
+            <DialogTitle className="text-sm">Events on {selectedDate}</DialogTitle>
           </DialogHeader>
 
           {eventsOnSelectedDate.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No events scheduled.</p>
+            <p className="text-muted-foreground text-xs">No events scheduled.</p>
           ) : (
             <ul className="list-disc pl-4 space-y-1">
               {eventsOnSelectedDate.map((event, idx) => (
-                <li key={idx} className="text-sm">
+                <li key={idx} className="text-xs">
                   {event.title}
                 </li>
               ))}
