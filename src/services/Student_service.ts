@@ -115,10 +115,10 @@ export const EditStudent = async (token: string, id: any, data: any) => {
   }
 };
 
-export const RegisterRFIDToStudent = async (token: string, id: any, data: any) => {
+export const RegisterRFIDToStudent = async (token: string, lrn: any, data: any) => {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/register-student-by-lrn/${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/register-student-by-lrn/${lrn}`,
       data,
       {
         headers: {

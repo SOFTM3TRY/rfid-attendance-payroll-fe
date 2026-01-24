@@ -13,7 +13,7 @@ import {
 import ShowProfile from "@/components/admin/manage-student/ShowProfile/ShowProfile";
 import EditProfile from "@/components/admin/manage-student/EditStudent/EditStudent";
 import ShowAttendanceHistory from "@/components/admin/manage-student/ShowAttendanceHistory/ShowAttendanceHistory";
-// import Registration from "@/components/admin/manage-student/Registration/Registration";
+import Registration from "@/components/admin/manage-student/Registration/Registration";
 
 import {
   Tooltip,
@@ -179,10 +179,10 @@ export const columns = (props: {
                 <History className="size-4 text-muted-foreground" />
                 Attendance History
               </DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => setOpenRegister(true)}>
-                <FilePlus className="w-4 h-4 text-blue-700" />
+              <DropdownMenuItem onClick={() => setOpenRegister(true)}>
+                <FilePlus className="size-4 text-muted-foreground" />
                 Register
-              </DropdownMenuItem> */}
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => props.onChangeStatus(studentId.toString())}
               >
@@ -196,11 +196,11 @@ export const columns = (props: {
             setOpen={setOpenHistory}
             row={row}
           />
-          {/* <Registration
+          <Registration
             open={openRegister}
             setOpen={setOpenRegister}
-            studentId={Id}
-          /> */}
+            lrn={lrn as string}
+          />
         </div>
       );
     },

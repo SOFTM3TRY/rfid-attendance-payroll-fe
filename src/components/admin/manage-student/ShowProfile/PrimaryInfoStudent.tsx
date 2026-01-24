@@ -24,7 +24,7 @@ export default function PrimaryInfo({ lrn }: { lrn: string }) {
       </Avatar>
 
       <div className="flex flex-col gap-1">
-        <p className="text-xl font-semibold leading-none uppercase">
+        <p className="text-sm font-semibold leading-none uppercase">
           {fullName || "—"}
         </p>
         <p className="text-xs my-2 font-semibold leading-none">
