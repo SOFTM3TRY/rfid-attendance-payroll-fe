@@ -20,6 +20,10 @@ export function FiltersDropdown({ selectedFilters, setSelectedFilters, sectionTy
     );
   };
 
+  const removeAllFilters = () => {
+    setSelectedFilters([]);
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -50,7 +54,14 @@ export function FiltersDropdown({ selectedFilters, setSelectedFilters, sectionTy
             {section}
           </DropdownMenuCheckboxItem>
         ))}
+        <DropdownMenuCheckboxItem
+          onCheckedChange={removeAllFilters}
+          className="text-xs text-primary"
+        >
+          Default
+        </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
+
 }

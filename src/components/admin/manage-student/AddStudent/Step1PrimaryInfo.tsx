@@ -119,8 +119,8 @@ export default function Step1({
           <SelectTrigger
             className={
               errors.grade
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border  py-1 px-3 rounded-sm w-56"
+                : "border  py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select Grade" />
@@ -152,8 +152,8 @@ export default function Step1({
           <SelectTrigger
             className={
               errors.section
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border  py-1 px-3 rounded-sm w-56"
+                : "border  py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select Section" />
@@ -185,8 +185,8 @@ export default function Step1({
           <SelectTrigger
             className={
               errors.school_year
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border  py-1 px-3 rounded-sm w-56"
+                : "border  py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select School Year" />

@@ -21,6 +21,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import {
   Eye,
   SquarePen,
@@ -41,7 +43,7 @@ import {
 import { Student } from "@/types/Student";
 export const columns = (props: {
   onEdit: (id: string) => void;
-}): ColumnDef<Student>[] =>  [
+}): ColumnDef<Student>[] => [
   {
     accessorKey: "lrn",
     header: () => (
@@ -58,13 +60,23 @@ export const columns = (props: {
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="flex flex-col">
-        <span className="font-semibold">{`${row.original.last_name} ${
-          row.original.first_name
-        } ${row.original.middle_name || ""}  ${
-          row.original.suffix || ""
-        }`}</span>
-        <span className="text-[10px]">{row.original.email || ""}</span>
+      <div className="flex items-center gap-2">
+        <Avatar className="size-8">
+          <AvatarImage
+            src="https://github.com/shadcn.png"
+            className="ounded-lg hover:grayscale-100 transition-all duration-300"
+            draggable={false}
+          />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col">
+          <span className="font-semibold">{`${row.original.last_name} ${
+            row.original.first_name
+          } ${row.original.middle_name || ""}  ${
+            row.original.suffix || ""
+          }`}</span>
+          <span className="text-[10px]">{row.original.email || ""}</span>
+        </div>
       </div>
     ),
   },
@@ -100,7 +112,7 @@ export const columns = (props: {
     cell: ({ row }) => {
       const status = row.original.status;
       return (
-        <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
+        <span className="text-xs w-22 h-5 flex items-center justify-center rounded-full font-normal bg-accent">
           {/* @ts-ignore */}
           {row.original.status == 1 ? "Active" : "Inactive"}
           <span
@@ -111,9 +123,9 @@ export const columns = (props: {
           >
             {/* @ts-ignore */}
             {row.original.status == 1 ? (
-              <UserCheck className="w-4 h-4" />
+              <UserCheck className="size-3" />
             ) : (
-              <UserX className="w-4 h-4" />
+              <UserX className="size-3" />
             )}
           </span>
         </span>
@@ -139,10 +151,7 @@ export const columns = (props: {
               <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
-                    <Grip
-                      strokeWidth={3}
-                      className="w-12 h-12 text-teal-800 dark:text-teal-300"
-                    />
+                    <Grip strokeWidth={3} className="w-12 h-12 text-primary" />
                   </Button>
                 </DropdownMenuTrigger>
               </TooltipTrigger>
@@ -161,10 +170,10 @@ export const columns = (props: {
                 View Profile
               </DropdownMenuItem>
               <DropdownMenuItem
-              onClick={() => props.onEdit(studentId.toString())}
-            >
-              <SquarePen className="size-4" /> Edit Profile {studentId}
-            </DropdownMenuItem>
+                onClick={() => props.onEdit(studentId.toString())}
+              >
+                <SquarePen className="size-4" /> Edit Profile
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setOpenHistory(true)}>
                 <History className="size-4 text-muted-foreground" />
                 Attendance History

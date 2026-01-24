@@ -29,7 +29,7 @@ export function FilterTable({ pagination, setPagination }: FilterTableProps) {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <span className="text-xs text-muted-foreground">Rows per page:</span>
+      {/* <span className="text-xs text-muted-foreground">Rows per page:</span> */}
       <Select
         value={String(pagination.pageSize)}
         onValueChange={(value) =>

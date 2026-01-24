@@ -7,9 +7,9 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { TableIcon, ChevronDownIcon, CircleUser, UserCheck, UserX } from "lucide-react";
+import { TableIcon, ChevronDownIcon, CircleUser, UserCheck, UserX, Circle } from "lucide-react";
 
-const statusTypes = [{ value: "1", label: "Active" }, { value: "0", label: "Inactive" }];
+const statusTypes = [{ value: "1", label: "Active" }, { value: "0", label: "Inactive" }, { value: "all", label: "Default" }];
 
 interface Props {
   selectedFilters: string[];
@@ -18,11 +18,15 @@ interface Props {
 
 export function FiltersDropdownStatus({ selectedFilters, setSelectedFilters }: Props) {
   const toggleFilter = (status: string) => {
-    setSelectedFilters((prev) =>
-      prev.includes(status)
-        ? prev.filter((t) => t !== status)
-        : [...prev, status]
-    );
+    if (status === "all") {
+      setSelectedFilters([]);
+    } else {
+      setSelectedFilters((prev) =>
+        prev.includes(status)
+          ? prev.filter((t) => t !== status)
+          : [...prev, status]
+      );
+    }
   };
 
   return (
@@ -42,7 +46,7 @@ export function FiltersDropdownStatus({ selectedFilters, setSelectedFilters }: P
             onCheckedChange={() => toggleFilter(value)}
             className="text-xs"
           >
-            {value === "1" ? <UserCheck className="text-green-500 px-0"/> : <UserX className="text-red-500"/>} {label}
+            {value === "1" ? <UserCheck className="text-green-500 size-3"/> : value === "0" ? <UserX className="text-red-500 size-3"/> : <Circle className="text-primary size-3" />} {label}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

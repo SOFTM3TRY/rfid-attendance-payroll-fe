@@ -17,9 +17,10 @@ export default function Step2({
   errors,
   setErrors,
   loading,
+  handleInputChange,
 }: any) {
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [name]: value }));
@@ -40,7 +41,7 @@ export default function Step2({
   };
 
   const suffixOptions = ["Jr.", "Sr.", "I", "II", "III", "IV", "V"];
-  const genderOptions = ["Male", "Female", "Other"];
+  const genderOptions = ["Male", "Female"];
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-20">
       <span className="col-span-1 md:col-span-4">
@@ -64,8 +65,8 @@ export default function Step2({
           placeholder="Enter First Name"
           className={
             errors.first_name
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -103,8 +104,8 @@ export default function Step2({
           placeholder="Enter Last Name"
           className={
             errors.last_name
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -126,8 +127,8 @@ export default function Step2({
           <SelectTrigger
             className={
               errors.suffix
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border py-1 px-3 rounded-sm w-56"
+                : "border py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select Suffix" />
@@ -154,8 +155,8 @@ export default function Step2({
           <SelectTrigger
             className={
               errors.gender
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border py-1 px-3 rounded-sm w-56"
+                : "border py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select Gender" />
@@ -186,8 +187,8 @@ export default function Step2({
           placeholder="Enter birth_place"
           className={
             errors.birth_place
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -202,15 +203,17 @@ export default function Step2({
           <CalendarDays className="text-violet-500 h-3 w-3" />
           Birth Date
         </Label>
+
         <Input
           id="birth_date"
           name="birth_date"
           type="date"
           value={formData.birth_date}
-          onChange={handleChange}
+          onChange={handleInputChange}
           placeholder="YYYY-MM-DD"
           disabled={loading}
         />
+
         {errors.birth_date && (
           <span className="text-xs text-red-500">{errors.birth_date}</span>
         )}
@@ -230,8 +233,8 @@ export default function Step2({
           placeholder="Enter Last School Attended"
           className={
             errors.last_school_attend
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border py-1 px-3 rounded-sm"
+              : "border py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />

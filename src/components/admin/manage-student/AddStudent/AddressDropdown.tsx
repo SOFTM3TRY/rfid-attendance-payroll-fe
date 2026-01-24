@@ -113,7 +113,7 @@ export default function AddressDropdowns({
         <SelectTrigger
           className={`border w-72 ${
             errors[name] ? "border-red-500" : ""
-          } dark:bg-zinc-900 py-1 px-3 rounded-sm`}
+          } py-1 px-3 rounded-sm`}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

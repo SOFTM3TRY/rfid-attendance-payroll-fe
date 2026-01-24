@@ -54,25 +54,48 @@ export function useStudentForm() {
   const stepFieldsMap: Record<number, string[]> = {
     1: ["lrn", "grade", "section", "school_year"],
     2: [
-      "first_name", "middle_name", "last_name", "suffix", "role", "email", "gender",
-      "birth_place", "birth_date", "student_status", "last_school_attend"
+      "first_name",
+      "middle_name",
+      "last_name",
+      "suffix",
+      "role",
+      "email",
+      "gender",
+      "birth_place",
+      "birth_date",
+      "student_status",
+      "last_school_attend",
     ],
     3: [
-      "region", "province", "city", "barangay", "street",
-      "guardian_first_name", "guardian_middle_name", "guardian_last_name",
-      "guardian_occupation", "guardian_contact", "guardian_email", "relationship"
+      "region",
+      "province",
+      "city",
+      "barangay",
+      "street",
+      "guardian_first_name",
+      "guardian_middle_name",
+      "guardian_last_name",
+      "guardian_occupation",
+      "guardian_contact",
+      "guardian_email",
+      "relationship",
     ],
   };
 
   const validateStep = () => {
     const requiredFields = stepFieldsMap[step] || [];
     const newErrors: Record<string, string> = {};
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       const value = formData[field];
       if (
         typeof value === "string" &&
         !value.trim() &&
-        !["middle_name", "suffix", "guardian_middle_name", "student_status"].includes(field)
+        ![
+          "middle_name",
+          "suffix",
+          "guardian_middle_name",
+          "student_status",
+        ].includes(field)
       ) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }
@@ -81,23 +104,105 @@ export function useStudentForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-    const isEmailValid = (guardian_email: string) => {
-    return guardian_email.endsWith("@gmail.com") && guardian_email.length > "@gmail.com".length;
+  const isEmailValid = (email: string) => {
+    const v = (email || "").trim().toLowerCase();
+    return v.endsWith("@gmail.com") && v.length > "@gmail.com".length;
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev: any) => ({ ...prev, [name]: value }));
+
+    // remove existing error for this field first
+    setErrors((prev: any) => {
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
+    });
+
+    // --- Age Validation (6+) ---
+    if (name === "birth_date") {
+      if (!value) return;
+
+      const today = new Date();
+      const birth = new Date(value);
+
+      if (isNaN(birth.getTime())) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Invalid birth date.",
+        }));
+        return;
+      }
+
+      // don't allow future birth date
+      if (birth > today) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Birth date cannot be in the future.",
+        }));
+        return;
+      }
+
+      const age =
+        today.getFullYear() -
+        birth.getFullYear() -
+        (today <
+        new Date(today.getFullYear(), birth.getMonth(), birth.getDate())
+          ? 1
+          : 0);
+
+      if (age < 6) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Student age must be 6 years old or above.",
+        }));
+      }
+    }
   };
 
   const handleNextStep = () => {
-    if (step === 3) {
-      // Check Step2 email
-      if (!isEmailValid(formData.guardian_email)) {
-        setErrors((prev: any) => ({
-          ...prev,
-          email: "Email must end with @gmail.com",
-        }));
-        return; // Stop moving forward
+    const ok = validateStep();
+    if (!ok) return;
+
+    if (step === 2) {
+      if (formData.birth_date) {
+        const birth = new Date(formData.birth_date);
+        if (isNaN(birth.getTime())) {
+          setErrors((prev: any) => ({
+            ...prev,
+            birth_date: "Invalid birth date.",
+          }));
+          return;
+        }
+
+        const date = new Date();
+        const age = date.getFullYear() - birth.getFullYear() - (date < new Date(date.getFullYear(), birth.getMonth(), birth.getDate()) ? 1 : 0);
+
+        if (age < 6) {
+          setErrors((prev: any) => ({
+            ...prev,
+            birth_date: "Student age must be 6 years old or above.",
+          }));
+          return;
+        }
       }
     }
 
-    setStep(step + 1);
+    if (step === 3) {
+      if (formData.guardian_email && !isEmailValid(formData.guardian_email)) {
+        setErrors((prev: any) => ({
+          ...prev,
+          guardian_email: "Guardian email must end with @gmail.com",
+        }));
+        return;
+      }
+    }
+
+    setStep((prev) => Math.min(prev + 1, 4));
   };
 
   const handlePrevStep = () => {
@@ -141,15 +246,30 @@ export function useStudentForm() {
       refetchStudent();
       setOpen(false);
     } catch (error: any) {
-      const { response: { data: { message } } } = error;
+      const {
+        response: {
+          data: { message },
+        },
+      } = error;
       toast.error(message);
     }
     setTimeout(() => setLoading(false), 1000);
   };
 
   return {
-    step, setStep, open, setOpen, loading, errors, setErrors,
-    handlePrevStep, handleNextStep, handleSubmit,
-    formData, setFormData
+    step,
+    setStep,
+    open,
+    setOpen,
+    loading,
+    errors,
+    setErrors,
+    handlePrevStep,
+    handleNextStep,
+    handleSubmit,
+    formData,
+    setFormData,
+    validateStep,
+    handleInputChange,
   };
 }

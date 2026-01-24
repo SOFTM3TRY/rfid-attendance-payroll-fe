@@ -40,15 +40,16 @@ export default function AddStudent() {
   const {
     step, setStep, open, setOpen, loading, errors,
     handlePrevStep, handleNextStep, handleSubmit, setErrors,
-    formData, setFormData
+    formData, setFormData, validateStep, handleInputChange 
   } = useStudentForm();
   
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="flex items-center justify-center text-xs h-6 rounded-full bg-teal-700 text-white hover:bg-teal-800">
+        <Button variant="outline" size="sm" className="rounded-full">
           <PlusIcon
-            className="bg-white rounded-full text-teal-900 p-0.5 size-4"
+            className="bg-primary rounded-full text-white p-0.5 size-4"
           />
           Add Student
         </Button>
@@ -69,7 +70,7 @@ export default function AddStudent() {
         </SheetHeader>
 
         <Tabs value={`step${step}`} className="w-full p-5">
-          <TabsList className="grid w-full grid-cols-4 mb-4 gap-5 h-20">
+          <TabsList className="grid w-full grid-cols-4 mb-4 gap-5 h-20 bg-accent/20">
             <TabsTrigger
               value="step1"
               disabled={step < 1}
@@ -194,6 +195,7 @@ export default function AddStudent() {
               errors={errors}
               setErrors={setErrors}
               loading={loading}
+              handleInputChange={handleInputChange}
             />
           </TabsContent>
           <TabsContent value="step3" className="mt-5">
@@ -216,9 +218,11 @@ export default function AddStudent() {
               <Button
                 onClick={handlePrevStep}
                 disabled={loading}
-                className="w-40 rounded-full dark:bg-red-900 dark:hover:bg-red-800 dark:text-white"
+                className="rounded-full"
+                variant="destructive"
+                size="sm"
               >
-                <ChevronsLeft />
+                <ChevronsLeft className="size-3"/>
                 Back
               </Button>
             )}
@@ -226,36 +230,40 @@ export default function AddStudent() {
               {step < 4 ? (
                 <Button
                   onClick={handleNextStep}
-                  className="w-40 rounded-full"
+                  className="rounded-full"
                   disabled={loading}
+                  variant="default"
+                  size="sm"
                 >
-                  Next <ChevronsRight />
+                  Next <ChevronsRight className="size-3"/>
                 </Button>
               ) : (
                 <Button
                   onClick={() => {
                     handleSubmit().then(() => setStep(1));
                   }}
-                  className="w-40 rounded-full"
+                  variant="default"
+                  size="sm"
+                  className="rounded-full"
                   disabled={loading}
 
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="animate-spin mr-2" size={18} />
+                      <Loader2 className="animate-spin size-3" size={18} />
                       Processing...
                     </>
                   ) : (
                     <>
-                      Submit <Send className="ml-2" />
+                      Submit <Send className="size-3" />
                     </>
                   )}
                 </Button>
               )}
             </div>
             <SheetClose asChild>
-              <Button variant="ghost" className="w-40" disabled={loading}>
-                <CircleX />
+              <Button variant="outline" size="sm" className="rounded-full" disabled={loading}>
+                <CircleX className="size-3"/>
                 Cancel
               </Button>
             </SheetClose>

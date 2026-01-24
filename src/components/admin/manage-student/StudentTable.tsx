@@ -90,7 +90,7 @@ export function StudentTable<TData>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-16 text-center text-red-500 dark:text-red-800"
+                  className="h-16 text-center"
                 >
                   No data found.
                 </TableCell>

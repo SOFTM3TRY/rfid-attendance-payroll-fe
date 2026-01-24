@@ -155,13 +155,7 @@ export default function GradeTabsPage() {
 
         <div className="bg-accent/10 p-5 rounded-lg ">
           {/* Header Actions */}
-          <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
-            <FilterTable
-              pagination={pagination}
-              setPagination={setPagination}
-            />
-
-            {/* Search */}
+          <div className="mb-10 flex flex-wrap gap-4 justify-between items-center">
             <div className="relative max-w-md w-80">
               <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
               <Input
@@ -183,6 +177,10 @@ export default function GradeTabsPage() {
                 selectedFilters={selectedFilters}
                 setSelectedFilters={setSelectedFilters}
                 sectionTypes={sectionTypes}
+              />
+              <FilterTable
+                pagination={pagination}
+                setPagination={setPagination}
               />
             </div>
           </div>

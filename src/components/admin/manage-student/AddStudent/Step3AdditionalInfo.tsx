@@ -80,8 +80,8 @@ export default function Step3({
           placeholder="Enter Street Address"
           className={
             errors.street
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -89,8 +89,6 @@ export default function Step3({
           <span className="text-xs text-red-500">{errors.street}</span>
         )}
       </div>
-
-      <hr />
 
       <span className="col-span-1 md:col-span-4">
         <p className="text-sm font-normal flex items-center">
@@ -112,8 +110,8 @@ export default function Step3({
           placeholder="Enter Guardian First Name"
           className={
             errors.guardian_first_name
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -136,8 +134,8 @@ export default function Step3({
           placeholder="Enter Guardian Middle Name"
           className={
             errors.guardian_middle_name
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -155,8 +153,8 @@ export default function Step3({
           placeholder="Enter Guardian Last Name"
           className={
             errors.guardian_last_name
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -180,8 +178,8 @@ export default function Step3({
           placeholder="Enter Guardian Occupation"
           className={
             errors.guardian_occupation
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -256,8 +254,8 @@ export default function Step3({
           }}
           className={
             errors.guardian_contact
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
@@ -292,8 +290,8 @@ export default function Step3({
           placeholder="Enter Guardian Email"
           className={
             errors.guardian_email
-              ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm"
-              : "border dark:bg-zinc-900 py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
           type="email"
@@ -318,8 +316,8 @@ export default function Step3({
           <SelectTrigger
             className={
               errors.relationship
-                ? "border-red-500 border dark:bg-zinc-900 py-1 px-3 rounded-sm w-full"
-                : "border dark:bg-zinc-900 py-1 px-3 rounded-sm w-full"
+                ? "border-red-500 border  py-1 px-3 rounded-sm w-full"
+                : "border  py-1 px-3 rounded-sm w-full"
             }
           >
             <SelectValue placeholder="Select Relationship" />

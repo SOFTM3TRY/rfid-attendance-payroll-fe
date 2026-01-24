@@ -62,11 +62,7 @@ export default function AddTeacher() {
     // STEP 2 VALIDATIONS
     if (step === 1) {
       // --- Required fields ---
-      const requiredFields = [
-        "grade",
-        "section",
-        "school_year",
-      ]
+      const requiredFields = ["grade", "section", "school_year"];
 
       for (const field of requiredFields) {
         if (!formData[field]) {
@@ -180,7 +176,11 @@ export default function AddTeacher() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center justify-center text-xs  rounded-full">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center justify-center text-xs  rounded-full"
+        >
           <PlusIcon
             strokeWidth={3}
             className="bg-primary rounded-full text-teal-900 p-0.5 size-4"
@@ -195,10 +195,10 @@ export default function AddTeacher() {
       >
         <SheetHeader className="text-zinc-900 mb-4">
           <SheetTitle className="flex items-center">
-            <UserRoundPlus className="mr-2 w-5 h-5 text-teal-500" />
+            <UserRoundPlus className="mr-1 size-5 text-teal-500" />
             Add Teacher
           </SheetTitle>
-          <SheetDescription>
+          <SheetDescription className="text-xs">
             Enter details to add a new teacher to the system
           </SheetDescription>
         </SheetHeader>
@@ -363,7 +363,7 @@ export default function AddTeacher() {
                 size="sm"
                 variant="destructive"
               >
-                <ChevronsLeft />
+                <ChevronsLeft className="size-3" />
                 Back
               </Button>
             )}
@@ -388,12 +388,12 @@ export default function AddTeacher() {
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="animate-spin mr-2" size={18} />
+                      <Loader2 className="animate-spin size-3" size={18} />
                       Processing...
                     </>
                   ) : (
                     <>
-                      Submit <Send className="ml-2" />
+                      Submit <Send className="size-3" />
                     </>
                   )}
                 </Button>
@@ -401,12 +401,12 @@ export default function AddTeacher() {
             </div>
             <SheetClose asChild>
               <Button
-                variant="ghost"
+                variant="outline"
                 className="rounded-full"
                 disabled={loading}
                 size="sm"
               >
-                <CircleX />
+                <CircleX className="size-3" />
                 Cancel
               </Button>
             </SheetClose>
