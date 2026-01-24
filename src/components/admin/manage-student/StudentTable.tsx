@@ -37,7 +37,7 @@ export function StudentTable<TData>({
   data,
   pagination,
   setPagination,
-  totalRows,
+  totalRows
 }: Props<TData>) {
   const table = useReactTable({
     data,

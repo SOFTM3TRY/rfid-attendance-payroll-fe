@@ -18,10 +18,15 @@ import { Input } from "@/components/ui/input";
 import AddStudent from "@/components/admin/manage-student/AddStudent/AddStudent";
 import EditStudent from "@/components/admin/manage-student/EditStudent/EditStudent";
 
-import { useStudentDetails } from "@/hooks/useStudentDetails";
+import {
+  useStudentDetails,
+  useChangeStudentStatus,
+} from "@/hooks/useStudentDetails";
 import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
 import { Student } from "@/types/Student";
+import { RefreshButton } from "@/components/relaod-table";
+import { id } from "date-fns/locale";
 
 export default function GradeTabsPage() {
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null); // Initialize the selectedGrade
@@ -33,6 +38,15 @@ export default function GradeTabsPage() {
     null,
   );
   const { token } = useAuth();
+
+  const { mutate: changeStatus, isPending: isChangingStatus } =
+    useChangeStudentStatus();
+
+  const handleStatusChange = (studentId: string) => {
+    if (!token) return;
+    changeStatus({ token: token as string, id: studentId });
+  };
+
   const {
     data: studentDetails,
     isLoading: isLoadingStudent,
@@ -156,12 +170,19 @@ export default function GradeTabsPage() {
         <div className="bg-accent/10 p-5 rounded-lg ">
           {/* Header Actions */}
           <div className="mb-10 flex flex-wrap gap-4 justify-between items-center">
-            <div className="relative max-w-md w-80">
-              <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
-              <Input
-                placeholder="Search Full Name or LRN..."
-                value={search}
-                onChange={handleFilterChange}
+            <div className="flex items-center gap-2">
+              <div className="relative max-w-md w-80">
+                <Search className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
+                <Input
+                  placeholder="Search Full Name or LRN..."
+                  value={search}
+                  onChange={handleFilterChange}
+                />
+              </div>
+
+              <RefreshButton
+                isLoading={isLoadingStudent}
+                onClick={studentDetails}
               />
             </div>
 
@@ -196,6 +217,7 @@ export default function GradeTabsPage() {
                       setSelectedTeacherId(teacherId);
                       setEditOpen(true);
                     },
+                    onChangeStatus: (studentId: string) => handleStatusChange(studentId),
                   })}
                   data={rows.slice(
                     pagination.pageIndex * pagination.pageSize,

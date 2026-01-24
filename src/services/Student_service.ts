@@ -177,3 +177,22 @@ export const CountStudentsPerGrade = async (token: string) => {
   
   return response.data;
 }
+
+export const ChangeStudentStatus = async (token: string, id: string) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/change-student-status/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

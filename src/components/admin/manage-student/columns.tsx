@@ -43,6 +43,7 @@ import {
 import { Student } from "@/types/Student";
 export const columns = (props: {
   onEdit: (id: string) => void;
+  onChangeStatus: (id: string) => void;
 }): ColumnDef<Student>[] => [
   {
     accessorKey: "lrn",
@@ -182,6 +183,12 @@ export const columns = (props: {
                 <FilePlus className="w-4 h-4 text-blue-700" />
                 Register
               </DropdownMenuItem> */}
+              <DropdownMenuItem
+                onClick={() => props.onChangeStatus(studentId.toString())}
+              >
+                <UserCog className="size-4 text-muted-foreground" />
+                Change Status
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <ShowAttendanceHistory
