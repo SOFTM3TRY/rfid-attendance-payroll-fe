@@ -25,6 +25,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useGrade } from "@/hooks/useGrade";
 import { useSection } from "@/hooks/useSection";
 import { useYear } from "@/hooks/useYear";
+import { useGetSectionById } from "@/hooks/useSection";
 
 export default function EditBasicInfo({
   formData,
@@ -37,13 +38,14 @@ export default function EditBasicInfo({
     setFormData((prev: any) => ({ ...prev, [k]: v }));
 
   const { token } = useAuth();
+  const { data: sectionData } = useGetSectionById(token as string, formData.section_id);
 
   const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(
-    token as string
+    token as string,
   );
 
   const { data: YearsData, isLoading: isLoadingYearsData } = useYear(
-    token as string
+    token as string,
   );
 
   // Correct Section ID (should use grade_id)
@@ -51,14 +53,14 @@ export default function EditBasicInfo({
 
   const { data: SectionsData, isLoading: isLoadingSectionsData } = useSection(
     token as string,
-    SectionID
+    SectionID,
   );
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev: any) =>
       name === "grade_id"
         ? { ...prev, grade_id: value, section_id: "" } // reset section when grade changes
-        : { ...prev, [name]: value }
+        : { ...prev, [name]: value },
     );
 
     setErrors((prev: any) => {
@@ -69,14 +71,15 @@ export default function EditBasicInfo({
   };
 
   const suffixOptions = ["Jr.", "Sr.", "I", "II", "III", "IV", "V"];
-  const genderOptions = ["Male", "Female", "Other"];
+  const genderOptions = ["Male", "Female"];
 
   return (
-    <div className="bg-zinc-100 dark:bg-zinc-900 p-5 rounded-xl w-full space-y-5">
+    <div className="bg-accent/10 p-5 rounded-xl w-full space-y-5">
       {/* Primary Information */}
       <div>
         <h1 className="text-sm font-bold flex items-center mb-3">
-          <ShieldUser className="text-blue-500 mr-1 size-4" /> Primary Information
+          <ShieldUser className="text-blue-500 mr-1 size-4" /> Primary
+          Information
         </h1>
 
         <div className="grid grid-cols-4 gap-5 my-5">
@@ -85,11 +88,7 @@ export default function EditBasicInfo({
               <GraduationCap className="text-muted-foreground size-3" />
               LRN
             </Label>
-            <Input
-              id="employee_no"
-              value={formData.lrn ?? ""}
-              disabled
-            />
+            <Input id="employee_no" value={formData.lrn ?? ""} readOnly />
           </div>
 
           <div className="grid gap-2">
@@ -97,11 +96,25 @@ export default function EditBasicInfo({
               <CalendarDays className="text-muted-foreground size-3" />
               School Year
             </Label>
-            <Input
-              id="school_year"
-              value={formData.school_year ?? ""}
-              onChange={(e) => update("school_year", e.target.value)}
-            />
+            <div className="flex gap-2">
+              <Select
+                value={formData.school_year || ""}
+                onValueChange={(value) => handleChange("school_year", value)}
+                disabled={loading || isLoadingYearsData}
+              >
+                <SelectTrigger className="border py-1 px-3 rounded-sm w-56">
+                  <SelectValue placeholder="Select School Year" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {YearsData?.data?.map((year: any) => (
+                    <SelectItem key={year.years} value={String(year.years)}>
+                      {year.years}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="grid gap-2">
@@ -113,7 +126,7 @@ export default function EditBasicInfo({
               onValueChange={(value) => handleChange("grade_id", value)}
               disabled={isLoadingYearsData || isLoadingGradesData}
             >
-              <SelectTrigger className="border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56">
+              <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
                 <SelectValue placeholder="Select Grade" />
               </SelectTrigger>
               <SelectContent>
@@ -133,20 +146,16 @@ export default function EditBasicInfo({
             </Label>
 
             <div className="flex gap-2">
-              <Input
-                id="section"
-                disabled
-                value={
-                  formData.section_id ?? ""
-                }
-              />
+              <Input id="section" readOnly value={sectionData?.data?.section_name} />
 
               <Select
                 value={formData.section_id || ""}
                 onValueChange={(value) => handleChange("section_id", value)}
-                disabled={loading || !formData.grade_id || isLoadingSectionsData}
+                disabled={
+                  loading || !formData.grade_id || isLoadingSectionsData
+                }
               >
-                <SelectTrigger className="border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56">
+                <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
                   <SelectValue placeholder="Select Section" />
                 </SelectTrigger>
                 <SelectContent>
@@ -165,14 +174,16 @@ export default function EditBasicInfo({
       {/* Personal Information */}
       <div>
         <h1 className="text-sm font-bold flex items-center mb-3">
-          <UserLock className="text-yellow-500 mr-1 size-4" /> Personal Information
+          <UserLock className="text-yellow-500 mr-1 size-4" /> Personal
+          Information
         </h1>
 
         <div className="grid grid-cols-4 gap-5 mt-5">
           {/* names */}
           <div className="grid gap-2">
             <Label htmlFor="first_name">
-              <User className="text-muted-foreground size-3" />First Name
+              <User className="text-muted-foreground size-3" />
+              First Name
             </Label>
             <Input
               id="first_name"
@@ -182,7 +193,10 @@ export default function EditBasicInfo({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="middle_name"><User className="text-muted-foreground size-3" />Middle Name</Label>
+            <Label htmlFor="middle_name">
+              <User className="text-muted-foreground size-3" />
+              Middle Name
+            </Label>
             <Input
               id="middle_name"
               value={formData.middle_name ?? ""}
@@ -191,7 +205,10 @@ export default function EditBasicInfo({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="last_name"><User className="text-muted-foreground size-3" />Last Name</Label>
+            <Label htmlFor="last_name">
+              <User className="text-muted-foreground size-3" />
+              Last Name
+            </Label>
             <Input
               id="last_name"
               value={formData.last_name ?? ""}
@@ -201,12 +218,15 @@ export default function EditBasicInfo({
 
           {/* suffix */}
           <div className="grid gap-2">
-            <Label htmlFor="suffix"><User className="text-muted-foreground size-3" />Suffix</Label>
+            <Label htmlFor="suffix">
+              <User className="text-muted-foreground size-3" />
+              Suffix
+            </Label>
             <Select
               value={formData.suffix || ""}
               onValueChange={(value) => handleChange("suffix", value)}
             >
-              <SelectTrigger className="border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56">
+              <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
                 <SelectValue placeholder="Select Suffix" />
               </SelectTrigger>
               <SelectContent>
@@ -221,7 +241,10 @@ export default function EditBasicInfo({
 
           {/* birth */}
           <div className="grid gap-2">
-            <Label htmlFor="birth_date"><CalendarDays className="text-muted-foreground size-3" />Birth Date</Label>
+            <Label htmlFor="birth_date">
+              <CalendarDays className="text-muted-foreground size-3" />
+              Birth Date
+            </Label>
             <Input
               type="date"
               id="birth_date"
@@ -231,7 +254,10 @@ export default function EditBasicInfo({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="birth_place"><MapPinHouse className="text-muted-foreground size-3" />Birth Place</Label>
+            <Label htmlFor="birth_place">
+              <MapPinHouse className="text-muted-foreground size-3" />
+              Birth Place
+            </Label>
             <Input
               id="birth_place"
               value={formData.birth_place ?? ""}
@@ -241,12 +267,15 @@ export default function EditBasicInfo({
 
           {/* gender */}
           <div className="grid gap-2">
-            <Label htmlFor="gender"><CircleSmall className="text-muted-foreground size-3" />Gender</Label>
+            <Label htmlFor="gender">
+              <CircleSmall className="text-muted-foreground size-3" />
+              Gender
+            </Label>
             <Select
               value={formData.gender || ""}
               onValueChange={(value) => handleChange("gender", value)}
             >
-              <SelectTrigger className="border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56">
+              <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
                 <SelectValue placeholder="Select Gender" />
               </SelectTrigger>
               <SelectContent>
@@ -261,7 +290,10 @@ export default function EditBasicInfo({
 
           {/* contact */}
           <div className="grid gap-2">
-            <Label htmlFor="contact_no"><Building2 className="text-muted-foreground size-3" />Last School Attended</Label>
+            <Label htmlFor="contact_no">
+              <Building2 className="text-muted-foreground size-3" />
+              Last School Attended
+            </Label>
             <Input
               id="contact_no"
               value={formData.last_school_attend ?? ""}
@@ -271,11 +303,15 @@ export default function EditBasicInfo({
 
           {/* email */}
           <div className="grid gap-2">
-            <Label htmlFor="email"><Mail className="text-muted-foreground size-3" />Email</Label>
+            <Label htmlFor="email">
+              <Mail className="text-muted-foreground size-3" />
+              Email
+            </Label>
             <Input
               id="email"
               value={formData.email ?? ""}
               onChange={(e) => update("email", e.target.value)}
+              readOnly
             />
           </div>
         </div>

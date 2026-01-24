@@ -17,7 +17,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Loader2, Send, CircleX } from "lucide-react";
+import { Loader2, Send, CircleX, UserRoundPlus, PenSquare, Save } from "lucide-react";
 
 import EditBasicInfo from "./EditBasicInfo";
 import EditAddressInfo from "./EditAddressInfo";
@@ -118,16 +118,22 @@ export default function EditStudent({ open, setOpen, id }: EditStudentProps) {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent side="bottom" className="h-[90%] overflow-y-auto">
+      <SheetContent side="bottom" className="h-[95%] overflow-y-auto">
         {isLoadingDetails ? (
           <div className="flex justify-center h-full">
             <Loader2 className="animate-spin w-8 h-8" />
           </div>
         ) : (
           <>
-            <SheetHeader>
-              <SheetTitle>Edit Student Profile</SheetTitle>
-              <SheetDescription>Edit student details</SheetDescription>
+            <SheetHeader className="text-zinc-900 mb-4">
+              <SheetTitle className="flex items-center">
+                <PenSquare className="mr-1 size-5 text-teal-500" />
+                Edit Student {student?.first_name} {student?.middle_name}
+                  {student?.last_name}
+              </SheetTitle>
+              <SheetDescription className="text-xs">
+                Edit student information here and click update to save.
+              </SheetDescription>
             </SheetHeader>
 
             <div className="p-5 space-y-5">
@@ -153,18 +159,20 @@ export default function EditStudent({ open, setOpen, id }: EditStudentProps) {
                 <Button
                   onClick={handleSubmit}
                   disabled={editStudentMutation.isPending}
+                  variant="default"
+                  size="sm"
                 >
+                  {editStudentMutation.isPending ? "Updating..." : "Update"}
                   {editStudentMutation.isPending ? (
                     <Loader2 className="animate-spin w-4 h-4 mr-2" />
                   ) : (
-                    <Send className="w-4 h-4 ml-2" />
+                    <Save className="size-3" />
                   )}
-                  Update
                 </Button>
 
                 <SheetClose asChild>
-                  <Button variant="outline">
-                    <CircleX className="w-4 h-4 mr-2" /> Close
+                  <Button variant="outline" size="sm">
+                    <CircleX className="size-3" /> Close
                   </Button>
                 </SheetClose>
               </div>

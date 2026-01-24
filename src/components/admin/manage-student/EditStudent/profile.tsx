@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Camera } from "lucide-react";
+import { Camera, Circle, CircleX, PenSquare, Save, UserCircle } from "lucide-react";
 
 import { useAuth } from "@/context/AuthContext";
 import { useGetStudentDetailsById } from "@/hooks/useStudentDetails";
@@ -32,7 +32,7 @@ export default function Profile({ id }: { id: any }) {
   const fullName = `${student?.first_name} ${student?.middle_name} ${student?.last_name} ${student?.suffix}`;
 
   return (
-    <div className="shadow-lg  z-2 w-120 py-5 flex flex-col justify-center rounded-xl items-center px-5 gap-5 bg-zinc-100 dark:bg-zinc-900">
+    <div className="shadow-lg  z-2 w-120 py-5 flex flex-col justify-center rounded-xl items-center px-5 gap-5 bg-accent/10">
       <Dialog>
         <DialogTrigger asChild>
           <div className="relative group w-30 h-30">
@@ -44,7 +44,7 @@ export default function Profile({ id }: { id: any }) {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
 
-            <div className="absolute inset-0 flex group-hover:cursor-pointer group-hover:bg-teal-800/50 rounded-lg items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute inset-0 flex group-hover:cursor-pointer group-hover:bg-accent/50 rounded-lg items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <Camera className="size-10 text-white text-xl" />
             </div>
           </div>
@@ -52,22 +52,22 @@ export default function Profile({ id }: { id: any }) {
 
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Change Avatar</DialogTitle>
+            <DialogTitle className="flex gap-2"><PenSquare className="size-5 text-teal-500" />Change Avatar</DialogTitle>
             <DialogDescription className="text-xs">
-              Make changes to your profile here. You can change your avatar.
+              Make change student avatar here.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 mt-5">
             <div className="grid gap-3">
-              <Label htmlFor="avatar">Avatar</Label>
+              <Label htmlFor="avatar"><UserCircle className="size-4 text-muted-foreground" />Avatar</Label>
               <Input id="avatar" name="avatar" type="file" />
             </div>
           </div>
           <DialogFooter className="mt-5">
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="destructive" size="sm"><CircleX className="size-3 text-muted-foreground" /> Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" variant="outline" size="sm"><Save className="size-3 text-primary" />Save changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -77,9 +77,9 @@ export default function Profile({ id }: { id: any }) {
             {fullName}
           </p>
           <span className="text-xs">
-            {student?.lrn || "N/A"} ||{" "}
+            {student?.lrn || "N/A"} {" "}
             <span
-              className={student?.status ? "text-green-500" : "text-red-500"}
+              className={student?.status ? "text-green-500 text-[10px]" : "text-red-500 text-[10px]"}
             >
               {student?.status ? "Active" : "Inactive"}
             </span>
@@ -92,10 +92,10 @@ export default function Profile({ id }: { id: any }) {
           </span>
         </p>
         <div className="flex gap-2 mt-2">
-          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
+          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full shadow bg-accent">
             {student?.grade?.grade_level || "N/A"}
           </span>
-          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
+          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full shadow bg-accent">
             {student?.section?.section_name || "N/A"}
           </span>
         </div>

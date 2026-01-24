@@ -7,7 +7,7 @@ export default function EditGuardianInfo({ formData, setFormData }: any) {
     setFormData((prev: any) => ({ ...prev, [k]: v }));
 
   return (
-    <div className="bg-zinc-100 dark:bg-zinc-900 p-5 rounded-md w-full space-y-3">
+    <div className="bg-accent/10 p-5 rounded-md w-full space-y-3">
       {/* Section Header */}
       <h1 className="text-sm font-bold flex items-center mb-3">
         <User className="text-teal-500 mr-1 size-4" /> Guardian Information
