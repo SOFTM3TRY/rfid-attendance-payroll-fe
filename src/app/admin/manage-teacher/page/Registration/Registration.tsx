@@ -125,11 +125,11 @@ const {register,handleSubmit,} =useForm()
           <pre className="hidden">{JSON.stringify(data, null, 2)}</pre>
           {/* Avatar + Primary */}
           <div className="col-span-1 rounded-md">
-            <PrimaryInfo data={data} fullName={fullName} />
+            {/* <PrimaryInfo data={data} fullName={fullName} />
 
             <BasicInfo data={data} />
             <AddressInfo data={data.additional_info || {}} />
-            <GuardianInfo data={data.additional_info || {}} />
+            <GuardianInfo data={data.additional_info || {}} /> */}
           </div>
 
           <div className="col-span-1 md:col-span-2 rounded-r-md p-7 h-full bg-zinc-100 dark:bg-zinc-900 border-l-4 border-zinc-300 dark:border-zinc-700">

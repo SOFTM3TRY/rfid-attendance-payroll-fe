@@ -119,10 +119,10 @@ export default function FlipCardOLD({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20">
           {/* Avatar + Primary */}
           <div className="col-span-1 rounded-md">
-            <PrimaryInfo data={data} fullName={fullName} />
+            {/* <PrimaryInfo data={data} fullName={fullName} />
             <BasicInfo data={data} />
             <AddressInfo data={data.additional_info?.[0]} />
-            <GuardianInfo data={data.additional_info?.[0]} />
+            <GuardianInfo data={data.additional_info?.[0]} /> */}
           </div>
 
           {/* FlipCard and RFID Form */}

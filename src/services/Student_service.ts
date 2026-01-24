@@ -196,3 +196,20 @@ export const ChangeStudentStatus = async (token: string, id: string) => {
     throw error;
   }
 };
+
+export const getStudentAttendanceById = async (token: string, id: number) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/student-attendanceby-id/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

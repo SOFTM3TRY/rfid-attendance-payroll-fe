@@ -15,6 +15,7 @@ import {
   EditStudent,
   CountStudentsPerGrade,
   ChangeStudentStatus,
+  getStudentAttendanceById
 } from "@/services/Student_service";
 import { StdioNull } from "child_process";
 
@@ -136,5 +137,14 @@ export const useChangeStudentStatus = () => {
         "Failed to update status";
       toast.error(msg);
     },
+  });
+};
+
+export const useGetStudentAttendanceById = (token: string | null, id: any) => {
+  return useQuery({
+    queryKey: ["get-student-attendance-by-id", id],
+    queryFn: () => getStudentAttendanceById(token as string, id),
+    enabled: !!token && !!id,
+    staleTime: 1000 * 60 * 5,
   });
 };

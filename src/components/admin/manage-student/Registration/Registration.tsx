@@ -83,10 +83,10 @@ export default function Registration({ open, setOpen, studentId }: { open: boole
         {/* Body */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20">
           <div className="col-span-1 rounded-md">
-            <PrimaryInfo data={student} fullName={fullName} />
+            {/* <PrimaryInfo data={student} fullName={fullName} />
             <BasicInfo data={student} />
             <AddressInfo data={student.additional_info || {}} />
-            <GuardianInfo data={student.additional_info || {}} />
+            <GuardianInfo data={student.additional_info || {}} /> */}
           </div>
 
           <div className="col-span-1 md:col-span-2 rounded-r-md p-7 h-full bg-zinc-100 dark:bg-zinc-900 border-l-4 border-zinc-300 dark:border-zinc-700">

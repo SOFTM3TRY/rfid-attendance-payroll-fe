@@ -20,6 +20,12 @@ import {
   TriangleAlert,
 } from "lucide-react";
 
+import { useAuth } from "@/context/AuthContext";
+import {
+  useGetStudentDetailsById,
+  useEditStudnentMutation,
+} from "@/hooks/useStudentDetails";
+
 import PrimaryInfo from "@/components/admin/manage-student/ShowProfile/PrimaryInfoStudent";
 import BasicInfo from "@/components/admin/manage-student/ShowProfile/BasicInfo";
 import AddressInfo from "@/components/admin/manage-student/ShowProfile/AddressInfo";
@@ -66,60 +72,58 @@ export default function ShowAttendanceHistory({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
-        className="bottom-0 h-full rounded-t-md overflow-y-auto p-3"
+        className="bottom-0 h-[95vh] rounded-t-md overflow-y-auto p-3"
         side="bottom"
       >
         <SheetHeader>
-          <SheetDescription className="flex items-center text-center text-md">
-            <User className="mr-1 w-4 h-4 text-teal-500" />
+          <SheetDescription className="flex items-center text-center text-sm">
+            <User className="mr-1 size-4 text-teal-500" />
             Student Attendance History
             <span
-              className={`text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
+              className={`text-white text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
                 data.status == 1
-                  ? "bg-green-200 text-green-900 dark:bg-green-100 dark:text-green-800"
-                  : "bg-red-200 text-red-900 dark:bg-red-100 dark:text-red-800"
+                  ? "bg-green-500"
+                  : "bg-destructive"
               }`}
             >
               {data.status == 1 ? "Active" : "Inactive"}
               <span className="ml-1">
                 {data.status == 1 ? (
-                  <UserCheck className="w-4 h-4 text-green-800" />
+                  <UserCheck className="size-3" />
                 ) : (
-                  <UserX className="w-4 h-4 text-red-800" />
+                  <UserX className="size-3" />
                 )}
               </span>
             </span>
           </SheetDescription>
-          <SheetTitle className="uppercase">{fullName}</SheetTitle>
-          <SheetDescription>S.Y : {data.school_year}</SheetDescription>
+          <SheetTitle className="uppercase text-sm">{fullName}</SheetTitle>
         </SheetHeader>
 
-        <SplitText
+        {/* <SplitText
                   text="Young Generation Academy"
                   className="absolute top-15 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                />
+                /> */}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 ">
-          <pre className="hidden">{JSON.stringify(data, null, 2)}</pre>
           {/* Avatar + Primary */}
           <div className="col-span-1 rounded-md">
-            <PrimaryInfo data={data} fullName={fullName} />
+            <PrimaryInfo lrn={data.lrn} />
 
-            <BasicInfo data={data} />
-            <AddressInfo data={data.additional_info || {}} />
-            <GuardianInfo data={data.additional_info || {}} />
+            <BasicInfo lrn={data.lrn} />
+            <AddressInfo lrn={data.lrn} />
+            <GuardianInfo lrn={data.lrn} />
           </div>
 
-          <div className="col-span-1 md:col-span-2 rounded-r-md p-7 h-full bg-zinc-100 dark:bg-zinc-900 border-l-4 border-zinc-300 dark:border-zinc-700">
-            <div className="sticky top-0 z-500">
-              <span className="text-lg font-medium shadow-lg flex items-center bg-zinc-200 dark:bg-zinc-800 py-2 px-3 rounded-full">
-                <User className="w-8 h-8 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
+          <div className="col-span-1 md:col-span-2 rounded-r-md p-7 h-full bg-accent/10 rounded-xl">
+            <div>
+              <span className="text-lg font-medium shadow-lg flex items-center bg-accent/20 py-2 px-3 rounded-full">
+                <User className="size-6 text-white p-1 mr-2 bg-teal-500 rounded-full" />{" "}
                 Student <span className="text-teal-500 mx-2">{fullName}</span>{" "}
                 Attendance History
               </span>
             </div>
-            <div className="mt-10 p-5">
-              <AttendanceHistory lrn={data.lrn} />
+            <div className="mt-5">
+              <AttendanceHistory id={data.id} />
             </div>
             
           </div>
@@ -141,11 +145,12 @@ export default function ShowAttendanceHistory({
             </Button> */}
             <SheetClose asChild>
               <Button
-                className="w-40"
+                size="sm"
                 variant="outline"
+                className="rounded-full"
                 onClick={() => setOpen(false)}
               >
-                <CircleX /> Close
+                <CircleX className="size-4" /> Close
               </Button>
             </SheetClose>
           </div>

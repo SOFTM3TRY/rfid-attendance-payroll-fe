@@ -98,11 +98,11 @@ export default function ShowProfile({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 p-5">
           {/* Avatar + Primary */}
           <div className="col-span-1 rounded-md">
-            <PrimaryInfo data={student} fullName={fullName} />
+            {/* <PrimaryInfo data={student} fullName={fullName} />
 
             <BasicInfo data={student} />
             <AddressInfo data={student?.additional_info || {}} />
-            <GuardianInfo data={student?.additional_info || {}} />
+            <GuardianInfo data={student?.additional_info || {}} /> */}
           </div>
           <div className="col-span-1 md:col-span-2 rounded-md h-full bg-zinc-100 dark:bg-zinc-900 p-5">
             <div className="sticky top-0 z-500">
