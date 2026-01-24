@@ -19,7 +19,7 @@ import {
 
 export default function BasicInfo({ student }: { student: any }) {
   return (
-    <div className="w-full py-5 flex flex-col gap-4 px-5 rounded-xl bg-zinc-100 dark:bg-zinc-900">
+    <div className="w-full py-5 flex flex-col gap-4 px-5 rounded-xl bg-accent/10">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <SectionHeader
           icon={<ShieldUser className="text-blue-500 size-4" />}

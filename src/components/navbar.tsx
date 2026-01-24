@@ -79,7 +79,7 @@ export function Navbar() {
 
   return (
     <nav
-      className="p-3 flex z-50 justify-between bg-white dark:bg-background dark:border-gray-800 w-full sticky top-0"
+      className="p-3 flex z-50 justify-between w-full sticky top-0"
       style={{ pointerEvents: "auto" }}
     >
       <SidebarTrigger />

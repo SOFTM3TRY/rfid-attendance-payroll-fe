@@ -7,7 +7,7 @@ import { Map, MapPinHouse } from "lucide-react";
 export default function AddressInfo({ student }: { student: any }) {
 
   return (
-    <div className="w-full py-5 flex flex-col gap-4 px-5 mt-5 rounded-md bg-zinc-100 dark:bg-zinc-900">
+    <div className="w-full py-5 flex flex-col gap-4 px-5 mt-5 rounded-md bg-accent/10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SectionHeader icon={<Map className="text-red-500 size-4" />} title="Address" />
 

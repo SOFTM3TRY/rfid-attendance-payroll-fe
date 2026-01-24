@@ -31,7 +31,7 @@ export default function FlipCardUI({
     .join(" ");
 
   return (
-    <div className="group h-90 w-100 [perspective:1000px]">
+    <div className="group h-110 w-100 [perspective:1000px]">
       {/* INNER */}
       <div
         className={cn(
@@ -78,7 +78,7 @@ export default function FlipCardUI({
             </div>
           </div>
 
-          <div className="absolute bottom-0 w-full h-10 bg-gradient-to-r from-teal-700 to-sky-700 rounded-b-xl" />
+          <div className="absolute bottom-0 w-auto h-10 bg-gradient-to-r from-teal-700 to-sky-700 rounded-b-xl" />
         </div>
 
         {/* BACK */}
