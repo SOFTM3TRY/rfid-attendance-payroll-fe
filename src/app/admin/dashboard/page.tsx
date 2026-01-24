@@ -5,7 +5,13 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
 
-import { SquareArrowOutUpRight, Users, Sheet, HouseIcon } from "lucide-react";
+import {
+  SquareArrowOutUpRight,
+  Users,
+  Sheet,
+  HouseIcon,
+  GraduationCap,
+} from "lucide-react";
 
 import {
   Breadcrumb,
@@ -45,7 +51,10 @@ import { useUserDetails } from "@/hooks/useUserDetails";
 import { useClientOnly } from "@/hooks/useClientOnly";
 
 import Loader from "@/components/Loader";
-import { useCountActiveStudents } from "@/hooks/useStudentDetails";
+import {
+  useCountActiveStudents,
+  useCountStudentsPerGrade,
+} from "@/hooks/useStudentDetails";
 import { useTeacherActiveCount } from "@/hooks/useTeacher";
 import { Label } from "@/components/ui/label";
 
@@ -56,6 +65,10 @@ export default function Dashboard() {
   const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
     token as string,
   );
+  const {
+    data: countStudentsPerGrade,
+    isLoading: isLoadingCountStudentsPerGrade,
+  } = useCountStudentsPerGrade(token as string);
   const { data: countActiveStudents, isLoading: isLoadingCountActiveStudents } =
     useCountActiveStudents(token as string);
   const { data: CountActiveTeachers, isLoading: isLoadingCountActiveTeachers } =
@@ -74,7 +87,9 @@ export default function Dashboard() {
 
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <Label className="text-sm"><HouseIcon className="size-4 text-primary" /> Dashboard</Label>
+              <Label className="text-sm">
+                <HouseIcon className="size-4 text-primary" /> Dashboard
+              </Label>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -84,18 +99,20 @@ export default function Dashboard() {
               </Breadcrumb>
             </div>
 
-            <div className="mt-10 p-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div>
+              <h1 className="text-sm mt-10 flex">
+                <Users className="mr-2 size-4" />
+                Totol Active Users
+              </h1>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               <Card>
-                <CardHeader>
+                <CardHeader className="flex items-center justify-between">
                   <CardDescription className="flex items-center">
                     <Users className="size-4 text-primary mr-2" />
                     Active Students
                   </CardDescription>
-
-                  <CardTitle className="text-4xl">
-                    {" "}
-                    {countActiveStudents?.active_students_count}
-                  </CardTitle>
 
                   <CardAction>
                     <Button variant="link" size="sm">
@@ -104,17 +121,22 @@ export default function Dashboard() {
                     </Button>
                   </CardAction>
                 </CardHeader>
+
+                <CardContent>
+                  <div className="text-5xl font-bold">
+                    {countActiveStudents?.active_students_count}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Total students
+                  </p>
+                </CardContent>
               </Card>
               <Card>
-                <CardHeader>
+                <CardHeader className="flex items-center justify-between">
                   <CardDescription className="flex items-center">
                     <Users className="size-4 text-primary mr-2" />
                     Active Teachers
                   </CardDescription>
-
-                  <CardTitle className="text-4xl">
-                    {CountActiveTeachers?.count}
-                  </CardTitle>
 
                   <CardAction>
                     <Button variant="link" size="sm">
@@ -123,31 +145,40 @@ export default function Dashboard() {
                     </Button>
                   </CardAction>
                 </CardHeader>
+
+                <CardContent>
+                  <div className="text-5xl font-bold">
+                    {CountActiveTeachers?.count}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Total students
+                  </p>
+                </CardContent>
               </Card>
               <Card
                 className="bg-muted-foreground/30 cursor-not-allowed"
                 title="This Card is not available"
               >
                 <CardHeader>
-                  <CardDescription className="flex items-center text-muted-foreground">
+                  <CardDescription className="flex items-center text-muted-foreground/50">
                     <Users className="size-4 mr-2" />
                     Active Employees
                   </CardDescription>
 
-                  <CardTitle className="text-4xl text-muted-foreground/50">
-                    0
-                  </CardTitle>
-
-                  <CardAction className="bg-muted-foreground/50  px-2 py-1 rounded-full text-xs">
+                  <CardAction className="bg-muted-foreground/30  px-2 py-1 rounded-full text-xs">
                     <a
                       href="#"
-                      className="flex items-center cursor-not-allowed"
+                      className="flex items-center cursor-not-allowed text-muted-foreground/50"
                     >
                       Go to Page
                       <SquareArrowOutUpRight className="h-3 w-3 ml-2" />
                     </a>
                   </CardAction>
                 </CardHeader>
+                <CardContent className="text-5xl font-bold text-muted-foreground/50">
+                  0
+
+                </CardContent>
               </Card>
             </div>
 
@@ -158,7 +189,46 @@ export default function Dashboard() {
               </h1>
             </div>
 
-            <div className="my-5">
+            <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+              {isLoadingCountStudentsPerGrade ? (
+                <Card>
+                  <CardHeader>
+                    <CardDescription>Loading...</CardDescription>
+                    <CardTitle className="text-3xl">...</CardTitle>
+                  </CardHeader>
+                </Card>
+              ) : countStudentsPerGrade?.status &&
+                Array.isArray(countStudentsPerGrade?.data) ? (
+                countStudentsPerGrade.data.map(
+                  (item: { grade: string; count: number }, idx: number) => (
+                    <Card key={`${item.grade}-${idx}`}>
+                      <CardHeader>
+                        <CardDescription className="flex items-center">
+                          <GraduationCap className="size-4 text-primary mr-2" />
+                          {item.grade}
+                        </CardDescription>
+                      </CardHeader>
+
+                      <CardContent>
+                        <div className="text-5xl font-bold">{item.count}</div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Total students
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ),
+                )
+              ) : (
+                <Card>
+                  <CardHeader>
+                    <CardDescription>No data</CardDescription>
+                    <CardTitle className="text-xl">0</CardTitle>
+                  </CardHeader>
+                </Card>
+              )}
+            </div>
+
+            <div className="my-5 mt-10">
               <ChartAreaInteractive />
             </div>
 
@@ -214,7 +284,9 @@ export default function Dashboard() {
                       Total
                     </CardDescription>
 
-                    <CardTitle className="text-4xl text-muted-foreground/50">0</CardTitle>
+                    <CardTitle className="text-4xl text-muted-foreground/50">
+                      0
+                    </CardTitle>
                   </CardHeader>
                 </Card>
               </div>

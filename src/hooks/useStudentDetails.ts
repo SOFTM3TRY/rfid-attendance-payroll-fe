@@ -1,6 +1,7 @@
 import { toast } from 'react-hot-toast';
 import { UseMutationResult, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { CountActiveStudents, CountByGradeStudents, GetStudentDetails, RegisterRFIDToStudent, GetStudentDetailsById, GetStudentDetailsByLrn, EditStudent } from '@/services/Student_service';
+import { CountActiveStudents, CountByGradeStudents, GetStudentDetails, RegisterRFIDToStudent, GetStudentDetailsById, GetStudentDetailsByLrn, EditStudent, CountStudentsPerGrade } from '@/services/Student_service';
+import { StdioNull } from 'child_process';
 
 export const useStudentDetails = (token: string | null) => {
   return useQuery({
@@ -67,3 +68,17 @@ export const useEditStudnentMutation = (
   });
 };
 
+export const useCountStudentsPerGrade = (token: string | null) => {
+  return useQuery({
+    queryKey: ["count-students-per-grade", token],
+    enabled: !!token,
+    queryFn: async () => {
+      if (!token) {
+        // ✅ NEVER return undefined
+        return { status: false, data: [] };
+      }
+      return await CountStudentsPerGrade(token);
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+};

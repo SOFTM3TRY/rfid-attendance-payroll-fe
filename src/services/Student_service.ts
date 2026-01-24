@@ -165,3 +165,15 @@ export const GetStudentDetailsByLrn = async (
 
   return res.json();
 };
+
+export const CountStudentsPerGrade = async (token: string) => {
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/students/count-by-grade`;
+  
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  
+  return response.data;
+}
