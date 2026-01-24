@@ -169,7 +169,7 @@ export function StudentTable() {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-3">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -193,7 +193,7 @@ export function StudentTable() {
       </div>
 
       <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm">
+        <div className="text-muted-foreground flex-1 text-xs">
           {`Showing ${
             table.getState().pagination.pageIndex *
               table.getState().pagination.pageSize +

@@ -31,8 +31,8 @@ export default function ManageTeacher() {
           <Navbar />
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-lg font-medium flex">
-                <Users className="mr-2 w-6 h-6 text-teal-500" />
+              <h1 className="text-sm font-medium flex">
+                <Users className="mr-2 size-4 text-primary" />
                 Manage Teachers
               </h1>
               <Breadcrumb>

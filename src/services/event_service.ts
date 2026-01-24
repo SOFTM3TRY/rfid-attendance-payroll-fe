@@ -36,23 +36,29 @@ export const CreateEvent = async (token: string, data: any) => {
   }
 };
 
-// export const UpdateYear = async (
-//   token: string,
-//   yearId: string,
-//   data: { years: string }
-// ) => {
-//   const response = await axios.put(
-//     `${process.env.NEXT_PUBLIC_BASE_URL_API}/update-year/${yearId}`,
-//     {
-//       id: yearId,     
-//       years: data.years,    
-//     },
-//     {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     }
-//   );
+export const UpdateEvent = async (token: string, id: number | string, data: any) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/update-event/${id}`,
+      data,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
-//   return response.data;
-// };
+export const DeleteEvent = async (token: string, id: number | string) => {
+  try {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/delete-event/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

@@ -7,6 +7,7 @@ import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
+import { DatePickerRangeField } from "@/components/DatePickerRangeField";
 
 import {
   Breadcrumb,
@@ -34,7 +35,7 @@ import { useClientOnly } from "@/hooks/useClientOnly";
 
 import Loader from "@/components/Loader";
 import { Label } from "@/components/ui/label";
-import { Calendar1 } from "lucide-react";
+import { Calendar1, CalendarPlus2, Captions, CaseSensitive, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -44,9 +45,11 @@ export default function CalendarPage() {
   const { token } = useAuth();
   const isClient = useClientOnly();
 
-  const { mutate: createEvent } = useCreateEvent();
+  const { mutate: createEvent, isPending } = useCreateEvent();
 
-  const { data: events, isLoading: isLoadingEvents } = useEvent(token as string);
+  const { data: events, isLoading: isLoadingEvents } = useEvent(
+    token as string,
+  );
 
   const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
     token as string,
@@ -67,11 +70,23 @@ export default function CalendarPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    createEvent({
-      token: token as string,
-      data: eventForm,
-    });
+    createEvent(
+      { token: token as string, data: eventForm },
+      {
+        onSuccess: () => {
+          setCreateOpen(false); // ✅ close modal
+          setEventForm({
+            title: "",
+            description: "",
+            start_date: "",
+            end_date: "",
+          }); // optional reset
+        },
+      },
+    );
   };
+
+  const [createOpen, setCreateOpen] = useState(false);
 
   if (!isClient || isLoadingUserDetails) {
     return <Loader />;
@@ -104,31 +119,29 @@ export default function CalendarPage() {
               </Breadcrumb>
             </div>
 
-            <pre>{JSON.stringify(events, null, 2)}</pre>
-
             <div className="p-5 h-full mt-5 z-1">
               <div className="w-full h-full py-2 flex items-center justify-between mb-5">
                 <h1 className="text-xl lg:text-xl uppercase font-bold">
                   YGA Calendar
                 </h1>
 
-                <Dialog>
-                  <DialogTrigger>
-                    <Button size="sm" variant="outline">
-                      Create Event
+                <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline" className="text-xs">
+                      <CalendarPlus2 className="size-4 text-primary" /> Create Event
                     </Button>
                   </DialogTrigger>
 
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Create Event</DialogTitle>
+                      <DialogTitle className="text-sm flex gap-2"><Calendar1 className="size-4 text-primary" /> Create Event</DialogTitle>
                     </DialogHeader>
 
                     <form onSubmit={handleSubmit}>
-                      <div className="space-y-6">
-                        <div className="grid grid-cols-1">
+                      <div className="space-y-6 mt-4">
+                        <div className="grid grid-cols-1 gap-3">
                           <div className="col-span-1">
-                            <Label>Title</Label>
+                            <Label><CaseSensitive className="size-4 text-primary" /> Event Title</Label>
                             <Input
                               type="text"
                               name="title"
@@ -138,8 +151,8 @@ export default function CalendarPage() {
                             />
                           </div>
 
-                          <div className="col-span-1">
-                            <Label>Description</Label>
+                          <div className="col-span-1 mt-2">
+                            <Label><Captions className="size-4 text-primary" />Description</Label>
                             <Input
                               type="text"
                               name="description"
@@ -149,30 +162,40 @@ export default function CalendarPage() {
                             />
                           </div>
 
-                          <div className="col-span-1">
-                            <Label>Start Date</Label>
-                            <Input
-                              type="date"
-                              name="start_date"
-                              value={eventForm.start_date}
-                              onChange={handleChange}
-                            />
-                          </div>
-
-                          <div className="col-span-1">
-                            <Label>End Date</Label>
-                            <Input
-                              type="date"
-                              name="end_date"
-                              value={eventForm.end_date}
-                              onChange={handleChange}
-                            />
-                          </div>
+                          {/* ✅ Range picker */}
+                          <DatePickerRangeField
+                            label="Event Date Range"
+                            value={{
+                              from: eventForm.start_date,
+                              to: eventForm.end_date,
+                            }}
+                            onChange={({ start_date, end_date }) => {
+                              setEventForm((prev) => ({
+                                ...prev,
+                                start_date,
+                                end_date,
+                              }));
+                            }}
+                          />
                         </div>
 
                         <div className="mt-5">
-                          <Button type="submit" className="w-full">
-                            Create Event
+                          <Button
+                            type="submit"
+                            variant="outline"
+                            size="sm"
+                            className="w-full flex items-center gap-2 text-xs"
+                            disabled={
+                              isPending ||
+                              !eventForm.title ||
+                              !eventForm.start_date ||
+                              !eventForm.end_date
+                            }
+                          >
+                            {isPending && (
+                              <Loader2 className="size-4 animate-spin" />
+                            )}
+                            <CalendarPlus2 />{isPending ? "Creating..." : "Create Event"}
                           </Button>
                         </div>
                       </div>
@@ -181,7 +204,7 @@ export default function CalendarPage() {
                 </Dialog>
               </div>
 
-              <Calendar />
+              <Calendar data={events} />
             </div>
           </div>
 

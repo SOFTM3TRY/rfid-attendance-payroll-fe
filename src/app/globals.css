@@ -232,7 +232,6 @@
 
 .fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
   background-color: var(--accent);
-  border: 0.5px solid white;
   color: var(--accent-foreground);
 
   &:hover {
@@ -242,7 +241,6 @@
 
 .fc-direction-ltr .fc-button-group > .fc-button:not(:last-child) {
   background-color: var(--accent);
-  border: 0.5px solid white;
   color: var(--accent-foreground);
 
   &:hover {
@@ -274,12 +272,30 @@
 }
 
 .fc-h-event {
-  background-color: var(--accent);
-  border: var(--accent) solid 1px;
+  background-color: var(--primary);
+  border: var(--primary) solid 1px;
   color: var(--primary);
-  font-size: smaller;
+  font-size: small;
+  padding-inline: 1rem;
+  padding-top: 0.2rem;
+  height: 2rem;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: var(--primary);
+    background-color: var(--accent);
+    border: var(--accent) solid 1px;
+    color: var(--accent-foreground);
   }
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border: var(--accent) solid 1px;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border-color: var(--accent);
+  color: var(--muted-foreground);
+  height: 2.5rem;
+  min-width: 2.5rem;
 }

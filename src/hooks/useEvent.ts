@@ -1,11 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateEvent, GetEvents } from "@/services/event_service";
+import { CreateEvent, DeleteEvent, GetEvents, UpdateEvent } from "@/services/event_service";
 import { toast } from "react-hot-toast";
-import { useAuth } from "@/context/AuthContext";
 
 export const useEvent = (token: string | null) => {
   return useQuery({
-    queryKey: ["year-details"],
+    queryKey: ["event-details"],
     queryFn: () => GetEvents(token as string),
     enabled: !!token,
     staleTime: 1000 * 60 * 5,
@@ -16,43 +15,52 @@ export const useCreateEvent = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ token, data }: { token: string; data: any }) =>
-      CreateEvent(token, data),
+    mutationFn: ({ token, data }: { token: string; data: any }) => CreateEvent(token, data),
     onSuccess: () => {
       toast.success("Event created successfully");
-    //   queryClient.invalidateQueries({ queryKey: ["year-details"] });
+      queryClient.invalidateQueries({ queryKey: ["event-details"] });
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to create new Event");
-      }
+      toast.error(error instanceof Error ? error.message : "Failed to create new Event");
     },
   });
 };
 
-// export const useUpdateYear = () => {
-//   const queryClient = useQueryClient();
+export const useUpdateEvent = () => {
+  const queryClient = useQueryClient();
 
-//   return useMutation({
-//     mutationFn: ({
-//       token,
-//       yearId,
-//       data,
-//     }: {
-//       token: string;
-//       yearId: string;
-//       data: { years: string };
-//     }) => UpdateYear(token, yearId, data),
+  return useMutation({
+    mutationFn: ({
+      token,
+      id,
+      data,
+    }: {
+      token: string;
+      id: number | string;
+      data: any;
+    }) => UpdateEvent(token, id, data),
+    onSuccess: () => {
+      toast.success("Event updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["event-details"] });
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to update Event");
+    },
+  });
+};
 
-//     onSuccess: () => {
-//       toast.success("School Year updated successfully");
-//       queryClient.invalidateQueries({ queryKey: ["year-details"] });
-//     },
+export const useDeleteEvent = () => {
+  const queryClient = useQueryClient();
 
-//     onError: () => {
-//       toast.error("Failed to update School Year");
-//     },
-//   });
-// };
+  return useMutation({
+    mutationFn: ({ token, id }: { token: string; id: number | string }) =>
+      DeleteEvent(token, id),
+    onSuccess: () => {
+      toast.success("Event deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["event-details"] });
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to delete Event");
+    },
+  });
+};
