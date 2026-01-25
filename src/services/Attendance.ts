@@ -25,3 +25,12 @@ export const AttendanceTimeOut = async (rfid_uid: string) => {
         throw error;
     }
 };
+
+export const AttendanceTap = async (rfid_uid: string) => {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-tap`,
+    { rfid_uid }
+  );
+
+  return response.data;
+};

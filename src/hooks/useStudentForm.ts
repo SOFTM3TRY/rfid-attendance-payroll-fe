@@ -64,7 +64,6 @@ export function useStudentForm() {
       "birth_place",
       "birth_date",
       "student_status",
-      "last_school_attend",
     ],
     3: [
       "region",
@@ -93,6 +92,7 @@ export function useStudentForm() {
         ![
           "middle_name",
           "suffix",
+          "last_school_attend",
           "guardian_middle_name",
           "student_status",
         ].includes(field)
@@ -180,7 +180,13 @@ export function useStudentForm() {
         }
 
         const date = new Date();
-        const age = date.getFullYear() - birth.getFullYear() - (date < new Date(date.getFullYear(), birth.getMonth(), birth.getDate()) ? 1 : 0);
+        const age =
+          date.getFullYear() -
+          birth.getFullYear() -
+          (date <
+          new Date(date.getFullYear(), birth.getMonth(), birth.getDate())
+            ? 1
+            : 0);
 
         if (age < 6) {
           setErrors((prev: any) => ({
@@ -229,7 +235,7 @@ export function useStudentForm() {
         birth_place: "",
         birth_date: "",
         student_status: "",
-        last_school_attend: "",
+        last_school_attend: "---",
         street: "",
         region: "",
         province: "",

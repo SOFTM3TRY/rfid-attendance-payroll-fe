@@ -4,6 +4,7 @@ import { Subject } from "./subject";
 
 export interface Student {
   id: number;
+  avatar: string | null;
   student_no: string | null;
   lrn: string;
   rfid_uid: string | null;

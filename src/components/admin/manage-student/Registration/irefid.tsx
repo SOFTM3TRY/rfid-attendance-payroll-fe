@@ -51,7 +51,7 @@ export default function FlipCardUI({
           />
 
           <Avatar className="h-24 w-24 absolute top-20 left-1/2 -translate-x-1/2 border-4 border-white">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src={student?.avatar ? `https://rfid-api.barangay185bms.com/storage/avatars/${student?.avatar}` : "https://github.com/shadcn.png"} />
             <AvatarFallback>
               {student.first_name?.[0]}
               {student.last_name?.[0]}

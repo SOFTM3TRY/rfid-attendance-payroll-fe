@@ -44,6 +44,7 @@ import { Student } from "@/types/Student";
 export const columns = (props: {
   onEdit: (id: string) => void;
   onChangeStatus: (id: string) => void;
+  onChangePassword: (id: string, name?: string) => void;
 }): ColumnDef<Student>[] => [
   {
     accessorKey: "lrn",
@@ -52,6 +53,7 @@ export const columns = (props: {
         <ShieldUser className="text-blue-500" /> LRN
       </Button>
     ),
+    cell: ({ row }) => <span className="text-primary">{row.original.lrn}</span>,
   },
   {
     accessorKey: "FullName",
@@ -64,7 +66,11 @@ export const columns = (props: {
       <div className="flex items-center gap-2">
         <Avatar className="size-8">
           <AvatarImage
-            src="https://github.com/shadcn.png"
+            src={
+              row.original.avatar
+                ? `https://rfid-api.barangay185bms.com/storage/avatars/${row.original.avatar}`
+                : "https://github.com/shadcn.png"
+            }
             className="ounded-lg hover:grayscale-100 transition-all duration-300"
             draggable={false}
           />
@@ -141,9 +147,11 @@ export const columns = (props: {
       const studentId = row.original.id;
       const lrn = row.original.lrn;
 
-      const [openEdit, setOpenEdit] = useState(false);
       const [openHistory, setOpenHistory] = useState(false);
       const [openRegister, setOpenRegister] = useState(false);
+
+      const studentName =
+        `${row.original.first_name || ""} ${row.original.last_name || ""}`.trim();
 
       return (
         <div>
@@ -170,19 +178,31 @@ export const columns = (props: {
                 <Eye className="size-4 text-muted-foreground" />
                 View Profile
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => props.onEdit(studentId.toString())}
               >
                 <SquarePen className="size-4" /> Edit Profile
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  props.onChangePassword(studentId.toString(), studentName)
+                }
+              >
+                <Pencil className="size-4 text-muted-foreground" />
+                Change Password
+              </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => setOpenHistory(true)}>
                 <History className="size-4 text-muted-foreground" />
                 Attendance History
               </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => setOpenRegister(true)}>
                 <FilePlus className="size-4 text-muted-foreground" />
                 Register
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => props.onChangeStatus(studentId.toString())}
               >
@@ -191,6 +211,7 @@ export const columns = (props: {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
           <ShowAttendanceHistory
             open={openHistory}
             setOpen={setOpenHistory}

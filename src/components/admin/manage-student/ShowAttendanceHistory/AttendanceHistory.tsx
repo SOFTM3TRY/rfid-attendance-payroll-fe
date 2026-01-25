@@ -60,7 +60,7 @@ export type AttendanceEntry = {
   date: string; // "2026-01-24"
   time_in: string; // "16:52:49"
   time_out: string; // "16:53:02" or "-"
-  remarks: "Present" | "Late" | "Absent";
+  remarks: string;
 };
 
 type RawAttendance = {
@@ -91,12 +91,12 @@ function dateSearchableText(dateStr: string) {
   return `${raw} ${formatted}`;
 }
 
-function normalizeRemarks(r: string): AttendanceEntry["remarks"] {
-  const v = (r || "").toUpperCase();
-  if (v === "LATE") return "Late";
-  if (v === "ABSENT") return "Absent";
-  return "Present";
-}
+// function normalizeRemarks(r: string): AttendanceEntry["remarks"] {
+//   const v = (r || "").toUpperCase();
+//   if (v === "LATE") return "Late";
+//   if (v === "ABSENT") return "Absent";
+//   return "Present";
+// }
 
 function extractTime(timeIn: string | null): string {
   // "2026-01-24 16:52:49" -> "16:52:49"
@@ -196,19 +196,7 @@ const columns: ColumnDef<AttendanceEntry>[] = [
     cell: ({ row }) => {
       const value = row.getValue("remarks") as string;
 
-      let cls =
-        "text-gray-600 py-1 text-center rounded-full font-medium flex items-center justify-center";
-      if (value === "Present")
-        cls =
-          "text-green-50 bg-green-500 dark:text-green-700 dark:bg-green-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
-      if (value === "Late")
-        cls =
-          "text-yellow-50 bg-yellow-500 dark:text-yellow-700 dark:bg-yellow-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
-      if (value === "Absent")
-        cls =
-          "text-red-50 bg-red-500 dark:text-red-700 dark:bg-red-200 py-1 text-center rounded-full font-medium flex items-center justify-center";
-
-      return <div className={cls}>{value}</div>;
+      return <div className="text-[10px] text-center text-primary">{value}</div>;
     },
   },
 ];
@@ -256,8 +244,7 @@ export function AttendanceHistory({ id }: { id: string }) {
 
       time_in: formatTime12h(r.time_in),
       time_out: formatTime12h(r.time_out),
-
-      remarks: normalizeRemarks(r.remarks),
+      remarks: r.remarks,
     }));
 
     setData(converted);

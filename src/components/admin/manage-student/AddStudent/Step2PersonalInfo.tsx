@@ -219,7 +219,7 @@ export default function Step2({
         )}
       </div>
 
-      <div className="grid gap-2">
+      <div className=" gap-2 hidden">
         <Label htmlFor="last_school_attend">
           <span className="text-red-500 mr-[-0.3rem]">*</span>
           <School className="text-blue-500 h-3 w-3" />
@@ -228,7 +228,7 @@ export default function Step2({
         <Input
           id="last_school_attend"
           name="last_school_attend"
-          value={formData.last_school_attend}
+          value="---"
           onChange={handleChange}
           placeholder="Enter Last School Attended"
           className={

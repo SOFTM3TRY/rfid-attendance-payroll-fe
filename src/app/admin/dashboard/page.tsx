@@ -127,7 +127,7 @@ export default function Dashboard() {
                     {countActiveStudents?.active_students_count}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Total students
+                    Total active students
                   </p>
                 </CardContent>
               </Card>
@@ -151,7 +151,7 @@ export default function Dashboard() {
                     {CountActiveTeachers?.count}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Total students
+                    Total active teachers
                   </p>
                 </CardContent>
               </Card>

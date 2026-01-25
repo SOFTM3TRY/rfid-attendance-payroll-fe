@@ -19,7 +19,7 @@ export default function PrimaryInfo({ lrn }: { lrn: string }) {
   return (
     <div className="bg-accent/20 flex gap-5 items-center justify-center rounded-lg p-5">
       <Avatar className="h-30 w-30 flex-shrink-0">
-        <AvatarImage src="https://github.com/shadcn.png" />
+        <AvatarImage src={student?.avatar ? `https://rfid-api.barangay185bms.com/storage/avatars/${student?.avatar}` : "https://github.com/shadcn.png"} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
 

@@ -15,7 +15,9 @@ import {
   EditStudent,
   CountStudentsPerGrade,
   ChangeStudentStatus,
-  getStudentAttendanceById
+  getStudentAttendanceById,
+  UpdateStudentAvatar,
+  ChangeStudentPassword,
 } from "@/services/Student_service";
 import { StdioNull } from "child_process";
 
@@ -146,5 +148,32 @@ export const useGetStudentAttendanceById = (token: string | null, id: any) => {
     queryFn: () => getStudentAttendanceById(token as string, id),
     enabled: !!token && !!id,
     staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useUpdateStudentAvatar = (token: string | null) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, avatar }: { id: number; avatar: File }) =>
+      UpdateStudentAvatar(token as string, id, avatar),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["student-details"] });
+      toast.success("Student updated successfully");
+    },
+  });
+};
+
+export const useChangeStudentPassword = (token: string | null) => {
+  return useMutation({
+    mutationFn: ({
+      id,
+      new_password,
+      confirm_password,
+    }: {
+      id: number;
+      new_password: string;
+      confirm_password: string;
+    }) => ChangeStudentPassword(token as string, id, new_password, confirm_password),
   });
 };

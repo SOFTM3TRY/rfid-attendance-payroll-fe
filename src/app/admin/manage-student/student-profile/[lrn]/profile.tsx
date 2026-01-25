@@ -37,7 +37,7 @@ export default function Profile({ student }: { student: any }) {
           <div className="relative group w-30 h-30">
             <Avatar className="h-30 w-30 flex-shrink-0">
               <AvatarImage
-                src="https://github.com/shadcn.png"
+                src={student?.avatar ? `http://127.0.0.1:8000/storage/avatars/${student?.avatar}` : "https://github.com/shadcn.png"}
                 className="rounded-lg hover:grayscale-100 transition-all duration-300"
               />
               <AvatarFallback>CN</AvatarFallback>

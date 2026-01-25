@@ -213,3 +213,77 @@ export const getStudentAttendanceById = async (token: string, id: number) => {
     throw error;
   }
 };
+
+export const UpdateStudentAvatar = async (
+  token: string,
+  id: number,
+  avatar: File
+) => {
+  try {
+    const formData = new FormData();
+    formData.append("avatar", avatar);
+
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/students/avatar/${id}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Avatar Upload Error:", error);
+
+    if (error.response) {
+      throw new Error(
+        error.response.data?.message ||
+          error.response.data?.error ||
+          "Server error while uploading avatar."
+      );
+    }
+    if (error.request) {
+      throw new Error("No response from server. Check backend connection.");
+    }
+    throw new Error("Unexpected error occurred.");
+  }
+};
+
+export const ChangeStudentPassword = async (
+  token: string,
+  id: number,
+  new_password: string,
+  confirm_password: string
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/students/change-password/${id}`,
+      { new_password, confirm_password },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (error: any) {
+    console.error("Change Password Error:", error);
+
+    // Laravel validation / server errors
+    if (error?.response?.data) {
+      const msg =
+        error.response.data.message ||
+        error.response.data.error ||
+        (typeof error.response.data === "string" ? error.response.data : null);
+
+      throw new Error(msg || "Failed to change password.");
+    }
+
+    // Network or unknown
+    throw new Error("Failed to change password.");
+  }
+};

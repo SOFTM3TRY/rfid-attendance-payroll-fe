@@ -132,7 +132,7 @@ export default function Step4({ formData }: any) {
       <div className="flex flex-col gap-2 bg-accent/20 rounded-md p-5 mt-5 mb-10">
         <span className="text-lg font-semibold mb-5 flex items-center text-green-700 dark:text-green-500">
           <UserLock className="mr-2" />
-          Personal Information
+          Basic Information
         </span>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col gap-1">
