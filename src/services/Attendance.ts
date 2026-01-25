@@ -67,12 +67,17 @@ export const AttendanceTimeOut = async (rfid_uid: string) => {
 };
 
 export const AttendanceTap = async (rfid_uid: string) => {
-  const response = await axios.post(
-    `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-tap`,
-    { rfid_uid }
-  );
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-tap`,
+      { rfid_uid }
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const GetAttendanceToday = async (token: string) => {
