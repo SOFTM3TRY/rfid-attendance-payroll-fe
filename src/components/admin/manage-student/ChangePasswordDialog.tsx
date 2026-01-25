@@ -111,13 +111,13 @@ export default function ChangePasswordDialog({
 
         <DialogFooter className="mt-3">
           <DialogClose asChild>
-            <Button variant="destructive" size="sm" className="rouded-full" disabled={isPending}>
+            <Button variant="destructive" size="sm" className="rounded-full" disabled={isPending}>
               <CircleX className="size-4" />
               Cancel
             </Button>
           </DialogClose>
 
-          <Button onClick={handleSave} variant="outline" size="sm" className="rouded-full" disabled={isPending}>
+          <Button onClick={handleSave} variant="outline" size="sm" className="rounded-full" disabled={isPending}>
             <Save className="size-4 text-primary" />
             {isPending ? "Saving..." : "Save"}
           </Button>

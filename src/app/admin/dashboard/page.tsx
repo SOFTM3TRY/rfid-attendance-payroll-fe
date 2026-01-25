@@ -177,7 +177,6 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent className="text-5xl font-bold text-muted-foreground/50">
                   0
-
                 </CardContent>
               </Card>
             </div>
@@ -238,11 +237,9 @@ export default function Dashboard() {
                 Student Attendance Today
               </h1>
             </div>
-
-            <div className="mt-5 p-3 grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-              <div className="col-span-1 md:col-span-2">
-                <StudentTable />
-              </div>
+            <StudentTable />
+            {/* <div className="mt-5 p-3 grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
+              <div className="col-span-1 md:col-span-2"></div>
               <div className="col-span-1 grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
                 <Card className="bg-green-500">
                   <CardHeader>
@@ -290,7 +287,7 @@ export default function Dashboard() {
                   </CardHeader>
                 </Card>
               </div>
-            </div>
+            </div> */}
           </div>
           <Footer />
         </main>

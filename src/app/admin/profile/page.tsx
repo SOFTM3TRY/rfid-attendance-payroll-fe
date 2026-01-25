@@ -71,6 +71,8 @@ export default function Profile() {
               PROFILE PROFILE  
               PROFILE PROFILE  
               PROFILE PROFILE 
+
+              <pre>{JSON.stringify(userDetails, null, 2)}</pre>
             </div>
           </div>
           <Footer />
