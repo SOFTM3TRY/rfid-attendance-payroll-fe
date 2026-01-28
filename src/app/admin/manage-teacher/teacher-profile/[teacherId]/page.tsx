@@ -28,6 +28,8 @@ import Profile from "./profile";
 import BasicInfo from "./basic-info";
 import AddressInfo from "./address-info";
 import EmergencyInfo from "./emergency-info";
+
+import { Skeleton } from "@/components/ui/skeleton";
 // import { Attendance } from "./attendance";
 // import { TotalStatus } from "./total-status";
 
@@ -68,9 +70,6 @@ export default function TeacherProfile() {
                   <User className="size-4 mr-1 text-teal-500 " />
                   Teacher Profile
                 </span>
-                <span className="text-teal-700 dark:text-teal-300 font-bold">
-                  {fullName}
-                </span>
               </div>
               <Breadcrumb>
                 <BreadcrumbList>
@@ -102,7 +101,16 @@ export default function TeacherProfile() {
             </div>
 
             {!teacherDetails ? (
-              <div className="p-2 h-full mt-10 z-10">Loading...</div>
+              <div className="p-2 h-full mt-10 z-10">
+                <div className="flex gap-5">
+                  <Skeleton className="w-1/4 h-80 mb-6" />
+                  <Skeleton className="w-3/4 h-80 mb-6" />
+                </div>
+                <div className="flex gap-5">
+                  <Skeleton className="w-full h-80 mb-2" />
+                  <Skeleton className="w-full h-80 mb-2" />
+                </div>
+              </div>
             ) : (
               <div className="p-2 h-full mt-10 z-10">
                 <div className="flex gap-5">

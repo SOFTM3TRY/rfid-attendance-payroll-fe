@@ -32,7 +32,7 @@ export default function Profile({ id }: { id: string }) {
   const fullName = `${teacher?.first_name} ${teacher?.middle_name} ${teacher?.last_name} ${teacher?.suffix}`;
 
   return (
-    <div className="shadow-lg  z-2 w-120 py-5 flex flex-col justify-center rounded-xl items-center px-5 gap-5 bg-zinc-100 dark:bg-zinc-900">
+    <div className="shadow-lg  z-2 w-120 py-5 flex flex-col justify-center rounded-xl items-center px-5 gap-5 bg-accent/20">
       <Dialog>
         <DialogTrigger asChild>
           <div className="relative group w-30 h-30">
@@ -79,7 +79,7 @@ export default function Profile({ id }: { id: string }) {
           <span className="text-xs">
             {teacher?.employee_no || "N/A"} ||{" "}
             <span
-              className={teacher?.status ? "text-green-500" : "text-red-500"}
+              className={teacher?.status ? "text-green-500 text-[10px]" : "text-red-500 text-[10px]"}
             >
               {teacher?.status ? "Active" : "Inactive"}
             </span>
@@ -92,10 +92,10 @@ export default function Profile({ id }: { id: string }) {
           </span>
         </p>
         <div className="flex gap-2 mt-2">
-          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
+          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-primary text-white">
             {teacher?.grade?.grade_level || "N/A"}
           </span>
-          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-green-200 shadow text-green-900 dark:bg-green-100 dark:text-green-800">
+          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-primary text-white">
             {teacher?.section?.section_name || "N/A"}
           </span>
         </div>
