@@ -15,18 +15,32 @@ import {
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/context/AuthContext";
-import { useClientOnly } from "@/hooks/useClientOnly";
 import Loader from "@/components/Loader";
 import { useGetStudentDetailsByLrn } from "@/hooks/useStudentDetails";
 
-import { User, Users } from "lucide-react";
+import { User } from "lucide-react";
 
-import Profile from "./profile";
 import BasicInfo from "./basic-info";
 import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
 import AddressInfo from "./address-info";
 import EmergencyInfo from "./emergency-info";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function StudentProfileSkeleton() {
+  return (
+    <div className="p-2 h-full mt-10 z-10">
+      <div className="flex gap-5">
+        <Skeleton className="w-1/4 h-80 mb-6 rounded-xl" />
+        <Skeleton className="w-3/4 h-80 mb-6 rounded-xl" />
+      </div>
+      <div className="flex gap-5">
+        <Skeleton className="w-full h-80 mb-2 rounded-xl" />
+        <Skeleton className="w-full h-80 mb-2 rounded-xl" />
+      </div>
+    </div>
+  );
+}
 
 export default function StudentProfile() {
   const { token } = useAuth();
@@ -34,33 +48,37 @@ export default function StudentProfile() {
 
   const lrn = params?.lrn as string;
 
+  // keep this simple
   if (!lrn) return <Loader />;
 
-  const { data, isLoading, isError } = useGetStudentDetailsByLrn(token, lrn);
+  const { data, isLoading, isFetching, isError } = useGetStudentDetailsByLrn(
+    token,
+    lrn
+  );
 
-  if (isLoading) return <Loader />;
-  if (isError || !data?.data?.student) return <div>Student not found</div>;
+  const loading = isLoading || isFetching;
 
-  const student = data.data.student;
+  const student = data?.data?.student;
 
-  const fullName = [
-    student.last_name,
-    student.first_name,
-    student.middle_name,
-    student.suffix,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const fullName = student
+    ? [student.last_name, student.first_name, student.middle_name, student.suffix]
+        .filter(Boolean)
+        .join(" ")
+    : "Student";
 
   return (
     <ProtectedRoute role="1">
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
         <AppSidebar />
-        <main className="w-full h-auto" >
+        <main className="w-full h-auto">
           <Navbar />
+
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium flex"><User className="size-4 text-primary"/> Student Students</Label>
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <User className="size-4 text-primary" /> Student Profile
+              </Label>
+
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -81,21 +99,23 @@ export default function StudentProfile() {
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbPage title={fullName}>
-                      {fullName.length > 17
-                        ? `${fullName.substring(0, 17)}...`
-                        : fullName}
+                      {fullName.length > 17 ? `${fullName.substring(0, 17)}...` : fullName}
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
 
-            {!data ? (
-              <div>Loading...</div>
+            {/* ✅ Loading Skeleton */}
+            {loading ? (
+              <StudentProfileSkeleton />
+            ) : isError || !student ? (
+              <div className="mt-10 text-center text-sm text-red-500">
+                Student not found
+              </div>
             ) : (
               <div className="h-full mt-10 z-10">
                 <div className="flex gap-5">
-                  {/* <Profile student={student} /> */}
                   <FlipCardUI student={student} rotate="y" />
                   <BasicInfo student={student} />
                 </div>
@@ -106,6 +126,7 @@ export default function StudentProfile() {
               </div>
             )}
           </div>
+
           <Footer />
         </main>
       </SidebarProvider>

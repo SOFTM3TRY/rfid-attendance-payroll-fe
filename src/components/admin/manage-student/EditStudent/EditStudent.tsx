@@ -17,17 +17,40 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Loader2, Send, CircleX, UserRoundPlus, PenSquare, Save } from "lucide-react";
+import {
+  Loader2,
+  Send,
+  CircleX,
+  UserRoundPlus,
+  PenSquare,
+  Save,
+} from "lucide-react";
 
 import EditBasicInfo from "./EditBasicInfo";
 import EditAddressInfo from "./EditAddressInfo";
 import EditGuardianInfo from "./EditGuardianInfo";
 import Profile from "./profile";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface EditStudentProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   id: string | number;
+}
+
+function StudentProfileSkeleton() {
+  return (
+    <div className="p-2 h-full mt-10 z-10">
+      <div className="flex gap-5">
+        <Skeleton className="w-1/4 h-80 mb-6 rounded-xl" />
+        <Skeleton className="w-3/4 h-80 mb-6 rounded-xl" />
+      </div>
+      <div className="flex gap-5">
+        <Skeleton className="w-full h-80 mb-2 rounded-xl" />
+        <Skeleton className="w-full h-80 mb-2 rounded-xl" />
+      </div>
+    </div>
+  );
 }
 
 export default function EditStudent({ open, setOpen, id }: EditStudentProps) {
@@ -119,23 +142,20 @@ export default function EditStudent({ open, setOpen, id }: EditStudentProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent side="bottom" className="h-[95%] overflow-y-auto">
+        <SheetHeader className="text-zinc-900 mb-4">
+          <SheetTitle className="flex items-center">
+            <PenSquare className="mr-1 size-5 text-teal-500" />
+            Edit Student {student?.first_name} {student?.middle_name}
+            {student?.last_name}
+          </SheetTitle>
+          <SheetDescription className="text-xs">
+            Edit student information here and click update to save.
+          </SheetDescription>
+        </SheetHeader>
         {isLoadingDetails ? (
-          <div className="flex justify-center h-full">
-            <Loader2 className="animate-spin w-8 h-8" />
-          </div>
+          <StudentProfileSkeleton />
         ) : (
           <>
-            <SheetHeader className="text-zinc-900 mb-4">
-              <SheetTitle className="flex items-center">
-                <PenSquare className="mr-1 size-5 text-teal-500" />
-                Edit Student {student?.first_name} {student?.middle_name}
-                  {student?.last_name}
-              </SheetTitle>
-              <SheetDescription className="text-xs">
-                Edit student information here and click update to save.
-              </SheetDescription>
-            </SheetHeader>
-
             <div className="p-5 space-y-5">
               <div className="flex gap-5">
                 <Profile id={id} />
