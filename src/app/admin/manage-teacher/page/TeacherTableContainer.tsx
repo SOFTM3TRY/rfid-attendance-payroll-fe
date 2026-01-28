@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
 import { TeacherTable } from "@/app/admin/manage-teacher/page/TeacherTable";
@@ -12,11 +14,12 @@ import EditTeacher from "./EditTeacher/EditTeacher";
 
 export function TeacherTableContainer() {
   const { token } = useAuth();
-  const { data: apiData, isLoading, isError } = useAllTeachers(token);
+
+  // ✅ fetch ONLY HERE
+  const { data: apiData, isLoading, isError, refetch } = useAllTeachers(token);
+
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(
-    null
-  );
+  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -46,12 +49,6 @@ export function TeacherTableContainer() {
     }));
   }, [teacherList]);
 
-  if (isLoading) return <p className="text-center mt-10"></p>;
-  if (isError)
-    return (
-      <p className="text-center mt-10 text-red-500">Failed to load teachers.</p>
-    );
-
   return (
     <div style={{ pointerEvents: "auto" }}>
       <div className="flex justify-between items-center mb-10">
@@ -61,6 +58,13 @@ export function TeacherTableContainer() {
         </p>
         <AddTeacher />
       </div>
+
+      {/* ✅ show error but keep table visible */}
+      {isError ? (
+        <p className="text-sm text-red-500 mb-3">
+          Failed to load teachers. Click refresh.
+        </p>
+      ) : null}
 
       <TeacherTable
         columns={columns({
@@ -73,14 +77,12 @@ export function TeacherTableContainer() {
         pagination={pagination}
         setPagination={setPagination}
         totalRows={mappedTeachers.length}
+        isLoading={isLoading}
+        onRefresh={refetch}
       />
 
       {selectedTeacherId && (
-        <EditTeacher
-          open={editOpen}
-          setOpen={setEditOpen}
-          id={selectedTeacherId}
-        />
+        <EditTeacher open={editOpen} setOpen={setEditOpen} id={selectedTeacherId} />
       )}
     </div>
   );

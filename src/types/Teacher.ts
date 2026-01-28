@@ -10,6 +10,7 @@ export interface TeacherResponse {
 
 export interface TeacherData {
   id: number;
+  avatar: string | null;
   employee_no: string;
   rfid_uid: string | null;
 

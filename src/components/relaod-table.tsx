@@ -18,17 +18,19 @@ export function RefreshButton({ isLoading, onClick }: RefreshButtonProps) {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
+          type="button"
           variant="outline"
           size="icon"
           onClick={onClick}
-          disabled={isLoading}
-          className="h-7 w-7 rounded-full"
+          className="h-7 w-7 rounded-full relative z-50"
+          aria-label="Refresh Table"
         >
           <RefreshCcw className={`size-3 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </TooltipTrigger>
+
       <TooltipContent>
-        <p className="text-xs">Refresh Table</p>
+        <p className="text-xs">{isLoading ? "Refreshing..." : "Refresh Table"}</p>
       </TooltipContent>
     </Tooltip>
   );

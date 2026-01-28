@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { TeacherData } from "@/types/Teacher";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const columns = (props: {
   onEdit: (id: string) => void;
@@ -41,6 +42,7 @@ export const columns = (props: {
         <ShieldUser className="text-blue-500" /> Employee No.
       </Button>
     ),
+    cell: ({ row }) => <span className="text-primary">{row.original.employee_no}</span>,
   },
 
   // Full Name
@@ -52,11 +54,29 @@ export const columns = (props: {
       </Button>
     ),
     cell: ({ row }) => {
-      const { last_name, first_name, middle_name, suffix } = row.original;
       return (
-        <span>
-          {`${last_name} ${first_name} ${middle_name ?? ""} ${suffix ?? ""}`}
-        </span>
+        <div className="flex items-center gap-2">
+        <Avatar className="size-8">
+          <AvatarImage
+            src={
+              row.original.avatar
+                ? `https://rfid-api.barangay185bms.com/storage/avatars/${row.original.avatar}`
+                : "https://github.com/shadcn.png"
+            }
+            className="ounded-lg hover:grayscale-100 transition-all duration-300"
+            draggable={false}
+          />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col">
+          <span className="font-semibold">{`${row.original.last_name} ${
+            row.original.first_name
+          } ${row.original.middle_name || ""}  ${
+            row.original.suffix || ""
+          }`}</span>
+          <span className="text-[10px] text-primary">{row.original.email || ""}</span>
+        </div>
+      </div>
       );
     },
   },
