@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   useReactTable,
@@ -25,14 +27,15 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { FilterTable } from "@/components/admin/manage-student/Filtertable";
-
 import { useAuth } from "@/context/AuthContext";
 import { Subject } from "@/types/subject";
 import { SubjectColumns } from "./SubjectColumns";
 
-// Replace these later with Subject modals
 import AddSubjectModal from "@/components/admin/manage-system/subject/AddSubject";
 import EditSubjectModal from "@/components/admin/manage-system/subject/EditSubject";
+
+// ✅ hook for delete
+import { useDeleteSubject } from "@/hooks/useSubjects";
 
 interface Props {
   data: Subject[];
@@ -56,14 +59,24 @@ export function ManageSubjectTable({
 
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
 
-  const columns = SubjectColumns((row) => setSelectedSubject(row));
+  // ✅ delete mutation
+  const { mutate: deleteSubject } = useDeleteSubject();
 
-  // ✅ FIXED FILTERING
+  const handleDelete = (row: Subject) => {
+    if (!token) return;
+    deleteSubject({ token: token as string, id: row.id });
+  };
+
+  const columns = SubjectColumns(
+    (row) => setSelectedSubject(row),
+    (row) => handleDelete(row),
+  );
+
   const filteredData = data.filter((row) => {
     const searchMatch =
       search === "" ||
       row.name.toLowerCase().includes(search.toLowerCase()) ||
-      row.grade.grade_level.toLowerCase().includes(search.toLowerCase());
+      row.grade?.grade_level?.toLowerCase().includes(search.toLowerCase());
 
     const subjectMatch =
       selectedFilters.length === 0 || selectedFilters.includes(String(row.id));
@@ -73,7 +86,7 @@ export function ManageSubjectTable({
 
   const pagedData = filteredData.slice(
     pagination.pageIndex * pagination.pageSize,
-    (pagination.pageIndex + 1) * pagination.pageSize
+    (pagination.pageIndex + 1) * pagination.pageSize,
   );
 
   const table = useReactTable({
@@ -93,14 +106,11 @@ export function ManageSubjectTable({
 
   return (
     <div className="w-full">
-      <div className="rounded-md border p-5">
+      <div className="rounded-md p-5 bg-accent/10">
         <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
           <FilterTable pagination={pagination} setPagination={setPagination} />
-
           <AddSubjectModal token={token as string} />
         </div>
-
-        {/* Replace with EditSubjectModal later */}
 
         {selectedSubject && token && (
           <EditSubjectModal
@@ -111,48 +121,50 @@ export function ManageSubjectTable({
           />
         )}
 
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="py-5">
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-
-          <TableBody>
-            {pagedData.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-3">
+        <div className="rounded-md border mt-10">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id} className="py-5">
                       {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                        header.column.columnDef.header,
+                        header.getContext(),
                       )}
-                    </TableCell>
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-16 text-center text-red-500 dark:text-red-800"
-                >
-                  No data found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+
+            <TableBody>
+              {pagedData.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-3">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-16 text-center text-red-500 dark:text-red-800"
+                  >
+                    No data found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
         <div className="flex items-center justify-between py-4 space-x-2 mt-5">
           <div className="text-xs text-muted-foreground flex-1">
@@ -167,9 +179,7 @@ export function ManageSubjectTable({
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                setPagination((prev) => ({ ...prev, pageIndex: 0 }))
-              }
+              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: 0 }))}
               disabled={pagination.pageIndex === 0}
               className="w-24 h-8 font-normal text-xs"
             >
@@ -195,10 +205,7 @@ export function ManageSubjectTable({
               variant="outline"
               size="icon"
               onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: prev.pageIndex + 1,
-                }))
+                setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }))
               }
               disabled={pagination.pageIndex >= totalPages - 1}
               className="w-24 h-8 font-normal text-xs"
@@ -210,10 +217,7 @@ export function ManageSubjectTable({
               variant="outline"
               size="icon"
               onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: totalPages - 1,
-                }))
+                setPagination((prev) => ({ ...prev, pageIndex: totalPages - 1 }))
               }
               disabled={pagination.pageIndex >= totalPages - 1}
               className="w-24 h-8 font-normal text-xs"

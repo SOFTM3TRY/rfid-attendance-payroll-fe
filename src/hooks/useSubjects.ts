@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { GetallSubjects, CreateSubject, EditSubject } from "@/services/Subject_service";
+import { GetallSubjects, CreateSubject, EditSubject, DeleteSubject } from "@/services/Subject_service";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 
@@ -53,6 +53,22 @@ export const useEditSubject = () => {
 
     onError: () => {
       toast.error("Failed to update Subject");
+    },
+  });
+};
+
+export const useDeleteSubject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ token, id }: { token: string; id: number | string }) =>
+      DeleteSubject(token, id),
+    onSuccess: (res) => {
+      toast.success(res?.message || "School Year deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["subject-details"] });
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to delete School Year");
     },
   });
 };

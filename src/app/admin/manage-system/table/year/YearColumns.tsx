@@ -50,7 +50,7 @@ export const YearColumns = (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                size="icon"
+                size="sm"
                 variant="outline"
                 className="rounded-full"
                 onClick={() => onEdit(row.original)}
