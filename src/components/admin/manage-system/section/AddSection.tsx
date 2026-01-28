@@ -68,27 +68,27 @@ export default function AddSectionModal({ token }: { token: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center rounded-full justify-center text-xs h-8 bg-teal-700 text-white hover:bg-teal-800">
-          <PlusIcon strokeWidth={3} size={10} className="text-white -mr-2" />
+        <Button variant="outline" size="sm" className="rounded-full">
+          <PlusIcon className="size-4" />
           Add Section
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg w-full p-6">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <UserRoundPlus className="w-5 h-5 text-teal-500" />
+          <DialogTitle className="flex items-center gap-2 text-sm">
+            <UserRoundPlus className="size-4 text-teal-500" />
             Add Section
           </DialogTitle>
-          <DialogDescription>Add New Section</DialogDescription>
+          <DialogDescription className="text-xs">Add New Section</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Grade Level</label>
+            <label className="text-xs font-medium"><span className="text-red-500 mr-1">*</span>Grade Level</label>
 
             {isLoading ? (
-              <p className="text-sm text-gray-500">Loading...</p>
+              <p className="text-xs text-gray-500">Loading...</p>
             ) : (
               <Select
                 onValueChange={(value) =>
@@ -100,7 +100,7 @@ export default function AddSectionModal({ token }: { token: string }) {
                 </SelectTrigger>
 
                 <SelectContent>
-                  {grades?.data?.map((grade: any) => (
+                  {grades?.data?.filter((grade : any) => grade.status === "active").map((grade: any) => (
                     <SelectItem key={grade.id} value={String(grade.id)}>
                       {grade.grade_level}
                     </SelectItem>
@@ -111,7 +111,7 @@ export default function AddSectionModal({ token }: { token: string }) {
           </div>
 
           <div>
-            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Section Name</label>
+            <label className="text-xs font-medium"><span className="text-red-500 mr-1">*</span>Section Name</label>
             <Input
               name="section_name"
               placeholder="Enter section name"
@@ -121,7 +121,7 @@ export default function AddSectionModal({ token }: { token: string }) {
             />
           </div>
           <div>
-            <label className="text-sm font-medium">
+            <label className="text-xs font-medium">
               <span className="text-red-500 mr-1">*</span>Description <small>(Optional)</small>
             </label>
             <Input
@@ -136,25 +136,28 @@ export default function AddSectionModal({ token }: { token: string }) {
         <DialogFooter className="mt-6 flex gap-2 justify-end">
           <Button
             onClick={handleSubmit}
-            className="w-32"
+            className="rounded-full"
+            size="sm"
+            variant="default"
             disabled={createGradeMutation.isPending}
           >
             {createGradeMutation.isPending ? (
               <>
-                <Loader2 className="animate-spin mr-1" size={18} />
+                <Loader2 className="animate-spin size-4" size={18} />
                 Processing...
               </>
             ) : (
               <>
-                Submit <Send className="-ml-1" />
+                Submit <Send className="size-4" />
               </>
             )}
           </Button>
 
           <DialogClose asChild>
             <Button
-              variant="ghost"
-              className="w-32"
+              variant="outline"
+              size="sm"
+              className="rounded-full"
               disabled={createGradeMutation.isPending}
             >
               <CircleX className="mr-1" /> Cancel
