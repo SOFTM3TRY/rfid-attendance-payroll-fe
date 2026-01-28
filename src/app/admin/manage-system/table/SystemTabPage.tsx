@@ -4,7 +4,13 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { PlusIcon, GraduationCap, CalendarDays, BookText, LayoutPanelTop } from "lucide-react";
+import {
+  PlusIcon,
+  GraduationCap,
+  CalendarDays,
+  BookText,
+  LayoutPanelTop,
+} from "lucide-react";
 
 import { ManageGradeTable } from "./grade/GradeTable";
 import { ManageSectionTable } from "./section/SectionTable";
@@ -25,11 +31,18 @@ export default function SystemTabPage() {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
   const { token } = useAuth();
-  const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(token as string);
-  const { data: SectionsData, isLoading: isLoadingSectionsData } = useAllSections(token as string);
-  const { data: YearsData, isLoading: isLoadingYearsData } = useYear(token as string);
-  const { data: SubjectsData, isLoading: isLoadingSubjectsData } = useSubject(token as string);
-
+  const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(
+    token as string,
+  );
+  const { data: SectionsData, isLoading: isLoadingSectionsData } =
+    useAllSections(token as string);
+  const { data: YearsData, isLoading: isLoadingYearsData } = useYear(
+    token as string,
+  );
+  const { data: SubjectsData, isLoading: isLoadingSubjectsData } = useSubject(
+    token as string,
+  );
+  const { data, isLoading, isFetching } = useYear(token);
   useEffect(() => {
     if (GradesData?.data && !selectedTab) {
       setSelectedTab("1");
@@ -40,37 +53,63 @@ export default function SystemTabPage() {
     <main>
       <Tabs value={selectedTab || ""} onValueChange={setSelectedTab}>
         {/* Tabs Header */}
-        <div className="flex justify-between mb-3">
-          <TabsList className="flex-wrap gap-3 bg-zinc-100 dark:bg-zinc-900 p-2 h-14">
-             <TabsTrigger key="1" value="1" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-xs">
-              <CalendarDays strokeWidth={2.5} className="size-4 text-violet-500 dark:text-violet-300" />
+        <div className="flex justify-between mb-10">
+          <TabsList className="flex-wrap gap-3 bg-accent/20 h-auto">
+            <TabsTrigger
+              key="1"
+              value="1"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-xs"
+            >
+              <CalendarDays
+                strokeWidth={2.5}
+                className="size-3  text-primary"
+              />
               Manage Academic Year
             </TabsTrigger>
-            <TabsTrigger key="2" value="2" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-xs">
-              <GraduationCap strokeWidth={2.5} className="size-4 text-green-500 dark:text-green-300" />
+            <TabsTrigger
+              key="2"
+              value="2"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-xs"
+            >
+              <GraduationCap
+                strokeWidth={2.5}
+                className="size-3 text-primary"
+              />
               Manage Grades
             </TabsTrigger>
-            <TabsTrigger key="3" value="3" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-xs">
-              <LayoutPanelTop strokeWidth={2.5} className="size-4 text-orange-500 dark:text-orange-300" />
+            <TabsTrigger
+              key="3"
+              value="3"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-xs"
+            >
+              <LayoutPanelTop
+                strokeWidth={2.5}
+                className="size-3  text-primary"
+              />
               Manage Sections
             </TabsTrigger>
-            <TabsTrigger key="4" value="4" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700 text-xs">
-              <BookText strokeWidth={2.5} className="size-4 text-blue-500 dark:text-blue-300" />
+            <TabsTrigger
+              key="4"
+              value="4"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-xs"
+            >
+              <BookText strokeWidth={2.5} className="size-3  text-primary" />
               Manage Subjects
             </TabsTrigger>
           </TabsList>
         </div>
 
         {/* Tabs Content */}
-         <TabsContent key="1" value="1">
+        <TabsContent key="1" value="1">
           <ManageYearTable
-            data={YearsData?.data || []}
+            data={data?.data || []}
             pagination={pagination}
             setPagination={setPagination}
-            totalRows={GradesData?.data?.length || 0}
+            totalRows={(data?.data || []).length}
             search={search}
             selectedStatus={selectedStatus}
             selectedFilters={selectedFilters}
+            isLoading={isLoading || isFetching}
           />
         </TabsContent>
 

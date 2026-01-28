@@ -139,18 +139,24 @@ export default function GradeTabsPage() {
         }}
       >
         <div className="flex justify-between items-center mb-3">
-          <TabsList className="flex-wrap gap-3 h-auto text-muted-foreground bg-accent/50">
-            {GradesData?.data?.map((grade: any) => (
-              <TabsTrigger
-                key={grade.id}
-                value={grade.id}
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-xs"
-              >
-                <GraduationCap className="size-4 text-muted-foreground" />
-                {grade.grade_level}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          {!GradesData ? (
+            <div className="flex gap-3 flex-wrap w-full">
+                <Skeleton className="h-6 w-1/2 rounded-md" />
+            </div>
+          ) : (
+            <TabsList className="flex-wrap gap-3 h-auto text-muted-foreground bg-accent/50">
+              {GradesData?.data?.map((grade: any) => (
+                <TabsTrigger
+                  key={grade.id}
+                  value={grade.id}
+                  className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-xs"
+                >
+                  <GraduationCap className="size-4 text-muted-foreground mr-1" />
+                  {grade.grade_level}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          )}
         </div>
 
         <div className="flex justify-between items-center my-5">

@@ -32,6 +32,11 @@ import { useAuth } from "@/context/AuthContext";
 import { Year } from "@/types/year";
 import { YearColumns } from "./YearColumns";
 
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDeleteYear } from "@/hooks/useYear";
+import toast from "react-hot-toast";
+
+
 import EditYearModal from "@/components/admin/manage-system/year/EditYear";
 
 interface Props {
@@ -42,7 +47,9 @@ interface Props {
   search: string;
   selectedStatus: string[];
   selectedFilters: string[];
+  isLoading?: boolean;
 }
+
 
 export function ManageYearTable({
   data,
@@ -51,14 +58,31 @@ export function ManageYearTable({
   search,
   selectedStatus,
   selectedFilters,
+  isLoading = false,
 }: Props) {
   const { token } = useAuth();
 
   const [selectedYear, setSelectedYear] = useState<Year | null>(null);
 
-  const columns = YearColumns((row) => {
-    setSelectedYear(row);
-  });
+  const { mutateAsync: deleteYear, isPending: deleting } = useDeleteYear();
+
+  const handleDelete = async (year: Year) => {
+    if (!token) return;
+
+    const ok = window.confirm(`Delete School Year "${year.years}"?`);
+    if (!ok) return;
+
+    try {
+      await deleteYear({ token: token as string, id: year.id });
+    } catch (e: any) {
+      toast.error(e?.message || "Delete failed.");
+    }
+  };
+
+  const columns = YearColumns(
+    (row) => setSelectedYear(row),
+    (row) => handleDelete(row)
+  );
 
   const filteredData = data.filter((row) => {
     const searchMatch =
@@ -94,10 +118,9 @@ export function ManageYearTable({
 
   return (
     <div className="w-full">
-      <div className="rounded-md border p-5">
+      <div className="rounded-md bg-accent/10 p-5">
         <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
           <FilterTable pagination={pagination} setPagination={setPagination} />
-
           <AddYearModal token={token as string} />
         </div>
 
@@ -110,66 +133,80 @@ export function ManageYearTable({
           />
         )}
 
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="py-5">
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-
-          <TableBody>
-            {pagedData.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-3">
+        <div className="rounded-md border mt-10 overflow-hidden">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id} className="py-5">
                       {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                        header.column.columnDef.header,
+                        header.getContext()
                       )}
-                    </TableCell>
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-16 text-center text-red-500 dark:text-red-800"
-                >
-                  No data found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
 
+            <TableBody>
+              {/* ✅ SKELETON LOADING */}
+              {isLoading ? (
+                Array.from({ length: pagination.pageSize }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="py-4">
+                      <Skeleton className="h-5 w-48" />
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <div className="flex gap-2">
+                        <Skeleton className="h-8 w-8 rounded-full" />
+                        <Skeleton className="h-8 w-8 rounded-full" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : pagedData.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-3">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-16 text-center text-red-500 dark:text-red-800"
+                  >
+                    No data found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Pagination */}
         <div className="flex items-center justify-between py-4 space-x-2 mt-5">
           <div className="text-xs text-muted-foreground flex-1">
-            Showing {start} to {end} of {filteredData.length} entries
+            Showing {filteredData.length ? start : 0} to {filteredData.length ? end : 0} of{" "}
+            {filteredData.length} entries
           </div>
 
           <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
-            Page {pagination.pageIndex + 1} of {totalPages}
+            Page {pagination.pageIndex + 1} of {totalPages || 1}
           </div>
 
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                setPagination((prev) => ({ ...prev, pageIndex: 0 }))
-              }
-              disabled={pagination.pageIndex === 0}
+              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: 0 }))}
+              disabled={pagination.pageIndex === 0 || isLoading || deleting}
               className="w-24 h-8 font-normal text-xs"
             >
               <ChevronsLeft className="h-4 w-4" /> First
@@ -179,12 +216,9 @@ export function ManageYearTable({
               variant="outline"
               size="icon"
               onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: Math.max(prev.pageIndex - 1, 0),
-                }))
+                setPagination((prev) => ({ ...prev, pageIndex: Math.max(prev.pageIndex - 1, 0) }))
               }
-              disabled={pagination.pageIndex === 0}
+              disabled={pagination.pageIndex === 0 || isLoading || deleting}
               className="w-24 h-8 font-normal text-xs"
             >
               <ChevronLeft className="h-4 w-4" /> Previous
@@ -193,13 +227,8 @@ export function ManageYearTable({
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: prev.pageIndex + 1,
-                }))
-              }
-              disabled={pagination.pageIndex >= totalPages - 1}
+              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }))}
+              disabled={pagination.pageIndex >= totalPages - 1 || isLoading || deleting}
               className="w-24 h-8 font-normal text-xs"
             >
               Next <ChevronRight className="h-4 w-4" />
@@ -208,13 +237,8 @@ export function ManageYearTable({
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: totalPages - 1,
-                }))
-              }
-              disabled={pagination.pageIndex >= totalPages - 1}
+              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: totalPages - 1 }))}
+              disabled={pagination.pageIndex >= totalPages - 1 || isLoading || deleting}
               className="w-24 h-8 font-normal text-xs"
             >
               Last <ChevronsRight className="h-4 w-4" />
@@ -225,3 +249,4 @@ export function ManageYearTable({
     </div>
   );
 }
+

@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { PlusIcon, GraduationCap , CircleX, Send, Loader2 } from "lucide-react";
+import { PlusIcon, GraduationCap, CircleX, Send, Loader2 } from "lucide-react";
 
 export default function AddYearModal({ token }: { token: string }) {
   const createGradeMutation = useCreateYear();
@@ -44,31 +44,39 @@ export default function AddYearModal({ token }: { token: string }) {
             years: "",
           });
         },
-      }
+      },
     );
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center rounded-full justify-center text-xs h-8 bg-teal-700 text-white hover:bg-teal-800">
-          <PlusIcon strokeWidth={3} size={10} className="text-white -mr-2" />
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center rounded-full justify-center text-xs "
+        >
+          <PlusIcon className="text-white size-4" />
           Add School Year
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg w-full p-6">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <GraduationCap className="w-5 h-5 text-teal-500" />
+          <DialogTitle className="flex items-center gap-2 text-sm">
+            <GraduationCap className="w-4 text-primary" />
             Add School Year
           </DialogTitle>
-          <DialogDescription>Add New School Year</DialogDescription>
+          <DialogDescription className="text-xs">Add New School Year</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-xs font-medium mb-3"> <span className="text-red-500 mr-1">*</span> School Year <small>(e.g. 2022-2023)</small></label>
+            <label className="text-xs font-medium mb-3">
+              {" "}
+              <span className="text-red-500 mr-1">*</span> School Year{" "}
+              <small>(e.g. 2022-2023)</small>
+            </label>
             <Input
               name="years"
               placeholder="Enter School Year"
@@ -81,8 +89,10 @@ export default function AddYearModal({ token }: { token: string }) {
 
         <DialogFooter className="mt-6 flex gap-2 justify-end">
           <Button
+            variant="default"
+            size="sm"
             onClick={handleSubmit}
-            className="w-32"
+            className="rounded-full"
             disabled={createGradeMutation.isPending}
           >
             {createGradeMutation.isPending ? (
@@ -99,9 +109,10 @@ export default function AddYearModal({ token }: { token: string }) {
 
           <DialogClose asChild>
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               disabled={createGradeMutation.isPending}
+              className="rounded-full"
             >
               <CircleX className="mr-1" /> Cancel
             </Button>

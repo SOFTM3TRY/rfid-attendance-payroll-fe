@@ -85,24 +85,24 @@ export default function YearUpdateModal({
         <DialogFooter className="mt-6 flex gap-2 justify-end">
           <Button
             onClick={handleSubmit}
-            className="w-32"
+            size="sm" className="rounded-full"
             disabled={updateYearMutation.isPending}
           >
             {updateYearMutation.isPending ? (
               <>
-                <Loader2 className="animate-spin mr-1" size={18} />
+                <Loader2 className="animate-spin size-4"/>
                 Updating...
               </>
             ) : (
               <>
-                Update <Send className="-ml-1" />
+                Update <Send className="size-4" />
               </>
             )}
           </Button>
 
           <DialogClose asChild>
-            <Button variant="ghost" className="w-32">
-              <CircleX className="mr-1" /> Cancel
+            <Button variant="outline" size="sm" className="rounded-full">
+              <CircleX className="size-4" /> Cancel
             </Button>
           </DialogClose>
         </DialogFooter>

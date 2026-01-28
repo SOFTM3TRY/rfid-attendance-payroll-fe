@@ -65,7 +65,7 @@ export default function manageSettings() {
               </Breadcrumb>
             </div>
 
-            <div className="p-2 h-full mt-15 z-1">
+            <div className="h-full mt-10 z-1">
               <SystemTabPage />
             </div>
           </div>

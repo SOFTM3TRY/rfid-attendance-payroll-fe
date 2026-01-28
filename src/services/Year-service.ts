@@ -56,3 +56,23 @@ export const UpdateYear = async (
 
   return response.data;
 };
+
+export const DeleteYear = async (token: string, id: number | string) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/delete-year`,
+      { id },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("DeleteYear error:", error);
+
+    if (error?.response?.data?.message) throw new Error(error.response.data.message);
+    if (error?.response?.data?.error) throw new Error(error.response.data.error);
+    throw new Error("Failed to delete School Year.");
+  }
+};
