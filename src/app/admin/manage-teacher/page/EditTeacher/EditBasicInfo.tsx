@@ -66,7 +66,7 @@ export default function EditBasicInfo({
   const genderOptions = ["Male", "Female", "Other"];
 
   return (
-    <div className="bg-zinc-100 dark:bg-zinc-900 p-5 rounded-xl w-full space-y-5">
+    <div className="bg-accent/20 p-5 rounded-xl w-full space-y-5">
       {/* Primary Information */}
       <div>
         <h1 className="text-sm font-bold flex items-center mb-3">
@@ -111,7 +111,7 @@ export default function EditBasicInfo({
               onValueChange={(value) => handleChange("grade", value)}
               disabled={isLoadingYearsData || isLoadingGradesData}
             >
-              <SelectTrigger className="border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56">
+              <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
                 <SelectValue placeholder="Select Grade" />
               </SelectTrigger>
               <SelectContent>
@@ -141,7 +141,7 @@ export default function EditBasicInfo({
                 onValueChange={(value) => handleChange("section", value)}
                 disabled={loading || !formData.grade || isLoadingSectionsData}
               >
-                <SelectTrigger className="border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56">
+                <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
                   <SelectValue placeholder="Select Section" />
                 </SelectTrigger>
                 <SelectContent>
@@ -213,7 +213,7 @@ export default function EditBasicInfo({
               onValueChange={(value) => handleChange("suffix", value)}
               disabled={loading}
             >
-              <SelectTrigger className="border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56">
+              <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
                 <SelectValue placeholder="Select Suffix" />
               </SelectTrigger>
               <SelectContent>
@@ -258,7 +258,7 @@ export default function EditBasicInfo({
               onValueChange={(value) => handleChange("gender", value)}
               disabled={loading}
             >
-              <SelectTrigger className="border dark:bg-zinc-900 py-1 px-3 rounded-sm w-56">
+              <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
                 <SelectValue placeholder="Select Gender" />
               </SelectTrigger>
               <SelectContent>

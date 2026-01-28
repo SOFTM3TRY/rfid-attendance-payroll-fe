@@ -32,7 +32,7 @@ export default function Profile({ id }: { id: string }) {
   const fullName = `${teacher?.first_name} ${teacher?.middle_name} ${teacher?.last_name} ${teacher?.suffix}`;
 
   return (
-    <div className="shadow-lg  z-2 w-120 py-5 flex flex-col justify-center rounded-xl items-center px-5 gap-5 bg-zinc-100 dark:bg-zinc-900">
+    <div className="shadow-lg  z-2 w-120 py-5 flex flex-col justify-center rounded-xl items-center px-5 gap-5 bg-accent/20">
       <Dialog>
         <DialogTrigger asChild>
           <div className="relative group w-30 h-30">
