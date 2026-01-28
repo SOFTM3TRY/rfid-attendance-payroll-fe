@@ -69,16 +69,16 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg w-full p-6">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <UserRoundPlus className="w-5 h-5 text-teal-500" />
+          <DialogTitle className="flex items-center gap-2 text-sm">
+            <UserRoundPlus className="size-4 text-primary" />
             Edit Grade
           </DialogTitle>
-          <DialogDescription>Update Grade Information</DialogDescription>
+          <DialogDescription className="text-xs">Update Grade Information</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-sm font-medium">Grade Level</label>
+            <label className="text-xs font-medium">Grade Level</label>
             <Input
               name="grade_level"
               placeholder="Enter grade level"
@@ -89,7 +89,7 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
           </div>
 
           <div>
-            <label className="text-sm font-medium">Description <small>(Optional)</small></label>
+            <label className="text-xs font-medium">Description <small>(Optional)</small></label>
             <Input
               name="description"
               placeholder="Enter description"
@@ -99,7 +99,7 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
           </div>
 
           <div>
-            <label className="text-sm font-medium">Available</label>
+            <label className="text-xs font-medium">Available</label>
             <Select value={formData.status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select status" />
@@ -115,23 +115,25 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
         <DialogFooter className="mt-6 flex gap-2 justify-end">
           <Button
             onClick={handleSubmit}
-            className="w-32"
+            className="rounded-full"
+            size="sm"
+            variant="default"
             disabled={editGradeMutation.isPending || isLoading}
           >
             {editGradeMutation.isPending ? (
               <>
-                <Loader2 className="animate-spin mr-1" size={18} />
+                <Loader2 className="animate-spin size-4" size={18} />
                 Processing...
               </>
             ) : (
               <>
-                Submit <Send className="-ml-1" />
+                Submit <Send className="size-4" />
               </>
             )}
           </Button>
 
           <DialogClose asChild>
-            <Button variant="ghost" className="w-32" disabled={editGradeMutation.isPending}>
+            <Button variant="outline" size="sm" className="rounded-full" disabled={editGradeMutation.isPending}>
               <CircleX className="mr-1" /> Cancel
             </Button>
           </DialogClose>

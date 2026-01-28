@@ -75,7 +75,7 @@ export function ManageGradeTable({
 
   const pagedData = filteredData.slice(
     pagination.pageIndex * pagination.pageSize,
-    (pagination.pageIndex + 1) * pagination.pageSize
+    (pagination.pageIndex + 1) * pagination.pageSize,
   );
 
   const table = useReactTable({
@@ -95,7 +95,7 @@ export function ManageGradeTable({
 
   return (
     <div className="w-full">
-      <div className="rounded-md border p-5">
+      <div className="rounded-md bg-accent/10 p-5">
         <div className="mb-5 flex flex-wrap gap-4 justify-between items-center">
           <FilterTable pagination={pagination} setPagination={setPagination} />
 
@@ -110,56 +110,57 @@ export function ManageGradeTable({
             onClose={() => setSelectedGrade(null)}
           />
         )}
-
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="py-5">
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-
-          <TableBody>
-            {pagedData.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-3">
+        <div className="rounded-md border mt-10">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id} className="py-5">
                       {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                        header.column.columnDef.header,
+                        header.getContext(),
                       )}
-                    </TableCell>
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-16 text-center text-red-500 dark:text-red-800"
-                >
-                  No data found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+
+            <TableBody>
+              {pagedData.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-3">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-16 text-center text-red-500 dark:text-red-800"
+                  >
+                    No data found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
         <div className="flex items-center justify-between py-4 space-x-2 mt-5">
-          <div className="text-sm text-muted-foreground flex-1">
+          <div className="text-xs text-muted-foreground flex-1">
             Showing {start} to {end} of {filteredData.length} entries
           </div>
 
-          <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
+          <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
             Page {pagination.pageIndex + 1} of {totalPages}
           </div>
 

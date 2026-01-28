@@ -15,8 +15,8 @@ export const GradeColumns = (
   {
     accessorKey: "grade_level",
     header: () => (
-      <Button variant="outline" size="sm" className="font-normal text-sm">
-        <GraduationCap className="text-green-500" /> Grade Level
+      <Button variant="outline" size="sm" className="font-normal text-xs">
+        <GraduationCap className="text-primary" /> Grade Level
       </Button>
     ),
     cell: (info) => info.getValue(),
@@ -25,7 +25,7 @@ export const GradeColumns = (
   {
     accessorKey: "status",
     header: () => (
-      <Button variant="outline" size="sm" className="font-normal text-sm">
+      <Button variant="outline" size="sm" className="font-normal text-xs">
         <Dot strokeWidth={10} className="text-blue-500" /> Available
       </Button>
     ),
@@ -46,10 +46,11 @@ export const GradeColumns = (
         <TooltipTrigger asChild>
           <Button
             size="sm"
-            className="h-7 w-7 p-0 bg-teal-700 hover:bg-teal-600 dark:bg-teal-500/30 dark:hover:bg-teal-500/50 text-white"
+            variant="outline"
+            className="rounded-full"
             onClick={() => onEdit(row.original)}
           >
-            <Pencil className="w-4 h-4" />
+            <Pencil className="size-4" />
           </Button>
         </TooltipTrigger>
         <TooltipContent side="top" align="center">
