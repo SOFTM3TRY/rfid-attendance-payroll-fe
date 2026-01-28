@@ -37,23 +37,23 @@ export default function EditBasicInfo({
 
   const { token } = useAuth();
   const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(
-    token as string
+    token as string,
   );
   const { data: YearsData, isLoading: isLoadingYearsData } = useYear(
-    token as string
+    token as string,
   );
 
   const SectionID = formData.grade;
   const { data: SectionsData, isLoading: isLoadingSectionsData } = useSection(
     token as string,
-    SectionID
+    SectionID,
   );
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev: any) =>
       name === "grade"
         ? { ...prev, [name]: value, section: "" }
-        : { ...prev, [name]: value }
+        : { ...prev, [name]: value },
     );
     setErrors((prev: any) => {
       const n = { ...prev };
@@ -94,12 +94,25 @@ export default function EditBasicInfo({
               <CalendarDays className="text-muted-foreground size-3" />
               School Year
             </Label>
-            <Input
-              id="school_year"
-              placeholder="School Year"
-              value={formData.school_year ?? ""}
-              onChange={(e) => update("school_year", e.target.value)}
-            />
+            <div className="flex gap-2">
+              <Select
+                value={formData.school_year || ""}
+                onValueChange={(value) => handleChange("school_year", value)}
+                disabled={loading || isLoadingYearsData}
+              >
+                <SelectTrigger className="border py-1 px-3 rounded-sm w-56">
+                  <SelectValue placeholder="Select School Year" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {YearsData?.data?.map((year: any) => (
+                    <SelectItem key={year.years} value={String(year.years)}>
+                      {year.years}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="grid gap-2">
@@ -160,7 +173,8 @@ export default function EditBasicInfo({
       {/* Personal Information */}
       <div>
         <h1 className="text-sm font-bold flex items-center mb-3">
-          <UserLock className="text-yellow-500 mr-1 size-4" /> Personal Information
+          <UserLock className="text-yellow-500 mr-1 size-4" /> Personal
+          Information
         </h1>
 
         <div className="grid grid-cols-4 gap-5 mt-5">
@@ -241,7 +255,8 @@ export default function EditBasicInfo({
 
           <div className="grid gap-2">
             <Label htmlFor="birth_place">
-              <MapPinHouse className="text-muted-foreground size-3" /> Birth Place
+              <MapPinHouse className="text-muted-foreground size-3" /> Birth
+              Place
             </Label>
             <Input
               id="birth_place"
