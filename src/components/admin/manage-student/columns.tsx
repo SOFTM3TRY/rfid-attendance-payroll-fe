@@ -82,7 +82,7 @@ export const columns = (props: {
           } ${row.original.middle_name || ""}  ${
             row.original.suffix || ""
           }`}</span>
-          <span className="text-[10px]">{row.original.email || ""}</span>
+          <span className="text-[10px] text-primary">{row.original.email || ""}</span>
         </div>
       </div>
     ),
