@@ -46,14 +46,14 @@ export function TeacherTableContainer() {
     }));
   }, [teacherList]);
 
-  if (isLoading) return <p className="text-center mt-10">Loading...</p>;
+  if (isLoading) return <p className="text-center mt-10"></p>;
   if (isError)
     return (
       <p className="text-center mt-10 text-red-500">Failed to load teachers.</p>
     );
 
   return (
-    <div className="bg-accent/10 p-5 rounded-lg" style={{ pointerEvents: "auto" }}>
+    <div style={{ pointerEvents: "auto" }}>
       <div className="flex justify-between items-center mb-10">
         <p className="flex items-center gap-1 text-sm">
           <Table2 className="size-4 text-violet-500" />

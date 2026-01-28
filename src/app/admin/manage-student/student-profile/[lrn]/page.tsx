@@ -56,7 +56,7 @@ export default function StudentProfile() {
     <ProtectedRoute role="1">
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
         <AppSidebar />
-        <main className="w-full h-auto">
+        <main className="w-full h-auto" >
           <Navbar />
           <div className="p-5">
             <div className="flex items-center justify-between">

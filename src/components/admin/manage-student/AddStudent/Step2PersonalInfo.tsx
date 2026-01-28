@@ -228,7 +228,7 @@ export default function Step2({
         <Input
           id="last_school_attend"
           name="last_school_attend"
-          value="---"
+          value={formData.last_school_attend}
           onChange={handleChange}
           placeholder="Enter Last School Attended"
           className={

@@ -27,6 +27,8 @@ import { RefreshButton } from "@/components/relaod-table";
 
 import ChangePasswordDialog from "@/components/admin/manage-student/ChangePasswordDialog";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 export default function GradeTabsPage() {
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -199,41 +201,72 @@ export default function GradeTabsPage() {
             </div>
           </div>
 
-          {GradesData?.data?.map((grade: any) => {
-            const rows = getFilteredData(grade.id);
+          {/* ✅ TABLE AREA */}
+          {isLoadingStudent || isFetchingStudents ? (
+            <div className="space-y-3">
+              <div className="rounded-lg border bg-background">
+                <div className="p-4 space-y-3">
+                  <div className="grid grid-cols-6 gap-3">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                  </div>
 
-            return (
-              <TabsContent key={grade.id} value={grade.id}>
-                <StudentTable
-                  columns={columns({
-                    onEdit: (teacherId: string) => {
-                      setSelectedTeacherId(teacherId);
-                      setEditOpen(true);
-                    },
-                    onChangeStatus: (studentId: string) =>
-                      handleStatusChange(studentId),
-                    onChangePassword: (studentId: string, name?: string) =>
-                      handlePasswordChange(studentId, name),
-                  })}
-                  data={rows.slice(
-                    pagination.pageIndex * pagination.pageSize,
-                    (pagination.pageIndex + 1) * pagination.pageSize,
-                  )}
-                  pagination={pagination}
-                  setPagination={setPagination}
-                  totalRows={rows.length}
-                />
+                  {Array.from({ length: pagination.pageSize }).map((_, i) => (
+                    <div key={i} className="grid grid-cols-6 gap-3">
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              {GradesData?.data?.map((grade: any) => {
+                const rows = getFilteredData(grade.id);
 
-                {selectedTeacherId && (
-                  <EditStudent
-                    open={editOpen}
-                    setOpen={setEditOpen}
-                    id={selectedTeacherId}
-                  />
-                )}
-              </TabsContent>
-            );
-          })}
+                return (
+                  <TabsContent key={grade.id} value={grade.id}>
+                    <StudentTable
+                      columns={columns({
+                        onEdit: (teacherId: string) => {
+                          setSelectedTeacherId(teacherId);
+                          setEditOpen(true);
+                        },
+                        onChangeStatus: (studentId: string) =>
+                          handleStatusChange(studentId),
+                        onChangePassword: (studentId: string, name?: string) =>
+                          handlePasswordChange(studentId, name),
+                      })}
+                      data={rows.slice(
+                        pagination.pageIndex * pagination.pageSize,
+                        (pagination.pageIndex + 1) * pagination.pageSize,
+                      )}
+                      pagination={pagination}
+                      setPagination={setPagination}
+                      totalRows={rows.length}
+                    />
+
+                    {selectedTeacherId && (
+                      <EditStudent
+                        open={editOpen}
+                        setOpen={setEditOpen}
+                        id={selectedTeacherId}
+                      />
+                    )}
+                  </TabsContent>
+                );
+              })}
+            </>
+          )}
         </div>
       </Tabs>
 
