@@ -1,4 +1,3 @@
-/*************  ✨ Windsurf Command 🌟  *************/
 "use client";
 
 import { useEffect, useState } from "react";
@@ -28,6 +27,7 @@ import Profile from "./profile";
 import BasicInfo from "./basic-info";
 import AddressInfo from "./address-info";
 import EmergencyInfo from "./emergency-info";
+import TeacherSubjects from "./teacher-subjects";
 
 import { Skeleton } from "@/components/ui/skeleton";
 // import { Attendance } from "./attendance";
@@ -107,6 +107,9 @@ export default function TeacherProfile() {
                   <Skeleton className="w-3/4 h-80 mb-6" />
                 </div>
                 <div className="flex gap-5">
+                  <Skeleton className="w-full h-80 mb-6" />
+                </div>
+                <div className="flex gap-5">
                   <Skeleton className="w-full h-80 mb-2" />
                   <Skeleton className="w-full h-80 mb-2" />
                 </div>
@@ -115,7 +118,11 @@ export default function TeacherProfile() {
               <div className="p-2 h-full mt-10 z-10">
                 <div className="flex gap-5">
                   <Profile id={teacher.id} />
+
                   <BasicInfo id={teacher.id} />
+                </div>
+                <div className="flex gap-5 mt-5">
+                  <TeacherSubjects teacherId={teacher.id} />
                 </div>
                 <div className="flex gap-5">
                   <AddressInfo id={teacher.id} />

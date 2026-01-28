@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  fetchRegions,
-  fetchProvinces,
-  fetchCities,
-  fetchBarangays,
-} from "@/lib/psgc";
+import { fetchRegions, fetchCities, fetchBarangays } from "@/lib/psgc";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -14,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const NCR_CODE = "130000000";
 const METRO_MANILA = "Metro Manila";
 
 export default function AddressDropdowns({
@@ -29,50 +23,38 @@ export default function AddressDropdowns({
   const [cities, setCities] = useState<any[]>([]);
   const [barangays, setBarangays] = useState<any[]>([]);
 
+  // ✅ Load NCR only
   useEffect(() => {
-    fetchRegions().then(setRegions);
-  }, []);
+    (async () => {
+      const allRegions = await fetchRegions();
 
-  /* ---------------- REGION ---------------- */
-  useEffect(() => {
-    if (!formData.region) return;
+      const ncr = allRegions.find((r: any) => {
+        const name = (r?.name || "").toLowerCase();
+        return name.includes("national capital region") || name === "ncr";
+      });
 
-    const regionCode = getCodeByName(regions, formData.region);
+      if (!ncr) return;
 
-    if (regionCode === NCR_CODE) {
-      // ✅ NCR FIX
+      // Only NCR available
+      setRegions([ncr]);
+
+      // Province fixed option (Metro Manila)
       setProvinces([{ code: "NCR", name: METRO_MANILA }]);
+
+      // Auto set NCR + Metro Manila
       setFormData((p: any) => ({
         ...p,
+        region: ncr.name,
         province: METRO_MANILA,
         city: "",
         barangay: "",
       }));
-      fetchCities(regionCode).then(setCities);
-    } else {
-      fetchProvinces(regionCode).then(setProvinces);
-      setCities([]);
-      setBarangays([]);
-      setFormData((p: any) => ({
-        ...p,
-        province: "",
-        city: "",
-        barangay: "",
-      }));
-    }
-  }, [formData.region]);
 
-  /* ---------------- PROVINCE ---------------- */
-  useEffect(() => {
-    if (!formData.province) return;
-    if (formData.region === "NCR") return;
-
-    const provinceCode = getCodeByName(provinces, formData.province);
-    fetchCities(provinceCode).then(setCities);
-
-    setBarangays([]);
-    setFormData((p: any) => ({ ...p, city: "", barangay: "" }));
-  }, [formData.province]);
+      // Load NCR cities
+      fetchCities(ncr.code).then(setCities);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ---------------- CITY ---------------- */
   useEffect(() => {
@@ -106,11 +88,11 @@ export default function AddressDropdowns({
         <span className="text-red-500 mr-[-0.3rem]">*</span>
         {label}
       </Label>
+
       <Select
         value={value || ""}
         onValueChange={(val) => handleSelectChange(name, val)}
         disabled={disabled || loading}
-        required={true}
       >
         <SelectTrigger
           className={`border w-72 ${
@@ -119,6 +101,7 @@ export default function AddressDropdowns({
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
+
         <SelectContent>
           {options.map((opt: any) => (
             <SelectItem key={opt.code} value={opt.name}>
@@ -127,6 +110,7 @@ export default function AddressDropdowns({
           ))}
         </SelectContent>
       </Select>
+
       {errors[name] && (
         <span className="text-xs text-red-500">{errors[name]}</span>
       )}
@@ -135,26 +119,37 @@ export default function AddressDropdowns({
 
   return (
     <>
-      {renderSelect("Region", "region", regions, formData.region, "Select Region", false)}
+      {/* ✅ Region dropdown clickable but NCR only */}
+      {renderSelect(
+        "Region",
+        "region",
+        regions,
+        formData.region,
+        "Select Region",
+        false
+      )}
 
+      {/* ✅ Province dropdown clickable but Metro Manila only */}
       {renderSelect(
         "Province",
         "province",
         provinces,
         formData.province,
         "Select Province",
-        !formData.region || formData.region === "NCR"
+        false
       )}
 
+      {/* City */}
       {renderSelect(
         "City / Municipality",
         "city",
         cities,
         formData.city,
         "Select City / Municipality",
-        !formData.province && formData.region !== "NCR"
+        false
       )}
 
+      {/* Barangay */}
       {renderSelect(
         "Barangay",
         "barangay",

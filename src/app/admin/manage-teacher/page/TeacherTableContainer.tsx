@@ -1,34 +1,59 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PaginationState } from "@tanstack/react-table";
+
 import { TeacherTable } from "@/app/admin/manage-teacher/page/TeacherTable";
 import { columns } from "@/app/admin/manage-teacher/page/columns";
+
 import { useAllTeachers } from "@/hooks/useTeacher";
 import { useAuth } from "@/context/AuthContext";
+
 import AddTeacher from "@/app/admin/manage-teacher/page/AddTeacher/AddTeacher";
 import { Table2 } from "lucide-react";
 import { TeacherData } from "@/types/Teacher";
 
 import EditTeacher from "./EditTeacher/EditTeacher";
+import ChangePasswordDialog from "./ChangePasswordDialog";
+
+// ✅ NEW dialog
+import AddTeacherSubjectDialog from "./AddTeacherSubjectDialog";
 
 export function TeacherTableContainer() {
+  const router = useRouter();
   const { token } = useAuth();
 
-  // ✅ fetch ONLY HERE
-  const { data: apiData, isLoading, isError, refetch } = useAllTeachers(token);
+  const { data: apiData, isLoading, isError, refetch, isFetching } = useAllTeachers(token);
 
   const [editOpen, setEditOpen] = useState(false);
   const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
 
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 5,
-  });
+  // ✅ Change password state
+  const [passOpen, setPassOpen] = useState(false);
+  const [passTeacherId, setPassTeacherId] = useState<string | null>(null);
+  const [passTeacherName, setPassTeacherName] = useState<string>("");
 
-  const teacherList = useMemo(() => {
-    return Array.isArray(apiData?.data) ? apiData.data : [];
-  }, [apiData]);
+  // ✅ Add Subject state
+  const [subjectOpen, setSubjectOpen] = useState(false);
+  const [subjectTeacherId, setSubjectTeacherId] = useState<string | null>(null);
+  const [subjectTeacherName, setSubjectTeacherName] = useState<string>("");
+
+  const handlePasswordChange = (teacherId: string, name?: string) => {
+    setPassTeacherId(teacherId);
+    setPassTeacherName(name || "");
+    setPassOpen(true);
+  };
+
+  const handleAddSubject = (teacherId: string, name?: string) => {
+    setSubjectTeacherId(teacherId);
+    setSubjectTeacherName(name || "");
+    setSubjectOpen(true);
+  };
+
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 5 });
+
+  const teacherList = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
 
   const mappedTeachers = useMemo<TeacherData[]>(() => {
     return teacherList.map((teacher: any) => ({
@@ -46,6 +71,7 @@ export function TeacherTableContainer() {
       additional_info: teacher.additional_info,
       grade: teacher.grade,
       section: teacher.section,
+      avatar: teacher.avatar,
     }));
   }, [teacherList]);
 
@@ -59,30 +85,56 @@ export function TeacherTableContainer() {
         <AddTeacher />
       </div>
 
-      {/* ✅ show error but keep table visible */}
       {isError ? (
-        <p className="text-sm text-red-500 mb-3">
-          Failed to load teachers. Click refresh.
-        </p>
+        <p className="text-sm text-red-500 mb-3">Failed to load teachers. Click refresh.</p>
       ) : null}
 
       <TeacherTable
         columns={columns({
+          onViewProfile: (teacherId: string) => router.push(`/admin/manage-teacher/teacher-profile/${teacherId}`),
+          onAdvisory: (teacherId: string) => router.push(`/admin/manage-teacher/advisory-class/${teacherId}`),
           onEdit: (teacherId: string) => {
             setSelectedTeacherId(teacherId);
             setEditOpen(true);
           },
+          onChangePassword: (teacherId: string, name?: string) => handlePasswordChange(teacherId, name),
+          onAddSubject: (teacherId: string, name?: string) => handleAddSubject(teacherId, name),
         })}
         data={mappedTeachers}
         pagination={pagination}
         setPagination={setPagination}
         totalRows={mappedTeachers.length}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         onRefresh={refetch}
       />
 
       {selectedTeacherId && (
         <EditTeacher open={editOpen} setOpen={setEditOpen} id={selectedTeacherId} />
+      )}
+
+      {passTeacherId && (
+        <ChangePasswordDialog
+          open={passOpen}
+          setOpen={setPassOpen}
+          userId={passTeacherId}
+          userName={passTeacherName}
+          type="teacher"
+          onSuccess={() => {
+            void refetch();
+          }}
+        />
+      )}
+
+      {subjectTeacherId && (
+        <AddTeacherSubjectDialog
+          open={subjectOpen}
+          setOpen={setSubjectOpen}
+          teacherId={subjectTeacherId}
+          teacherName={subjectTeacherName}
+          onSuccess={() => {
+            void refetch();
+          }}
+        />
       )}
     </div>
   );

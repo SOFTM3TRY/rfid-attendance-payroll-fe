@@ -1,6 +1,8 @@
+"use client";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+
 import {
   Eye,
   SquarePen,
@@ -8,11 +10,10 @@ import {
   User,
   GraduationCap,
   BookAudio,
-  UserCog,
-  UserCheck,
-  UserX,
   Rows4,
+  Pencil,
   Grip,
+  BookPlus, // ✅ ADD ICON
 } from "lucide-react";
 
 import {
@@ -22,19 +23,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { TeacherData } from "@/types/Teacher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const columns = (props: {
   onEdit: (id: string) => void;
+  onViewProfile: (id: string) => void;
+  onAdvisory: (id: string) => void;
+  onChangePassword: (id: string, name?: string) => void;
+
+  // ✅ ADD THIS
+  onAddSubject: (id: string, name?: string) => void;
 }): ColumnDef<TeacherData>[] => [
-  // Employee No
   {
     accessorKey: "employee_no",
     header: () => (
@@ -45,7 +47,6 @@ export const columns = (props: {
     cell: ({ row }) => <span className="text-primary">{row.original.employee_no}</span>,
   },
 
-  // Full Name
   {
     id: "full_name",
     header: () => (
@@ -54,34 +55,32 @@ export const columns = (props: {
       </Button>
     ),
     cell: ({ row }) => {
+      const fullName = `${row.original.last_name} ${row.original.first_name} ${row.original.middle_name || ""} ${row.original.suffix || ""}`.trim();
+
       return (
         <div className="flex items-center gap-2">
-        <Avatar className="size-8">
-          <AvatarImage
-            src={
-              row.original.avatar
-                ? `https://rfid-api.barangay185bms.com/storage/avatars/${row.original.avatar}`
-                : "https://github.com/shadcn.png"
-            }
-            className="ounded-lg hover:grayscale-100 transition-all duration-300"
-            draggable={false}
-          />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <span className="font-semibold">{`${row.original.last_name} ${
-            row.original.first_name
-          } ${row.original.middle_name || ""}  ${
-            row.original.suffix || ""
-          }`}</span>
-          <span className="text-[10px] text-primary">{row.original.email || ""}</span>
+          <Avatar className="size-8">
+            <AvatarImage
+              src={
+                row.original.avatar
+                  ? `https://rfid-api.barangay185bms.com/storage/avatars/${row.original.avatar}`
+                  : "https://github.com/shadcn.png"
+              }
+              className="rounded-lg hover:grayscale-100 transition-all duration-300"
+              draggable={false}
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+
+          <div className="flex flex-col">
+            <span className="font-semibold uppercase">{fullName}</span>
+            <span className="text-[10px] text-primary">{row.original.email || ""}</span>
+          </div>
         </div>
-      </div>
       );
     },
   },
 
-  // Advisory Grade
   {
     id: "grade",
     header: () => (
@@ -93,7 +92,6 @@ export const columns = (props: {
     cell: ({ getValue }) => <span>{getValue<string>()}</span>,
   },
 
-  // Advisory Section
   {
     id: "section",
     header: () => (
@@ -105,37 +103,12 @@ export const columns = (props: {
     cell: ({ getValue }) => <span>{getValue<string>()}</span>,
   },
 
-  // Status
-  // {
-  //   accessorKey: "status",
-  //   header: () => (
-  //     <Button variant="outline" size="sm" className="text-xs">
-  //       <UserCog className="text-teal-500" /> Status
-  //     </Button>
-  //   ),
-  //   cell: ({ row }) => {
-  //     const isActive = row.original.status === "1";
-
-  //     return (
-  //       <span className="text-xs w-22 px-3 py-1 rounded-md flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800">
-  //         {isActive ? "Active" : "Inactive"}
-  //         {isActive ? (
-  //           <UserCheck className="size-4 text-green-500" />
-  //         ) : (
-  //           <UserX className="size-4 text-red-500" />
-  //         )}
-  //       </span>
-  //     );
-  //   },
-  // },
-
-  // Actions
   {
     id: "actions",
-    header: () => <span className="font-normal text-xs">Actions</span>,
+    header: () => <span className="font-normal text-xs text-muted-foreground">Actions</span>,
     cell: ({ row }) => {
-      const router = useRouter();
-      const teacherId = row.original.id;
+      const teacherId = row.original.id.toString();
+      const teacherName = `${row.original.first_name || ""} ${row.original.last_name || ""}`.trim();
 
       return (
         <DropdownMenu>
@@ -143,37 +116,39 @@ export const columns = (props: {
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
-                  <Grip className="size-4 text-primary" />
+                  <Grip strokeWidth={3} className="w-5 h-5 text-primary" />
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent>Actions</TooltipContent>
+            <TooltipContent side="top" align="center">
+              Actions
+            </TooltipContent>
           </Tooltip>
 
           <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() =>
-                router.push(
-                  `/admin/manage-teacher/teacher-profile/${teacherId}`
-                )
-              }
-            >
-              <Eye className="size-4 " />
+            <DropdownMenuItem onClick={() => props.onViewProfile(teacherId)}>
+              <Eye className="size-4 text-muted-foreground" />
               View Profile
             </DropdownMenuItem>
 
-            <DropdownMenuItem
-              onClick={() => props.onEdit(teacherId.toString())}
-            >
-              <SquarePen className="size-4" /> Edit Profile
+            <DropdownMenuItem onClick={() => props.onEdit(teacherId)}>
+              <SquarePen className="size-4" />
+              Edit Profile
             </DropdownMenuItem>
 
-            <DropdownMenuItem
-              onClick={() =>
-                router.push(`/admin/manage-teacher/advisory-class/${teacherId}`)
-              }
-            >
-              <Rows4 className="size-4 " />
+            <DropdownMenuItem onClick={() => props.onChangePassword(teacherId, teacherName)}>
+              <Pencil className="size-4 text-muted-foreground" />
+              Change Password
+            </DropdownMenuItem>
+
+            {/* ✅ NEW */}
+            <DropdownMenuItem onClick={() => props.onAddSubject(teacherId, teacherName)}>
+              <BookPlus className="size-4 text-muted-foreground" />
+              Add Subject
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => props.onAdvisory(teacherId)}>
+              <Rows4 className="size-4 text-muted-foreground" />
               Advisory Class
             </DropdownMenuItem>
           </DropdownMenuContent>
