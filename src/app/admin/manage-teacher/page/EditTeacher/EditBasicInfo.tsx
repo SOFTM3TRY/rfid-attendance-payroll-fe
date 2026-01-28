@@ -128,11 +128,13 @@ export default function EditBasicInfo({
                 <SelectValue placeholder="Select Grade" />
               </SelectTrigger>
               <SelectContent>
-                {GradesData?.data.map((grade: any) => (
-                  <SelectItem key={grade.id} value={String(grade.id)}>
-                    {grade.grade_level}
-                  </SelectItem>
-                ))}
+                {GradesData?.data
+                  .filter((grade : any) => grade.status === "active")
+                  .map((grade: any) => (
+                    <SelectItem key={grade.id} value={String(grade.id)}>
+                      {grade.grade_level}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>
@@ -158,11 +160,13 @@ export default function EditBasicInfo({
                   <SelectValue placeholder="Select Section" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SectionsData?.data.map((section: any) => (
-                    <SelectItem key={section.id} value={section.id}>
-                      {section.section_name}
-                    </SelectItem>
-                  ))}
+                  {SectionsData?.data
+                    .filter((section: any) => section.status === 1)
+                    .map((section: any) => (
+                      <SelectItem key={section.id} value={section.id}>
+                        {section.section_name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
