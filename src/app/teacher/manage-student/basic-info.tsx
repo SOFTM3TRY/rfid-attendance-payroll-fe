@@ -180,7 +180,7 @@ function SectionHeader({
 }) {
   return (
     <div className="col-span-1 md:col-span-2 mb-3">
-      <p className="text-sm font-medium flex items-center gap-1">
+      <p className="text-xs font-medium flex items-center gap-1">
         {icon} {title}
       </p>
     </div>

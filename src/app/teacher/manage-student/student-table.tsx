@@ -22,11 +22,22 @@ import {
   BadgeInfo,
   User,
   Calendar,
-  CircleSmall
+  CircleSmall,
+  UserCog,
+  UserCheck,
+  UserX,
+  History,
+  Eye,
+  Grip,
+  TableProperties,
 } from "lucide-react";
+
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import {
   Table,
   TableBody,
@@ -37,12 +48,7 @@ import {
 } from "@/components/ui/table";
 
 import { FilterTable } from "@/components/admin/manage-student/Filtertable";
-
-import { useState, useEffect } from "react";
-import ShowProfile from "@/components/admin/manage-student/ShowProfile/ShowProfile";
-import EditProfile from "@/components/admin/manage-student/EditStudent/EditStudent";
 import ShowAttendanceHistory from "@/components/admin/manage-student/ShowAttendanceHistory/ShowAttendanceHistory";
-import Registration from "@/components/admin/manage-student/Registration/Registration";
 
 import {
   Tooltip,
@@ -51,263 +57,262 @@ import {
 } from "@/components/ui/tooltip";
 
 import {
-  Eye,
-  SquarePen,
-  TableProperties,
-  ShieldUser,
-  GraduationCap,
-  BookAudio,
-  UserCog,
-  UserCheck,
-  UserX,
-  History,
-  FilePlus,
-  Pencil,
-  Grip,
-} from "lucide-react";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-// Type from your API
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+/* ---------------- Types ---------------- */
+
 export type Student = {
   id: number;
   lrn: string;
   first_name: string;
-  middle_name: string;
+  middle_name?: string | null;
   last_name: string;
-  suffix?: string;
+  suffix?: string | null;
   gender: string;
   birth_date: string;
+  status?: number | string;
+  email?: string | null;
+  avatar?: string | null;
 };
 
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
+/* ---------------- Columns ---------------- */
 
-import { cn } from "@/lib/utils"
-
-function DropdownMenu({
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
-  return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />
-}
-
-function DropdownMenuPortal({
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
-  return (
-    <DropdownMenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />
-  )
-}
-
-function DropdownMenuTrigger({
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {
-  return (
-    <DropdownMenuPrimitive.Trigger
-      data-slot="dropdown-menu-trigger"
-      {...props}
-    />
-  )
-}
-
-function DropdownMenuContent({
-  className,
-  sideOffset = 4,
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
-  return (
-    <DropdownMenuPrimitive.Portal>
-      <DropdownMenuPrimitive.Content
-        data-slot="dropdown-menu-content"
-        sideOffset={sideOffset}
-        className={cn(
-          "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 max-h-(--radix-dropdown-menu-content-available-height) min-w-[8rem] origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border p-1 shadow-md",
-          className
-        )}
-        {...props}
-      />
-    </DropdownMenuPrimitive.Portal>
-  )
-}
-
-function DropdownMenuGroup({
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Group>) {
-  return (
-    <DropdownMenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />
-  )
-}
-
-function DropdownMenuItem({
-  className,
-  inset,
-  variant = "default",
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & {
-  inset?: boolean
-  variant?: "default" | "destructive"
-}) {
-  return (
-    <DropdownMenuPrimitive.Item
-      data-slot="dropdown-menu-item"
-      data-inset={inset}
-      data-variant={variant}
-      className={cn(
-        "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-const columns: ColumnDef<Student>[] = [
+export const teacherStudentColumns = (): ColumnDef<Student>[] => [
   {
     accessorKey: "lrn",
     header: () => (
-      <div className="flex items-center">
-        <BadgeInfo className="text-blue-500 mr-1 w-4 h-4" /> LRN
-      </div>
-    ),
-  },
-  {
-    id: "full_name",
-    accessorFn: (row) =>
-      `${row.last_name}, ${row.first_name} ${row.middle_name || ""} ${row.suffix || ""
-      }`,
-    header: () => (
-      <div className="flex items-center">
-        <User className="text-green-500 mr-1 w-4 h-4" /> Full Name
-      </div>
+      <Button variant="outline" size="sm" className="text-xs font-normal">
+        <BadgeInfo className="text-blue-500 size-4 mr-1" />
+        LRN
+      </Button>
     ),
     cell: ({ row }) => (
-      <span className="uppercase font-medium">{row.getValue("full_name")}</span>
+      <span className="text-primary text-xs font-medium">{row.original.lrn}</span>
     ),
   },
+
+  // ✅ IMPORTANT: use accessorFn + id for searching
   {
-    accessorKey: "gender",
+    id: "full_name",
+    accessorFn: (s) =>
+      `${s.last_name}, ${s.first_name} ${s.middle_name || ""} ${s.suffix || ""}`
+        .replace(/\s+/g, " ")
+        .trim(),
     header: () => (
-      <div className="flex items-center">
-        <CircleSmall className="text-green-500 mr-1 w-4 h-4" /> Gender
-      </div>
-    ),
-  },
-  {
-    accessorKey: "birth_date",
-    header: () => (
-      <div className="flex items-center">
-        <Calendar className="text-orange-500 mr-1 w-4 h-4" /> Birth Date
-      </div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: () => (
-      <Button variant="outline" size="sm">
-        <UserCog className="text-teal-500" /> Status
+      <Button variant="outline" size="sm" className="text-xs font-normal">
+        <User className="text-green-500 size-4 mr-1" />
+        Full Name
       </Button>
     ),
     cell: ({ row }) => {
+      const s = row.original;
+
+      const fullName =
+        `${s.last_name}, ${s.first_name} ${s.middle_name || ""} ${s.suffix || ""}`
+          .replace(/\s+/g, " ")
+          .trim();
+
+      const avatarUrl = s.avatar
+        ? `https://rfid-api.barangay185bms.com/storage/avatars/${s.avatar}`
+        : "https://github.com/shadcn.png";
+
+      const initials =
+        `${s.first_name?.[0] ?? ""}${s.last_name?.[0] ?? ""}`.toUpperCase() || "CN";
+
       return (
-        <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
-          {/* @ts-ignore */}
-          {row.original.status == 1 ? "Active" : "Inactive"}
-          <span
-            className={`ml-1 ${
-              // @ts-ignore
-              row.original.status == 1 ? "text-green-500" : "text-red-500"
-            }`}
-          >
-            {/* @ts-ignore */}
-            {row.original.status == 1 ? (
-              <UserCheck className="w-4 h-4" />
-            ) : (
-              <UserX className="w-4 h-4" />
-            )}
+        <div className="flex items-center gap-2">
+          <Avatar className="size-8">
+            <AvatarImage
+              src={avatarUrl}
+              className="rounded-lg hover:grayscale-100 transition-all duration-300"
+              draggable={false}
+            />
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
+
+          <div className="flex flex-col">
+            <span className="font-semibold text-xs uppercase">{fullName}</span>
+            <span className="text-[10px] text-primary">{s.email || ""}</span>
+          </div>
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: "gender",
+    header: () => (
+      <Button variant="outline" size="sm" className="text-xs font-normal">
+        <CircleSmall className="text-green-500 size-4 mr-1" />
+        Gender
+      </Button>
+    ),
+    cell: ({ row }) => <span className="text-xs">{row.original.gender || "N/A"}</span>,
+  },
+
+  {
+    accessorKey: "birth_date",
+    header: () => (
+      <Button variant="outline" size="sm" className="text-xs font-normal">
+        <Calendar className="text-orange-500 size-4 mr-1" />
+        Birth Date
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const rawDate = row.original.birth_date;
+
+      const formattedDate = rawDate
+        ? new Date(rawDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : "N/A";
+
+      return <span className="text-xs">{formattedDate}</span>;
+    },
+  },
+
+  {
+    accessorKey: "status",
+    header: () => (
+      <Button variant="outline" size="sm" className="text-xs font-normal">
+        <UserCog className="text-teal-500 size-4 mr-1" />
+        Status
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const isActive = String(row.original.status ?? "1") === "1";
+
+      return (
+        <span className="text-xs w-22 h-5 flex items-center justify-center rounded-full font-normal bg-accent">
+          {isActive ? "Active" : "Inactive"}
+          <span className={`ml-1 ${isActive ? "text-green-500" : "text-red-500"}`}>
+            {isActive ? <UserCheck className="size-3" /> : <UserX className="size-3" />}
           </span>
         </span>
       );
     },
   },
+
   {
-    accessorKey: "Actions",
     id: "actions",
-    cell: ({ row }) => {
-      const [openView, setOpenView] = useState(false);
-      const [openEdit, setOpenEdit] = useState(false);
-      const [openHistory, setOpenHistory] = useState(false);
-      const [openRegister, setOpenRegister] = useState(false);
+    header: () => (
+      <Button variant="outline" size="sm" className="text-xs font-normal">
+        <TableProperties className="text-slate-600 size-4 mr-1" />
+        Actions
+      </Button>
+    ),
+    cell: ({ row, table }) => {
+      // @ts-ignore
+      const meta = table.options.meta as {
+        onOpenHistory: (row: any) => void;
+        onOpenProfile: (lrn: string) => void;
+      };
 
       return (
-        <div className="flex justify-start items-center" style={{ pointerEvents: "auto" }}>
+        <div style={{ pointerEvents: "auto" }}>
           <DropdownMenu>
             <Tooltip>
               <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
-                    <Grip strokeWidth={3} className="w-12 h-12 text-teal-800 dark:text-teal-300" />
+                    <Grip strokeWidth={3} className="w-12 h-12 text-primary" />
                   </Button>
                 </DropdownMenuTrigger>
               </TooltipTrigger>
-              <TooltipContent
-                side="top"
-                align="center"
-                className="block group-data-[collapsible=icon]:hidden"
-              >
+              <TooltipContent side="top" align="center">
                 Actions
               </TooltipContent>
             </Tooltip>
+
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setOpenView(true)}>
-                <Eye className="w-4 h-4 text-teal-700 dark:text-teal-500" />
-                View Profile
+              <DropdownMenuItem onClick={() => meta.onOpenProfile(row.original.lrn)}>
+                <Eye className="size-4 text-muted-foreground" />
+                Student Profile
               </DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => setOpenEdit(true)}>
-                <SquarePen className="w-4 h-4 text-sky-700 dark:text-sky-500" />
-                Edit Profile
-              </DropdownMenuItem> */}
-              <DropdownMenuItem onClick={() => setOpenHistory(true)}>
-                <History className="w-4 h-4 text-indigo-700 dark:text-indigo-500" />
+
+              <DropdownMenuItem onClick={() => meta.onOpenHistory(row)}>
+                <History className="size-4 text-muted-foreground" />
                 Attendance History
               </DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => setOpenRegister(true)}>
-                <FilePlus className="w-4 h-4 text-blue-700 dark:text-blue-500" />
-                Register
-              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* <ShowProfile open={openView} setOpen={setOpenView} row={row} /> */}
-          {/* <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} /> */}
-          <ShowAttendanceHistory open={openHistory} setOpen={setOpenHistory} row={row} />
-          {/* <Registration open={openRegister} setOpen={setOpenRegister} row={row} /> */}
         </div>
       );
     },
   },
 ];
 
+/* ---------------- Skeleton Row ---------------- */
+
+function TableSkeleton({ rows = 5 }: { rows?: number }) {
+  return (
+    <>
+      {Array.from({ length: rows }).map((_, i) => (
+        <TableRow key={i}>
+          <TableCell className="py-5">
+            <Skeleton className="h-4 w-24" />
+          </TableCell>
+          <TableCell className="py-5">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-8 w-8 rounded-lg" />
+              <div className="flex flex-col gap-2">
+                <Skeleton className="h-3 w-44" />
+                <Skeleton className="h-3 w-28" />
+              </div>
+            </div>
+          </TableCell>
+          <TableCell className="py-5">
+            <Skeleton className="h-4 w-16" />
+          </TableCell>
+          <TableCell className="py-5">
+            <Skeleton className="h-4 w-28" />
+          </TableCell>
+          <TableCell className="py-5">
+            <Skeleton className="h-5 w-20 rounded-full" />
+          </TableCell>
+          <TableCell className="py-5">
+            <Skeleton className="h-9 w-12" />
+          </TableCell>
+        </TableRow>
+      ))}
+    </>
+  );
+}
+
+/* ---------------- Table Component ---------------- */
+
 export default function TeacherStudentTable({
   students,
+  isLoading = false,
 }: {
   students: Student[];
+  isLoading?: boolean;
 }) {
+  const router = useRouter();
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: 5,
-  });
+  const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: 5 });
+
+  const [openHistory, setOpenHistory] = React.useState(false);
+  const [selectedRow, setSelectedRow] = React.useState<any>(null);
+
+  const columns = React.useMemo(() => teacherStudentColumns(), []);
 
   const table = useReactTable({
     data: students,
     columns,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      pagination,
-    },
+    state: { sorting, columnFilters, columnVisibility, rowSelection, pagination },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
@@ -317,25 +322,35 @@ export default function TeacherStudentTable({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    meta: {
+      onOpenHistory: (row: any) => {
+        setSelectedRow(row);
+        setOpenHistory(true);
+      },
+      onOpenProfile: (lrn: string) => {
+        router.push(`/teacher/manage-student/student-profile/${lrn}`);
+      },
+    },
   });
 
   const pageIndex = table.getState().pagination?.pageIndex ?? 0;
   const pageSize = table.getState().pagination?.pageSize ?? 5;
   const totalRows = students.length;
-  const start = pageIndex * pageSize + 1;
-  const end = Math.min(start + pageSize - 1, totalRows);
+  const start = totalRows ? pageIndex * pageSize + 1 : 0;
+  const end = totalRows ? Math.min(start + pageSize - 1, totalRows) : 0;
   const totalPages = table.getPageCount();
 
   return (
     <div className="w-full">
       <div className="flex items-center justify-between py-4">
         <FilterTable pagination={pagination} setPagination={setPagination} />
+
+        {/* ✅ FIXED SEARCH: use "full_name" */}
         <Input
           placeholder="Search full name..."
+          disabled={isLoading}
           value={(table.getColumn("full_name")?.getFilterValue() as string) ?? ""}
-          onChange={(e) =>
-            table.getColumn("full_name")?.setFilterValue(e.target.value)
-          }
+          onChange={(e) => table.getColumn("full_name")?.setFilterValue(e.target.value)}
           className="max-w-sm"
         />
       </div>
@@ -349,17 +364,17 @@ export default function TeacherStudentTable({
                   <TableHead key={header.id} className="py-3">
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {table.getRowModel().rows.length ? (
+            {isLoading ? (
+              <TableSkeleton rows={pagination.pageSize} />
+            ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -371,7 +386,10 @@ export default function TeacherStudentTable({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-10 text-muted-foreground text-sm">
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-center py-10 text-muted-foreground text-xs"
+                >
                   No students assigned to this teacher.
                 </TableCell>
               </TableRow>
@@ -380,13 +398,16 @@ export default function TeacherStudentTable({
         </Table>
       </div>
 
-      {/* Pagination */}
+      {selectedRow ? (
+        <ShowAttendanceHistory open={openHistory} setOpen={setOpenHistory} row={selectedRow} />
+      ) : null}
+
       <div className="flex items-center justify-between px-5 py-4 space-x-2">
-        <div className="text-sm text-muted-foreground flex-1">
+        <div className="text-xs text-muted-foreground flex-1">
           Showing {totalRows ? start : 0} to {totalRows ? end : 0} of {totalRows} entries
         </div>
 
-        <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
+        <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
           Page {pageIndex + 1} of {totalPages || 1}
         </div>
 
@@ -395,35 +416,38 @@ export default function TeacherStudentTable({
             variant="outline"
             size="sm"
             onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
+            disabled={isLoading || !table.getCanPreviousPage()}
           >
             <ChevronsLeft className="h-4 w-4 mr-1" />
-            First
+            First Page
           </Button>
+
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            disabled={isLoading || !table.getCanPreviousPage()}
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Previous
           </Button>
+
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            disabled={isLoading || !table.getCanNextPage()}
           >
             Next <ChevronRight className="h-4 w-4 ml-1" />
           </Button>
+
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.setPageIndex(totalPages - 1)}
-            disabled={!table.getCanNextPage()}
+            disabled={isLoading || !table.getCanNextPage()}
           >
-            Last <ChevronsRight className="h-4 w-4 ml-1" />
+            Last Page <ChevronsRight className="h-4 w-4 ml-1" />
           </Button>
         </div>
       </div>
