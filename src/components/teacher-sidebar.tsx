@@ -1,20 +1,7 @@
 "use client";
-import {
-  Calendar,
-  Home,
-  Inbox,
-  SquareUser,
-  Users,
-  IdCardLanyard,
-  Settings,
-  ShieldUser,
-} from "lucide-react";
+
+import { Calendar, Home, SquareUser } from "lucide-react";
 import { usePathname } from "next/navigation";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -28,27 +15,20 @@ import {
   SidebarMenuItem,
   SidebarFooter,
   SidebarGroupLabel,
+  SidebarHeader,
 } from "@/components/ui/sidebar";
+
 import { useAuth } from "@/context/AuthContext";
 // @ts-ignore
 import { useUserDetails } from "@/hooks/useUserDetails";
-import { useEffect, useState } from "react";
 import { useClientOnly } from "@/hooks/useClientOnly";
 
 import SplitTextSide from "@/components/animata/text/split-text-side";
 
 const items = [
   { title: "Dashboard", url: "/teacher/dashboard", icon: Home },
-  // { title: "Email", url: "/teacher/email", icon: Inbox },
   { title: "Calendar", url: "/teacher/calendar", icon: Calendar },
   { title: "Manage Avisory Class", url: "/teacher/manage-student", icon: SquareUser },
-  // {
-  //   title: "Manage Teacher",
-  //   url: "/teacher/manage-teacher",
-  //   icon: IdCardLanyard,
-  // },
-  // { title: "Manage Admin", url: "/teacher/manage-admin", icon: ShieldUser },
-  // { title: "System Settings", url: "/teacher/system-settings", icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -57,14 +37,22 @@ export function AppSidebar() {
   const { token } = useAuth();
   const isClient = useClientOnly();
 
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
-    token as string
-  );
+  const { data: userDetails } = useUserDetails(token as string);
+
+  const user = userDetails?.data;
+
+  const roleLabel =
+    user?.role_id === 1 ? "Admin" : user?.role_id === 2 ? "Teacher" : user?.role_id === 3 ? "Student" : "";
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar
+      collapsible="icon"
+      variant="floating"
+      style={{ pointerEvents: "auto" }}
+    >
       <SidebarContent>
-        <SidebarGroup style={{ pointerEvents: "auto" }}>
+        {/* ✅ HEADER (same design as admin sidebar) */}
+        <SidebarHeader>
           <div className="flex flex-col items-center justify-center gap-5 p-3 group-data-[collapsible=icon]:mt-3 group-data-[collapsible=icon]:mb-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0">
             <img
               src="/logo.png"
@@ -77,62 +65,90 @@ export function AppSidebar() {
               className="group-data-[collapsible=icon]:hidden"
             />
           </div>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+        </SidebarHeader>
+
+        {/* ✅ MAIN SECTION */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Main</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="mt-2">
-              {items.map(({ title, url, icon: Icon }) => (
-                <SidebarMenuItem key={title}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SidebarMenuButton
-                        asChild
-                        className={`h-10 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-2 ${
-                          url === pathname
-                            ? "bg-teal-600 h-10 text-white hover:bg-teal-800 hover:text-white"
-                            : ""
-                        }`}
-                      >
-                        <a href={url}>
-                          <Icon className="size-4" />
-                          <span className="block group-data-[collapsible=icon]:hidden">
-                            {title}
-                          </span>
-                        </a>
-                      </SidebarMenuButton>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="right"
-                      align="center"
-                      className="block group-data-[collapsible=icon]:hidden"
+            <SidebarMenu className="mt-2 gap-3">
+              {items
+                .filter((i) => ["Dashboard", "Calendar"].includes(i.title))
+                .map(({ title, url, icon: Icon }) => (
+                  <SidebarMenuItem key={title}>
+                    <SidebarMenuButton
+                      asChild
+                      className={`h-8 rounded-sm text-xs group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                        pathname === url ? "bg-accent" : ""
+                      }`}
+                      tooltip={title}
                     >
-                      {title}
-                    </TooltipContent>
-                  </Tooltip>
-                </SidebarMenuItem>
-              ))}
+                      <a href={url}>
+                        <Icon className="size-4" />
+                        {title}
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* ✅ USER MANAGEMENT SECTION */}
+        <SidebarGroup>
+          <SidebarGroupLabel>User Management</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="mt-2 gap-3">
+              {items
+                .filter((i) => ["Manage Avisory Class"].includes(i.title))
+                .map(({ title, url, icon: Icon }) => (
+                  <SidebarMenuItem key={title}>
+                    <SidebarMenuButton
+                      asChild
+                      className={`h-8 rounded-sm text-xs group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                        pathname === url ? "bg-accent" : ""
+                      }`}
+                      tooltip={title}
+                    >
+                      <a href={url}>
+                        <Icon className="size-4" />
+                        {title}
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      {/* ✅ FOOTER (same design as admin sidebar) */}
       <SidebarFooter className="py-5">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Avatar className="h-8 w-8 flex-shrink-0">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage
+              src={
+                user?.avatar
+                  ? `https://rfid-api.barangay185bms.com/storage/avatars/${user.avatar}`
+                  : "https://github.com/shadcn.png"
+              }
+            />
+            <AvatarFallback>
+              {(user?.first_name?.[0] ?? "U").toUpperCase()}
+              {(user?.last_name?.[0] ?? "U").toUpperCase()}
+            </AvatarFallback>
           </Avatar>
 
           <div className="px-2 py-2 block group-data-[collapsible=icon]:hidden">
             <p className="font-semibold text-xs">
-              {userDetails?.data.first_name + " " + userDetails?.data.last_name}
-              <span className="text-[10px] px-2 py-0 bg-teal-600 text-white rounded-full">
-                {userDetails?.data.role_id === 1
-                  ? "Admin"
-                  : userDetails?.data.role_id === 3
-                  ? "Student"
-                  : ""}
-              </span>
+              {(user?.first_name ?? "") + " " + (user?.last_name ?? "")}
+              {roleLabel ? (
+                <span className="text-[10px] px-2 py-0 bg-accent rounded-full ml-2">
+                  {roleLabel}
+                </span>
+              ) : null}
             </p>
-            <p className="text-xs">{userDetails?.data.email}</p>
+            <p className="text-xs">{user?.email}</p>
           </div>
         </div>
       </SidebarFooter>
