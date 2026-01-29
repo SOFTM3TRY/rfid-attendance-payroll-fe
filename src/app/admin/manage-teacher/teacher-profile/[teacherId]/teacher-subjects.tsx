@@ -83,10 +83,12 @@ export default function TeacherSubjects({ teacherId }: Props) {
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
           </div>
 
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="grid grid-cols-4 gap-3">
+              <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
@@ -110,7 +112,8 @@ export default function TeacherSubjects({ teacherId }: Props) {
             <TableRow>
               <TableHead className="text-xs">Subject</TableHead>
               <TableHead className="text-xs">Grade Level</TableHead>
-              <TableHead className="text-xs">Schedule</TableHead>
+              <TableHead className="text-xs">Schedule Day</TableHead>
+              <TableHead className="text-xs">Schedule Time</TableHead>
               <TableHead className="text-xs">Year</TableHead>
             </TableRow>
           </TableHeader>
@@ -124,6 +127,9 @@ export default function TeacherSubjects({ teacherId }: Props) {
                   </TableCell>
                   <TableCell className="text-xs">
                     {s.grade_level || "N/A"}
+                  </TableCell>
+                  <TableCell className="text-xs">
+                    {s.schedule_day || "N/A"}
                   </TableCell>
                   <TableCell className="text-xs">
                     {s.schedule || "N/A"}

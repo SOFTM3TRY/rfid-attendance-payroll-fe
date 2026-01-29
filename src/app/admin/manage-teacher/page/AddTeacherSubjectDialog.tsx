@@ -57,6 +57,15 @@ function formatHour(h24: number) {
   return `${h12}:00 ${suffix}`;
 }
 
+const scheduleDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
 export default function CreateTeacherSubjectDialog({
   open,
   setOpen,
@@ -68,7 +77,9 @@ export default function CreateTeacherSubjectDialog({
   const { mutateAsync, isPending } = useCreateTeacherSubject(token);
 
   const { data: gradeData, isLoading: gradeLoading } = useGrade(token as string);
-  const { data: subjectData, isLoading: subjectLoading } = useSubject(token as string);
+  const { data: subjectData, isLoading: subjectLoading } = useSubject(
+    token as string
+  );
 
   const grades = Array.isArray(gradeData?.data) ? gradeData.data : [];
   const subjects = Array.isArray(subjectData?.data) ? subjectData.data : [];
@@ -77,6 +88,7 @@ export default function CreateTeacherSubjectDialog({
 
   const [gradeId, setGradeId] = React.useState<string>("");
   const [subjectName, setSubjectName] = React.useState<string>("");
+  const [scheduleDay, setScheduleDay] = React.useState<string>(""); // ✅ added
   const [schedule, setSchedule] = React.useState<string>("");
 
   // ✅ filter subjects based on selected gradeId
@@ -85,10 +97,12 @@ export default function CreateTeacherSubjectDialog({
     return subjects.filter((s: any) => String(s.grade_id) === String(gradeId));
   }, [subjects, gradeId]);
 
+  // ✅ reset fields on close
   React.useEffect(() => {
     if (!open) {
       setGradeId("");
       setSubjectName("");
+      setScheduleDay("");
       setSchedule("");
     }
   }, [open]);
@@ -101,7 +115,7 @@ export default function CreateTeacherSubjectDialog({
   const handleSave = async () => {
     if (!teacherId) return;
 
-    if (!subjectName || !gradeId || !schedule) {
+    if (!subjectName || !gradeId || !scheduleDay || !schedule) {
       toast.error("Please fill out all fields.");
       return;
     }
@@ -112,6 +126,7 @@ export default function CreateTeacherSubjectDialog({
         subject_name: subjectName,
         grade_id: gradeId,
         schedule,
+        schedule_day: scheduleDay,
       });
 
       toast.success(res?.message || "Subject created successfully.");
@@ -190,7 +205,6 @@ export default function CreateTeacherSubjectDialog({
               </SelectContent>
             </Select>
 
-            {/* optional helper */}
             {gradeId && !subjectLoading && filteredSubjects.length === 0 ? (
               <p className="text-[10px] text-muted-foreground">
                 No subjects found for this grade.
@@ -198,9 +212,30 @@ export default function CreateTeacherSubjectDialog({
             ) : null}
           </div>
 
-          {/* Schedule */}
+          {/* ✅ Schedule Day (Monday - Saturday) */}
           <div className="col-span-2 grid gap-2">
-            <Label>Schedule</Label>
+            <Label>Schedule Day</Label>
+            <Select value={scheduleDay} onValueChange={setScheduleDay}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select day" />
+              </SelectTrigger>
+              <SelectContent>
+                {scheduleDays.map((day) => (
+                  <SelectItem key={day} value={day}>
+                    {day}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <p className="text-[10px] text-muted-foreground">
+              Available days: Monday to Saturday.
+            </p>
+          </div>
+
+          {/* ✅ Schedule Time */}
+          <div className="col-span-2 grid gap-2">
+            <Label>Schedule Time</Label>
             <Select value={schedule} onValueChange={setSchedule}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select schedule" />

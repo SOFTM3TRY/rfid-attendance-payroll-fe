@@ -290,7 +290,7 @@ export default function Dashboard() {
                 </Card>
               </div>
             </div> */}
-          </div>
+          </div>..
           <Footer />
         </main>
       </SidebarProvider>

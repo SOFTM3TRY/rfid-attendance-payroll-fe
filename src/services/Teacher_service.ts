@@ -202,6 +202,7 @@ export const CreateTeacherSubject = async (
     subject_name: string;
     grade_id: string;
     schedule: string;
+    schedule_day: string;
   }
 ) => {
   try {
@@ -226,3 +227,4 @@ export const CreateTeacherSubject = async (
     );
   }
 };
+

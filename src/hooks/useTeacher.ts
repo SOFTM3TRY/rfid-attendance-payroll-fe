@@ -101,6 +101,7 @@ export const useCreateTeacherSubject = (token: string | null) => {
       subject_name: string;
       grade_id: string;
       schedule: string;
+      schedule_day: string;
     }) => CreateTeacherSubject(token as string, payload),
 
     onSuccess: (res) => {
