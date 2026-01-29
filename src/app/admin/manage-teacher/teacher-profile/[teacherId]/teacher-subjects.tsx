@@ -140,7 +140,7 @@ export default function TeacherSubjects({ teacherId }: Props) {
                           year: "numeric",
                         }).format(new Date(s.created_at))
                       : "—"}
-                  </TableCell>
+                  </TableCell> 
                 </TableRow>
               ))
             ) : (

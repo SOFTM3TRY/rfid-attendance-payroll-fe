@@ -9,7 +9,7 @@ export function Footer() {
         </p>
       </div>
 
-      <img src="https://avatars.githubusercontent.com/u/221351242?s=200&v=4" alt="Avatar" className="w-8 h-8 rounded-full"/>
+      <img src="https://avatars.githubusercontent.com/u/221351242?s=200&v=4" alt="Avatar" draggable="false" className="w-8 h-8 rounded-full"/>
     </footer>
   )
 }

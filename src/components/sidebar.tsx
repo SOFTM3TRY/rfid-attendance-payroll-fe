@@ -170,8 +170,8 @@ export function AppSidebar() {
       <SidebarFooter className="py-5">
         <div className="flex items-center gap-4">
           <Avatar className="h-8 w-8 flex-shrink-0">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={userDetails?.data.avatar ? `https://rfid-api.barangay185bms.com/storage/avatars/${userDetails?.data.avatar}` : "https://github.com/shadcn.png"} />
+            <AvatarFallback>{userDetails?.data.first_name.charAt(0)}{userDetails?.data.last_name.charAt(0)}</AvatarFallback>
           </Avatar>
 
           <div className="px-2 py-2 block group-data-[collapsible=icon]:hidden">

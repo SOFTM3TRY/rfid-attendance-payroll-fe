@@ -44,7 +44,7 @@ export function Navbar() {
   const { token } = useAuth();
   const isClient = useClientOnly();
   const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
-    token as string
+    token as string,
   );
   const router = useRouter();
   const handlelogout = async () => {
@@ -170,8 +170,17 @@ export function Navbar() {
           <PopoverTrigger>
             <div className="flex items-center gap-1 pr-5 pl-2 py-1 ml-5 bg-primary/50 hover:bg-primary dark:bg-primary/50 dark:hover:bg-primary rounded-full">
               <Avatar className="h-8 w-8 flex-shrink-0">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage
+                  src={
+                    userDetails?.data.avatar
+                      ? `https://rfid-api.barangay185bms.com/storage/avatars/${userDetails?.data.avatar}`
+                      : "https://github.com/shadcn.png"
+                  }
+                />
+                <AvatarFallback>
+                  {userDetails?.data.first_name.charAt(0)}
+                  {userDetails?.data.last_name.charAt(0)}
+                </AvatarFallback>
               </Avatar>
 
               <div className="flex flex-col text-start leading-2 text-white">
@@ -185,8 +194,8 @@ export function Navbar() {
                   {userDetails?.data.role_id === 1
                     ? "Admin"
                     : userDetails?.data.role_id === 2
-                    ? "Teacher"
-                    : ""}
+                      ? "Teacher"
+                      : ""}
                 </small>
               </div>
             </div>
@@ -201,8 +210,8 @@ export function Navbar() {
                   {userDetails?.data.role_id === 1
                     ? "Admin"
                     : userDetails?.data.role_id === 2
-                    ? "Teacher"
-                    : "Student"}
+                      ? "Teacher"
+                      : "Student"}
                 </span>
               </p>
               <p className="text-xs">{userDetails?.data.email}</p>
@@ -215,8 +224,8 @@ export function Navbar() {
                     userDetails?.data.role_id === 1
                       ? "/admin/profile"
                       : userDetails?.data.role_id === 2
-                      ? "/teacher/profile"
-                      : "/student/profile"
+                        ? "/teacher/profile"
+                        : "/student/profile"
                   }
                 >
                   <Button
