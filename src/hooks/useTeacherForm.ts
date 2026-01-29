@@ -59,22 +59,45 @@ export function useTeacherForm(existingData: any = null) {
   const stepFieldsMap: Record<number, string[]> = {
     1: ["grade", "section", "school_year"],
     2: [
-      "first_name", "middle_name", "last_name", "suffix", "contact_no", "email", "role_id",
-      "birth_place", "birth_date", "gender", "status",
+      "first_name",
+      "middle_name",
+      "last_name",
+      "suffix",
+      "contact_no",
+      "email",
+      "role_id",
+      "birth_place",
+      "birth_date",
+      "gender",
+      "status",
     ],
     3: [
-      "region", "province", "city", "barangay", "street",
-      "emergency_fname", "emergency_mname", "emergency_lname", "emergency_contact", "emergency_relationship",
+      "region",
+      "province",
+      "city",
+      "barangay",
+      "street",
+      "emergency_fname",
+      "emergency_mname",
+      "emergency_lname",
+      "emergency_contact",
+      "emergency_relationship",
     ],
   };
 
   const validateStep = () => {
     const requiredFields = stepFieldsMap[step] || [];
     const newErrors: Record<string, string> = {};
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       if (
         !formData[field]?.toString().trim() &&
-        !["middle_name", "suffix", "role_id", "status", "emergency_mname"].includes(field)
+        ![
+          "middle_name",
+          "suffix",
+          "role_id",
+          "status",
+          "emergency_mname",
+        ].includes(field)
       ) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }
@@ -94,12 +117,16 @@ export function useTeacherForm(existingData: any = null) {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      let res;
+
       if (existingData?.id) {
-        // await UpdateTeacher(token as string, existingData.id, formData);
+        // res = await UpdateTeacher(token as string, existingData.id, formData);
         toast.success("Teacher updated successfully");
       } else {
-        await CreateTeacher(token as string, formData);
-        toast.success("Teacher created successfully");
+        res = await CreateTeacher(token as string, formData);
+
+        // ✅ success response from backend
+        toast.success(res?.message || "Teacher created successfully");
       }
 
       refetchTeachers();
@@ -109,7 +136,6 @@ export function useTeacherForm(existingData: any = null) {
       if (!existingData) {
         setFormData(defaultFormData);
       }
-
     } catch (error: any) {
       const { data } = error.response || {};
       setErrors({ ...errors, ...data?.errors });
@@ -120,12 +146,17 @@ export function useTeacherForm(existingData: any = null) {
   };
 
   return {
-    step, setStep,
-    open, setOpen,
+    step,
+    setStep,
+    open,
+    setOpen,
     loading,
-    errors, setErrors,
-    handlePrevStep, handleNextStep,
+    errors,
+    setErrors,
+    handlePrevStep,
+    handleNextStep,
     handleSubmit,
-    formData, setFormData,
+    formData,
+    setFormData,
   };
 }
