@@ -57,6 +57,7 @@ import {
 } from "@/hooks/useStudentDetails";
 import { useTeacherActiveCount } from "@/hooks/useTeacher";
 import { Label } from "@/components/ui/label";
+import { useGetRegisteredStudent } from "@/hooks/useStudentDetails";
 
 export default function Dashboard() {
   const { token } = useAuth();
@@ -73,7 +74,8 @@ export default function Dashboard() {
     useCountActiveStudents(token as string);
   const { data: CountActiveTeachers, isLoading: isLoadingCountActiveTeachers } =
     useTeacherActiveCount(token as string);
-  console.log("Active Students Count:", countActiveStudents);
+  const { data: registeredStudents, isLoading: isLoadingRegisteredStudents } =
+    useGetRegisteredStudent(token as string);
   if (!isClient || isLoadingUserDetails) {
     return <Loader />;
   }
@@ -155,28 +157,27 @@ export default function Dashboard() {
                   </p>
                 </CardContent>
               </Card>
-              <Card
-                className="bg-muted-foreground/30 cursor-not-allowed"
-                title="This Card is not available"
-              >
-                <CardHeader>
-                  <CardDescription className="flex items-center text-muted-foreground/50">
-                    <Users className="size-4 mr-2" />
-                    Active Employees
+              <Card>
+                <CardHeader className="flex items-center justify-between">
+                  <CardDescription className="flex items-center">
+                    <Users className="size-4 text-primary mr-2" />
+                    Total Registered Students
                   </CardDescription>
 
-                  <CardAction className="bg-muted-foreground/30  px-2 py-1 rounded-full text-xs">
-                    <a
-                      href="#"
-                      className="flex items-center cursor-not-allowed text-muted-foreground/50"
-                    >
-                      Go to Page
-                      <SquareArrowOutUpRight className="h-3 w-3 ml-2" />
-                    </a>
+                  <CardAction>
+                    <Button variant="link" size="sm">
+                      <a href="/admin/manage-student">Go to Page</a>
+                      <SquareArrowOutUpRight className="size-3" />
+                    </Button>
                   </CardAction>
                 </CardHeader>
-                <CardContent className="text-5xl font-bold text-muted-foreground/50">
-                  0
+                <CardContent>
+                  <div className="text-5xl font-bold">
+                    {registeredStudents?.registered_students_count}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Total registered students
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -227,10 +228,6 @@ export default function Dashboard() {
               )}
             </div>
 
-            <div className="my-5 mt-10">
-              <ChartAreaInteractive />
-            </div>
-
             <div>
               <h1 className="text-sm mt-10 flex">
                 <Sheet className="mr-2 size-4" />
@@ -238,6 +235,11 @@ export default function Dashboard() {
               </h1>
             </div>
             <StudentTable />
+
+            <div className="my-5 mt-10">
+              <ChartAreaInteractive />
+            </div>
+
             {/* <div className="mt-5 p-3 grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
               <div className="col-span-1 md:col-span-2"></div>
               <div className="col-span-1 grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">

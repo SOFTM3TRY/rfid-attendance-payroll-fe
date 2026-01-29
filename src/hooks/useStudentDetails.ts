@@ -18,6 +18,7 @@ import {
   getStudentAttendanceById,
   UpdateStudentAvatar,
   ChangeStudentPassword,
+  CountRegisteredStudents
 } from "@/services/Student_service";
 import { StdioNull } from "child_process";
 
@@ -177,3 +178,17 @@ export const useChangeStudentPassword = (token: string | null) => {
     }) => ChangeStudentPassword(token as string, id, new_password, confirm_password),
   });
 };
+
+export const useGetRegisteredStudent = (token: string | null) => {
+  return useQuery({
+    queryKey: ["get-registered-student", token],
+    enabled: !!token,
+    queryFn: async () => {
+      if (!token) {
+        return { status: false, data: [] };
+      }
+      return await CountRegisteredStudents(token);
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+}

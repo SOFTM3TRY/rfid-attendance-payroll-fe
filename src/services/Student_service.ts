@@ -287,3 +287,20 @@ export const ChangeStudentPassword = async (
     throw new Error("Failed to change password.");
   }
 };
+
+export const CountRegisteredStudents = async (token: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/students-registered`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
