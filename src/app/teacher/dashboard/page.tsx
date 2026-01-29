@@ -31,18 +31,21 @@ import { useUserDetails } from "@/hooks/useUserDetails";
 import { useTeacherDetails } from "@/hooks/useTeacher";
 
 import { Badge } from "@/components/ui/badge";
-import { Users, BookOpen, CalendarDays, GraduationCap } from "lucide-react";
+import { Users, BookOpen, CalendarDays, GraduationCap, HouseIcon } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 export default function Dashboard() {
   const { token } = useAuth();
 
-  const { data: user, isLoading: userLoading } = useUserDetails(token as string);
+  const { data: user, isLoading: userLoading } = useUserDetails(
+    token as string,
+  );
 
   const userId = user?.data?.id ? String(user.data.id) : "";
 
   const { data: teacherRes, isLoading: teacherLoading } = useTeacherDetails(
     token as string,
-    { id: userId }
+    { id: userId },
   );
 
   const teacher = teacherRes?.data?.teacher?.[0] ?? null;
@@ -71,7 +74,9 @@ export default function Dashboard() {
 
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl">Dashboard</h1>
+              <Label className="text-sm">
+                <HouseIcon className="size-4 text-primary" /> Dashboard
+              </Label>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -179,7 +184,9 @@ export default function Dashboard() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-xs text-muted-foreground">No subjects.</p>
+                    <p className="text-xs text-muted-foreground">
+                      No subjects.
+                    </p>
                   )}
                 </CardContent>
               </Card>
