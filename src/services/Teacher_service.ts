@@ -201,6 +201,7 @@ export const CreateTeacherSubject = async (
     user_id: string;
     subject_name: string;
     grade_id: string;
+    section_id: string;
     schedule: string;
     schedule_day: string;
   }

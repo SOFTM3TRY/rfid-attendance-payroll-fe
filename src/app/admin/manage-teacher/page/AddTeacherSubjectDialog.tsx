@@ -30,6 +30,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCreateTeacherSubject } from "@/hooks/useTeacher";
 import { useGrade } from "@/hooks/useGrade";
 import { useSubject } from "@/hooks/useSubjects";
+import { useSection } from "@/hooks/useSection"; // ✅ sections-by-grade hook
 
 type Props = {
   open: boolean;
@@ -87,9 +88,17 @@ export default function CreateTeacherSubjectDialog({
   const scheduleOptions = React.useMemo(() => buildScheduleOptions(), []);
 
   const [gradeId, setGradeId] = React.useState<string>("");
+  const [sectionId, setSectionId] = React.useState<string>(""); // ✅ added
   const [subjectName, setSubjectName] = React.useState<string>("");
-  const [scheduleDay, setScheduleDay] = React.useState<string>(""); // ✅ added
+  const [scheduleDay, setScheduleDay] = React.useState<string>("");
   const [schedule, setSchedule] = React.useState<string>("");
+
+  // ✅ fetch sections by grade (your existing hook)
+  const { data: sectionData, isLoading: sectionLoading } = useSection(
+    token,
+    gradeId
+  );
+  const sections = Array.isArray(sectionData?.data) ? sectionData.data : [];
 
   // ✅ filter subjects based on selected gradeId
   const filteredSubjects = React.useMemo(() => {
@@ -101,21 +110,23 @@ export default function CreateTeacherSubjectDialog({
   React.useEffect(() => {
     if (!open) {
       setGradeId("");
+      setSectionId("");
       setSubjectName("");
       setScheduleDay("");
       setSchedule("");
     }
   }, [open]);
 
-  // ✅ when grade changes, reset subject selection
+  // ✅ when grade changes, reset subject + section (dependent)
   React.useEffect(() => {
     setSubjectName("");
+    setSectionId("");
   }, [gradeId]);
 
   const handleSave = async () => {
     if (!teacherId) return;
 
-    if (!subjectName || !gradeId || !scheduleDay || !schedule) {
+    if (!subjectName || !gradeId || !sectionId || !scheduleDay || !schedule) {
       toast.error("Please fill out all fields.");
       return;
     }
@@ -125,6 +136,7 @@ export default function CreateTeacherSubjectDialog({
         user_id: teacherId,
         subject_name: subjectName,
         grade_id: gradeId,
+        section_id: sectionId, // ✅ send section_id
         schedule,
         schedule_day: scheduleDay,
       });
@@ -152,7 +164,7 @@ export default function CreateTeacherSubjectDialog({
         </DialogHeader>
 
         <div className="grid grid-cols-2 gap-4 mt-2 w-full">
-          {/* ✅ Grade FIRST (so subject depends on it) */}
+          {/* ✅ Grade */}
           <div className="grid gap-2">
             <Label>Grade</Label>
             <Select
@@ -175,8 +187,45 @@ export default function CreateTeacherSubjectDialog({
             </Select>
           </div>
 
-          {/* ✅ Subject depends on gradeId */}
+          {/* ✅ Section depends on gradeId */}
           <div className="grid gap-2">
+            <Label>Section</Label>
+            <Select
+              value={sectionId}
+              onValueChange={setSectionId}
+              disabled={!gradeId || sectionLoading}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue
+                  placeholder={
+                    !gradeId
+                      ? "Select grade first"
+                      : sectionLoading
+                      ? "Loading sections..."
+                      : sections.length
+                      ? "Select section"
+                      : "No sections for this grade"
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {sections.map((sec: any) => (
+                  <SelectItem key={sec.id} value={String(sec.id)}>
+                    {sec.section_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {gradeId && !sectionLoading && sections.length === 0 ? (
+              <p className="text-[10px] text-muted-foreground">
+                No sections found for this grade.
+              </p>
+            ) : null}
+          </div>
+
+          {/* ✅ Subject depends on gradeId */}
+          <div className="col-span-2 grid gap-2">
             <Label>Subject</Label>
             <Select
               value={subjectName}
@@ -212,7 +261,7 @@ export default function CreateTeacherSubjectDialog({
             ) : null}
           </div>
 
-          {/* ✅ Schedule Day (Monday - Saturday) */}
+          {/* ✅ Schedule Day */}
           <div className="col-span-2 grid gap-2">
             <Label>Schedule Day</Label>
             <Select value={scheduleDay} onValueChange={setScheduleDay}>
