@@ -143,31 +143,31 @@ export default function AddTeacher() {
       }
     }
 
-    // STEP 3 VALIDATIONS
-    if (step === 3) {
-      // --- Required fields ---
-      const requiredFields = [
-        "region",
-        "province",
-        "city",
-        "barangay",
-        "street",
-        "emergency_fname",
-        "emergency_lname",
-        "emergency_relation",
-        "emergency_contact",
-      ];
+    // // STEP 3 VALIDATIONS
+    // if (step === 3) {
+    //   // --- Required fields ---
+    //   const requiredFields = [
+    //     "region",
+    //     "province",
+    //     "city",
+    //     "barangay",
+    //     "street",
+    //     "emergency_fname",
+    //     "emergency_lname",
+    //     "emergency_relation",
+    //     "emergency_contact",
+    //   ];
 
-      for (const field of requiredFields) {
-        if (!formData[field]) {
-          setErrors((prev: any) => ({
-            ...prev,
-            [field]: "This field is required.",
-          }));
-          return; // Stop moving forward
-        }
-      }
-    }
+    //   for (const field of requiredFields) {
+    //     if (!formData[field]) {
+    //       setErrors((prev: any) => ({
+    //         ...prev,
+    //         [field]: "This field is required.",
+    //       }));
+    //       return; // Stop moving forward
+    //     }
+    //   }
+    // }
 
     // Move to next step
     setStep(step + 1);

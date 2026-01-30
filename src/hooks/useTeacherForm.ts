@@ -28,6 +28,8 @@ export function useTeacherForm(existingData: any = null) {
     birth_date: "",
     birth_place: "",
     gender: "",
+
+    // ✅ OPTIONAL FIELDS (pwede blank)
     region: "",
     province: "",
     city: "",
@@ -56,6 +58,7 @@ export function useTeacherForm(existingData: any = null) {
     }
   }, [existingData]);
 
+  // ✅ Step fields
   const stepFieldsMap: Record<number, string[]> = {
     1: ["grade", "section", "school_year"],
     2: [
@@ -72,6 +75,7 @@ export function useTeacherForm(existingData: any = null) {
       "status",
     ],
     3: [
+      // still shown in step 3, pero OPTIONAL na
       "region",
       "province",
       "city",
@@ -85,23 +89,40 @@ export function useTeacherForm(existingData: any = null) {
     ],
   };
 
+  // ✅ Fields that are OPTIONAL (hindi required kahit empty)
+  const optionalFields = new Set([
+    "middle_name",
+    "suffix",
+    "role_id",
+    "status",
+
+    // ✅ make these optional:
+    "region",
+    "province",
+    "city",
+    "barangay",
+    "street",
+    "emergency_fname",
+    "emergency_mname",
+    "emergency_lname",
+    "emergency_contact",
+    "emergency_relationship",
+  ]);
+
   const validateStep = () => {
     const requiredFields = stepFieldsMap[step] || [];
     const newErrors: Record<string, string> = {};
+
     requiredFields.forEach((field) => {
-      if (
-        !formData[field]?.toString().trim() &&
-        ![
-          "middle_name",
-          "suffix",
-          "role_id",
-          "status",
-          "emergency_mname",
-        ].includes(field)
-      ) {
+      // ✅ skip validation if optional
+      if (optionalFields.has(field)) return;
+
+      const value = formData[field];
+      if (!value?.toString().trim()) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }
     });
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -124,22 +145,36 @@ export function useTeacherForm(existingData: any = null) {
         toast.success("Teacher updated successfully");
       } else {
         res = await CreateTeacher(token as string, formData);
-
-        // ✅ success response from backend
         toast.success(res?.message || "Teacher created successfully");
       }
 
       refetchTeachers();
       setOpen(false);
 
-      // Reset only if creating
-      if (!existingData) {
-        setFormData(defaultFormData);
-      }
+      if (!existingData) setFormData(defaultFormData);
     } catch (error: any) {
-      const { data } = error.response || {};
-      setErrors({ ...errors, ...data?.errors });
-      toast.error(data?.message || "An error occurred");
+      const responseData = error?.response?.data;
+
+      // ✅ validation errors
+      if (responseData?.errors) {
+        setErrors(responseData.errors);
+
+        // ✅ safe extract first error message
+        const firstError = (
+          Object.values(responseData.errors)[0] as string[]
+        )?.[0];
+
+        toast.error(firstError || "Validation error");
+        return;
+      }
+
+      // ✅ fallback message
+      const msg =
+        responseData?.message ||
+        responseData?.error ||
+        (typeof responseData === "string" ? responseData : null);
+
+      toast.error(msg || "An error occurred");
     } finally {
       setTimeout(() => setLoading(false), 1000);
     }

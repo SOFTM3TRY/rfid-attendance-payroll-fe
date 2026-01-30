@@ -46,7 +46,7 @@ export default function Step3({
       <span className="col-span-1 md:col-span-4">
         <h1 className="text-xl font-bold flex items-center">
           <ContactRound className="text-yellow-500 h-6 w-6 mr-1" />
-          Additional Information
+          Additional Information (This is optional)
         </h1>
       </span>
 
