@@ -73,3 +73,25 @@ export const DeleteSubject = async (token: string, id: number | string) => {
     throw new Error("Failed to delete School Year.");
   }
 };
+
+export const GetTeacherSchedulesByGradeAndSection = async (
+  token: string,
+  gradeId: string,
+  sectionId: string
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/teacher-schedules/${gradeId}/${sectionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

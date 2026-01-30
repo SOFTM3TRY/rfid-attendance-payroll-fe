@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { GetallSubjects, CreateSubject, EditSubject, DeleteSubject } from "@/services/Subject_service";
+import { GetallSubjects, CreateSubject, EditSubject, DeleteSubject, GetTeacherSchedulesByGradeAndSection  } from "@/services/Subject_service";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 
@@ -70,5 +70,21 @@ export const useDeleteSubject = () => {
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : "Failed to delete School Year");
     },
+  });
+};
+
+export const useTeacherSchedulesByGradeAndSection = (
+  token: string | null,
+  gradeId?: string | number | null,
+  sectionId?: string | number | null
+) => {
+  const g = gradeId ? String(gradeId) : "";
+  const s = sectionId ? String(sectionId) : "";
+
+  return useQuery({
+    queryKey: ["teacher-schedules", g, s],
+    queryFn: () => GetTeacherSchedulesByGradeAndSection(token as string, g, s),
+    enabled: !!token && !!g && !!s,
+    staleTime: 1000 * 60 * 5,
   });
 };
