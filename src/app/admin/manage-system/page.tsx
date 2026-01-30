@@ -49,7 +49,7 @@ export default function manageSettings() {
 
           <div className="p-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-lg font-medium flex"><Users  className="mr-2 w-6 h-6 text-teal-500"/> Manage Settings</h1>
+              <h1 className="text-sm font-medium flex"><Users  className="size-4 mr-2 text-primary"/> Manage Settings</h1>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
