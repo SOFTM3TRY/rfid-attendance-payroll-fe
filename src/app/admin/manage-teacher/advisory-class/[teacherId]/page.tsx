@@ -26,6 +26,7 @@ import Subject from "./subject";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import DownloadAttendanceReportPdfModal from "@/components/DownloadAttendanceReportPdfModal";
 
 function AdvisorySkeleton() {
   return (
@@ -245,6 +246,18 @@ export default function AdvisoryClass() {
                   </div>
 
                   <div className="bg-accent/20 rounded-lg p-5 w-full">
+                    {token && teacher ? (
+                      <DownloadAttendanceReportPdfModal
+                        token={token}
+                        sectionApiParam={
+                          teacher?.section?.section_name || "N/A"
+                        } // kung API expects "2" then pass "2"
+                        gradeLabel={teacher?.grade?.grade_level || "N/A"}
+                        sectionLabel={teacher?.section?.section_name || "N/A"}
+                        teacherName={fullName}
+                        schoolName="Young Generation Academy"
+                      />
+                    ) : null}
                     <TeacherStudentTable
                       students={students}
                       isLoading={isLoadingStudents}

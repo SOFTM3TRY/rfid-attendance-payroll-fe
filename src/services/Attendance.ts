@@ -9,6 +9,23 @@ export type AttendanceChartItem = {
   absent: number;
 };
 
+export type AttendanceBySectionItem = {
+  id: number;
+  lrn: string;
+  grade: string;
+  section: string;
+  fullname: string;
+  status: string;
+  time_in: string | null;
+  time_out: string | null;
+  date: string;
+};
+
+export type AttendanceBySectionResponse = {
+  status: boolean;
+  data: AttendanceBySectionItem[];
+};
+
 export const GetAttendanceChart = async (
   token: string,
   range: AttendanceChartRange = "90d"
@@ -95,4 +112,21 @@ export const GetAttendanceToday = async (token: string) => {
     console.error(error);
     throw error;
   }
+};
+
+export const GetAttendanceBySection = async (
+  token: string,
+  section: string,
+  start_date?: string,
+  end_date?: string
+) => {
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-attendance-by-section/${section}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { start_date, end_date },
+    }
+  );
+
+  return res.data;
 };
