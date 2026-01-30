@@ -18,6 +18,11 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 
+import { useAuth } from "@/context/AuthContext";
+// @ts-ignore
+import { useUserDetails } from "@/hooks/useUserDetails";
+import { useClientOnly } from "@/hooks/useClientOnly";
+
 import SplitTextSide from "@/components/animata/text/split-text-side";
 
 const items = [
@@ -26,6 +31,21 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const { token } = useAuth();
+
+  const { data: userDetails } = useUserDetails(token as string);
+
+  const user = userDetails?.data;
+
+  const roleLabel =
+    user?.role_id === 1
+      ? "Admin"
+      : user?.role_id === 2
+        ? "Teacher"
+        : user?.role_id === 3
+          ? "Student"
+          : "";
+
   const pathname = usePathname();
 
   return (
@@ -82,18 +102,29 @@ export function AppSidebar() {
       <SidebarFooter className="py-5">
         <div className="flex items-center gap-4">
           <Avatar className="h-8 w-8 flex-shrink-0">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>ST</AvatarFallback>
+            <AvatarImage
+              src={
+                user?.avatar
+                  ? `https://rfid-api.barangay185bms.com/storage/avatars/${user.avatar}`
+                  : "https://github.com/shadcn.png"
+              }
+            />
+            <AvatarFallback>
+              {(user?.first_name?.[0] ?? "U").toUpperCase()}
+              {(user?.last_name?.[0] ?? "U").toUpperCase()}
+            </AvatarFallback>
           </Avatar>
 
           <div className="px-2 py-2 block group-data-[collapsible=icon]:hidden">
             <p className="font-semibold text-xs">
-              Student Student
-              <span className="text-[10px] px-2 py-0 bg-accent rounded-full ml-2">
-                Student
-              </span>
+              {(user?.first_name ?? "") + " " + (user?.last_name ?? "")}
+              {roleLabel ? (
+                <span className="text-[10px] px-2 py-0 bg-accent rounded-full ml-2">
+                  {roleLabel}
+                </span>
+              ) : null}
             </p>
-            <p className="text-xs text-muted-foreground">student@yga.edu.ph</p>
+            <p className="text-xs">{user?.email}</p>
           </div>
         </div>
       </SidebarFooter>

@@ -15,9 +15,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 
-import { GraduationCap, BookOpen, User, Layers } from "lucide-react";
+import { GraduationCap, BookOpen, User, Layers, HouseIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Label } from "@/components/ui/label";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb";
 
 export default function Dashboard() {
   const { token } = useAuth();
@@ -38,12 +40,21 @@ export default function Dashboard() {
         <main className="w-full h-auto">
           <Navbar />
 
-          <div className="p-6">
-            {/* TITLE */}
-            <h1 className="text-xl font-semibold mb-6">Student Dashboard</h1>
-
-            {/* ✅ TOP CARDS */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="p-5">
+             <div className="flex items-center justify-between">
+              <Label className="text-sm">
+                <HouseIcon className="size-4 text-primary" /> Dashboard
+              </Label>
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
               {/* CARD 1: Grade */}
               <Card className="rounded-2xl shadow-sm">
                 <CardHeader className="flex flex-row items-center gap-2">
