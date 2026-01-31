@@ -12,66 +12,259 @@ import {
 } from "@/services/Attendance";
 
 import { StdioNull } from "child_process";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 import { GetAttendanceBySection } from "@/services/Attendance";
-import type { AttendanceBySectionItem } from "@/services/Attendance";
-import { generateAttendanceReportPdf } from "@/utils/attendanceReportPdf";
 
-const toYmd = (dt?: string | null) => (dt ? dt.slice(0, 10) : "");
+/* =========================
+   TYPES
+========================= */
+type AttendanceItem = {
+  id: number;
+  lrn: string;
+  grade: string;
+  section: string;
+  fullname: string;
+  status: string;
+  time_in: string | null;
+  time_out: string | null;
+  date: string;
+};
 
+type AttendanceResponse = {
+  status: boolean;
+  data: AttendanceItem[];
+};
+
+/* =========================
+   DATE HELPERS
+========================= */
+function parseToDate(value?: string | null): Date | null {
+  if (!value) return null;
+
+  const v = value.trim();
+
+  // YYYY-MM-DD or YYYY-MM-DD HH:mm:ss
+  if (v.includes("-") && v.length >= 10) {
+    const [yyyy, mm, dd] = v.slice(0, 10).split("-");
+    return new Date(Number(yyyy), Number(mm) - 1, Number(dd));
+  }
+
+  return null;
+}
+
+function formatDate(d: Date) {
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${mm}/${dd}/${yyyy}`;
+}
+
+function formatTime12(dt?: string | null) {
+  if (!dt) return "";
+
+  const time = dt.split(" ")[1];
+  if (!time) return "";
+
+  const [hhStr, mmStr, ssStr] = time.split(":");
+  const hh = Number(hhStr);
+
+  const suffix = hh >= 12 ? "PM" : "AM";
+  const h12 = ((hh + 11) % 12) + 1;
+
+  return `${String(h12).padStart(2, "0")}:${mmStr}:${ssStr} ${suffix}`;
+}
+
+/* =========================
+   PDF GENERATOR (Screenshot Layout)
+========================= */
+function generatePdf(args: {
+  schoolName: string;
+  gradeLabel: string;
+  sectionLabel: string;
+  teacherName: string;
+  startDate: string;
+  endDate: string;
+  rows: AttendanceItem[];
+}) {
+  const {
+    schoolName,
+    gradeLabel,
+    sectionLabel,
+    teacherName,
+    startDate,
+    endDate,
+    rows,
+  } = args;
+
+  const doc = new jsPDF("portrait", "pt", "a4");
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const marginX = 40;
+
+  // Header lines
+  doc.setDrawColor(120);
+  doc.line(marginX, 35, pageWidth - marginX, 35);
+  doc.line(marginX, 90, pageWidth - marginX, 90);
+
+  // School name
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.text(schoolName, marginX, 60);
+
+  // Title
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(20);
+  doc.text("ATTENDANCE REPORT", pageWidth / 2, 70, { align: "center" });
+
+  // Info box
+  const boxX = marginX;
+  const boxY = 120;
+  const boxW = pageWidth - marginX * 2;
+  const boxH = 100;
+
+  doc.setLineDashPattern([3, 3], 0);
+  doc.rect(boxX, boxY, boxW, boxH);
+  doc.setLineDashPattern([], 0);
+
+  let y = boxY + 25;
+  doc.setFontSize(12);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Grade:", boxX + 20, y);
+  doc.setFont("helvetica", "normal");
+  doc.text(gradeLabel, boxX + 120, y);
+
+  y += 20;
+  doc.setFont("helvetica", "bold");
+  doc.text("Section:", boxX + 20, y);
+  doc.setFont("helvetica", "normal");
+  doc.text(sectionLabel, boxX + 120, y);
+
+  y += 20;
+  doc.setFont("helvetica", "bold");
+  doc.text("Date Covered:", boxX + 20, y);
+  doc.setFont("helvetica", "normal");
+  doc.text(`${startDate} - ${endDate}`, boxX + 120, y);
+
+  y += 20;
+  doc.setFont("helvetica", "bold");
+  doc.text("Teacher:", boxX + 20, y);
+  doc.setFont("helvetica", "normal");
+  doc.text(teacherName, boxX + 120, y);
+
+  y += 20;
+  doc.setFont("helvetica", "bold");
+  doc.text("Total:", boxX + 20, y);
+  doc.setFont("helvetica", "normal");
+  doc.text(String(rows.length), boxX + 120, y);
+
+  // Table
+  autoTable(doc, {
+    startY: boxY + boxH + 20,
+    head: [[
+      "NO.",
+      "LRN",
+      "FULL NAME",
+      "STATUS",
+      "TIME IN",
+      "TIME OUT",
+      "DATE",
+    ]],
+    body: rows.map((r, i) => {
+      const d = parseToDate(r.date);
+      return [
+        i + 1,
+        r.lrn,
+        r.fullname,
+        r.status,
+        formatTime12(r.time_in),
+        r.time_out || "",
+        d ? formatDate(d) : "",
+      ];
+    }),
+    headStyles: {
+      fillColor: [0, 0, 0],
+      textColor: [255, 255, 255],
+      halign: "center",
+    },
+    styles: {
+      fontSize: 10,
+      cellPadding: 5,
+    },
+  });
+
+  doc.save(`attendance_${sectionLabel}_${startDate}_to_${endDate}.pdf`);
+}
+
+/* =========================
+   MAIN HOOK
+========================= */
 export const useDownloadAttendanceReportPdf = () => {
   return useMutation({
     mutationFn: async (args: {
       token: string;
       section: string;
+      startDate: string;
+      endDate: string;
+      schoolName: string;
       gradeLabel: string;
       sectionLabel: string;
       teacherName: string;
-      schoolName: string;
-      subtitle?: string;
-      startDate: string; // YYYY-MM-DD
-      endDate: string;   // YYYY-MM-DD
     }) => {
       const {
         token,
         section,
+        startDate,
+        endDate,
+        schoolName,
         gradeLabel,
         sectionLabel,
         teacherName,
-        schoolName,
-        subtitle,
-        startDate,
-        endDate,
       } = args;
 
-      const res = await GetAttendanceBySection(token, section);
+      console.log("SECTION PARAM:", section);
 
-      const filtered: AttendanceBySectionItem[] = (res.data || []).filter((r : any) => {
-        const d = toYmd(r.date || r.time_in);
-        if (!d) return false;
-        return d >= startDate && d <= endDate;
-      });
+      // ✅ API CALL (same as Postman)
+      const res = (await GetAttendanceBySection(
+        token,
+        section,
+        startDate,
+        endDate
+      )) as AttendanceResponse;
 
-      const doc = generateAttendanceReportPdf({
+      console.log("FULL RESPONSE:", res);
+
+      const rows = res.data || [];
+
+      if (rows.length === 0) {
+        toast.error("No attendance found in this date range.");
+        return 0;
+      }
+
+      // ✅ Generate PDF
+      generatePdf({
         schoolName,
-        subtitle: subtitle || "Example on student view",
         gradeLabel,
         sectionLabel,
         teacherName,
         startDate,
         endDate,
-        rows: filtered,
+        rows,
       });
 
-      doc.save(`attendance_${section}_${startDate}_to_${endDate}.pdf`);
-
-      return filtered.length;
+      return rows.length;
     },
-    onSuccess: (count) => toast.success(`PDF downloaded (${count} rows).`),
-    onError: (err: any) =>
-      toast.error(err?.message || "Failed to download PDF."),
+
+    onSuccess: (count) => {
+      if (count > 0) toast.success(`PDF Downloaded (${count} rows).`);
+    },
+
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to download PDF.");
+    },
   });
 };
-
 
 export const useAttendanceChart = (
   token: string | null,

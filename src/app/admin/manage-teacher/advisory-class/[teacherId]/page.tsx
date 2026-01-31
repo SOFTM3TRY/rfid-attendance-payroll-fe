@@ -249,11 +249,9 @@ export default function AdvisoryClass() {
                     {token && teacher ? (
                       <DownloadAttendanceReportPdfModal
                         token={token}
-                        sectionApiParam={
-                          teacher?.section?.section_name || "N/A"
-                        } // kung API expects "2" then pass "2"
-                        gradeLabel={teacher?.grade?.grade_level || "N/A"}
-                        sectionLabel={teacher?.section?.section_name || "N/A"}
+                        sectionId={String(teacher?.section?.id)} // ✅ FIXED
+                        gradeLabel={teacher?.grade?.grade_level}
+                        sectionLabel={teacher?.section?.section_name}
                         teacherName={fullName}
                         schoolName="Young Generation Academy"
                       />
