@@ -23,6 +23,8 @@ import { User } from "lucide-react";
 import TeacherStudentTable from "./student-table";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import DownloadAttendanceReportPdfModal from "@/components/DownloadAttendanceReportPdfModal";
+import { use } from "react";
 
 function ManageStudentSkeleton() {
   return (
@@ -100,8 +102,19 @@ export default function ManageStudent() {
 
   const isLoading = isLoadingUserDetails || isLoadingTeacher;
 
-  if (userError) return <div>Error loading user details: {String(userError)}</div>;
-  if (teacherError) return <div>Error loading teacher details: {String(teacherError)}</div>;
+  if (userError)
+    return <div>Error loading user details: {String(userError)}</div>;
+  if (teacherError)
+    return <div>Error loading teacher details: {String(teacherError)}</div>;
+
+  const fullName = [
+    userDetails?.data?.last_name,
+    userDetails?.data?.first_name,
+    userDetails?.data?.middle_name,
+    userDetails?.data?.suffix,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <ProtectedRoute role="2">
@@ -121,7 +134,9 @@ export default function ManageStudent() {
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="/admin/dashboard">Dashboard</BreadcrumbLink>
+                    <BreadcrumbLink href="/admin/dashboard">
+                      Dashboard
+                    </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -142,16 +157,42 @@ export default function ManageStudent() {
                     </span>
 
                     <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-accent/20 border">
-                      Section: {userDetails?.data?.section?.section_name || "N/A"}
+                      Section:{" "}
+                      {userDetails?.data?.section?.section_name || "N/A"}
                     </span>
 
                     <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-accent/20 border">
-                      School Year: {userDetails?.data?.additional_info?.school_year || "N/A"}
+                      School Year:{" "}
+                      {userDetails?.data?.additional_info?.school_year || "N/A"}
                     </span>
                   </div>
                 </div>
 
                 <div className="mt-10">
+                  
+                {token && userDetails?.data ? (
+                  <DownloadAttendanceReportPdfModal
+                    token={token}
+                    // ✅ IMPORTANT: dapat numeric id/number para tumama sa backend where('section', $section)
+                    sectionId={String(
+                      userDetails.data?.section?.id ??
+                        userDetails.data?.additional_info?.section ??
+                        "",
+                    )}
+                    gradeLabel={String(
+                      userDetails.data?.grade?.grade_level ??
+                        userDetails.data?.grade ??
+                        "N/A",
+                    )}
+                    sectionLabel={String(
+                      userDetails.data?.section?.section_name ??
+                        userDetails.data?.section ??
+                        "N/A",
+                    )}
+                    teacherName={fullName}
+                    schoolName="Young Generation Academy"
+                  />
+                ) : null}
                   <TeacherStudentTable
                     students={teacherDetails?.data?.students || []}
                     isLoading={false}

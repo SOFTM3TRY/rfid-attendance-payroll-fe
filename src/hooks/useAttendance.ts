@@ -109,26 +109,26 @@ function generatePdf(args: {
 
   // School name
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(13);
+  doc.setFontSize(14);
   doc.text(schoolName, marginX, 60);
 
   // Title
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(20);
-  doc.text("ATTENDANCE REPORT", pageWidth / 2, 70, { align: "center" });
+  doc.setFontSize(15);
+  doc.text("ATTENDANCE REPORT", pageWidth / 2, 80, { align: "center" });
 
   // Info box
   const boxX = marginX;
   const boxY = 120;
   const boxW = pageWidth - marginX * 2;
-  const boxH = 100;
+  const boxH = 120;
 
   doc.setLineDashPattern([3, 3], 0);
   doc.rect(boxX, boxY, boxW, boxH);
   doc.setLineDashPattern([], 0);
 
   let y = boxY + 25;
-  doc.setFontSize(12);
+  doc.setFontSize(10);
 
   doc.setFont("helvetica", "bold");
   doc.text("Grade:", boxX + 20, y);

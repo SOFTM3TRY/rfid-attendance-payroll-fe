@@ -73,7 +73,7 @@ export default function DownloadAttendancePdfModal(props: {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <Download className="mr-2 h-4 w-4" />
+          <Download className="size-4" />
           Download PDF Report
         </Button>
       </DialogTrigger>
