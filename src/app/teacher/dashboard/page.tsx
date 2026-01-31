@@ -219,7 +219,7 @@ export default function Dashboard() {
                           key={t.id}
                           className="rounded-md border p-2 text-xs"
                         >
-                          <div className="font-medium">{t.subject_name} • {t.section_name}</div>
+                          <div className="font-medium">{t.subject_name} • {t.grade_level} • {t.section_name}</div>
                           <div className="text-muted-foreground">
                             {t.schedule_day} • {t.schedule}
                           </div>
