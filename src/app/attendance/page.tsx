@@ -228,7 +228,7 @@ export default function Attendance() {
             }}
             onChange={handleChange}
             className={cn(
-              "border-none bg-transparent focus:outline-none absolute -top-20 left-0",
+              "border-none bg-transparent focus:outline-none absolute -top-20 left-0 w-96",
             )}
           />
         </form>
