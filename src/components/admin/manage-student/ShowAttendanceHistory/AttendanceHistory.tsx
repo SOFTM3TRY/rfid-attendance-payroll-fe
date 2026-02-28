@@ -393,11 +393,11 @@ export function AttendanceHistory({ id }: { id: string }) {
 
       {/* Pagination */}
       <div className="flex items-center justify-between mt-5 py-4 space-x-2">
-        <div className="text-xs text-muted-foreground flex-1">
+        <div className="text-sm text-muted-foreground flex-1">
           Showing {start} to {end} of {totalRows} entries
         </div>
 
-        <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
+        <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
           Page {totalRows === 0 ? 0 : pageIndex + 1} of {totalPages}
         </div>
 

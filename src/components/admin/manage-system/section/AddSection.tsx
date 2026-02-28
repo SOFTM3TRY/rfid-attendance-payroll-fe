@@ -80,15 +80,15 @@ export default function AddSectionModal({ token }: { token: string }) {
             <UserRoundPlus className="size-4 text-teal-500" />
             Add Section
           </DialogTitle>
-          <DialogDescription className="text-xs">Add New Section</DialogDescription>
+          <DialogDescription className="text-sm">Add New Section</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-xs font-medium"><span className="text-red-500 mr-1">*</span>Grade Level</label>
+            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Grade Level</label>
 
             {isLoading ? (
-              <p className="text-xs text-gray-500">Loading...</p>
+              <p className="text-sm text-gray-500">Loading...</p>
             ) : (
               <Select
                 onValueChange={(value) =>
@@ -111,7 +111,7 @@ export default function AddSectionModal({ token }: { token: string }) {
           </div>
 
           <div>
-            <label className="text-xs font-medium"><span className="text-red-500 mr-1">*</span>Section Name</label>
+            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Section Name</label>
             <Input
               name="section_name"
               placeholder="Enter section name"
@@ -121,7 +121,7 @@ export default function AddSectionModal({ token }: { token: string }) {
             />
           </div>
           <div>
-            <label className="text-xs font-medium">
+            <label className="text-sm font-medium">
               <span className="text-red-500 mr-1">*</span>Description <small>(Optional)</small>
             </label>
             <Input

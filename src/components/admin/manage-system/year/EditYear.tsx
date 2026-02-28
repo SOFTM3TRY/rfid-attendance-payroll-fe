@@ -67,7 +67,7 @@ export default function YearUpdateModal({
         </DialogHeader>
 
         <div className="mt-4 space-y-2">
-          <label className="text-xs font-medium">
+          <label className="text-sm font-medium">
             <span className="text-red-500">*</span> School Year
             <small className="ml-1 text-muted-foreground">
               (e.g. 2023-2024)

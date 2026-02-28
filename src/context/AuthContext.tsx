@@ -23,7 +23,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const token = getCookie("token") as string | null;
   const router = useRouter();
- 
+
   const loginUser = async ({
     email,
     password,
@@ -38,13 +38,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         secure: true,
         sameSite: "lax",
       });
-      setUser( response);
+      setUser(response);
       console.log("User logged in:", response);
-        toast.success(
-        `Login successful as ${response?.role_id === 1 ? "Admin" : response?.role_id === 2 ? "Teacher" : "Student"}`
+      toast.success(
+        `Login successful as ${response?.role_id === 1 ? "Super Admin" : response?.role_id === 2 ? "Admin" : response?.role_id === 3 ? "Teacher" : "Student"}`,
       );
-      if (response.role_id === 1) {   
-        router.push("/admin/dashboard");
+      if (response.role_id === 1 || response.role_id === 2) {
+        router.push("/dashboard");
       } else if (response.role_id === 2) {
         router.push("/teacher/dashboard");
       } else if (response.role_id === 3) {
@@ -57,7 +57,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logoutUser = () => {
     localStorage.removeItem("token");
- 
   };
 
   return (

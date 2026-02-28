@@ -100,11 +100,11 @@ export function StudentTable<TData>({
         </Table>
 
         <div className="flex items-center justify-between px-5 py-4 space-x-2 mt-3">
-          <div className="text-xs text-muted-foreground flex-1">
+          <div className="text-sm text-muted-foreground flex-1">
             Showing {start} to {end} of {totalRows} entries
           </div>
 
-          <div className="text-xs text-muted-foreground flex-1 text-center mr-3">
+          <div className="text-sm text-muted-foreground flex-1 text-center mr-3">
             Page {pagination.pageIndex + 1} of {totalPages}
           </div>
 
@@ -116,7 +116,7 @@ export function StudentTable<TData>({
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }))
               }
               disabled={pagination.pageIndex === 0}
-              className="w-24 h-8 font-normal text-xs"
+              className="w-24 h-8 font-normal text-sm"
             >
               <ChevronsLeft className="h-4 w-4" /> First page
             </Button>
@@ -131,7 +131,7 @@ export function StudentTable<TData>({
                 }))
               }
               disabled={pagination.pageIndex === 0}
-              className="w-24 h-8 font-normal text-xs"
+              className="w-24 h-8 font-normal text-sm"
             >
               <ChevronLeft className="h-4 w-4" /> Previous
             </Button>
@@ -146,7 +146,7 @@ export function StudentTable<TData>({
                 }))
               }
               disabled={pagination.pageIndex >= totalPages - 1}
-              className="w-24 h-8 font-normal text-xs"
+              className="w-24 h-8 font-normal text-sm"
             >
               Next <ChevronRight className="h-4 w-4" />
             </Button>
@@ -161,7 +161,7 @@ export function StudentTable<TData>({
                 }))
               }
               disabled={pagination.pageIndex >= totalPages - 1}
-              className="w-24 h-8 font-normal text-xs"
+              className="w-24 h-8 font-normal text-sm"
             >
               Last Page
               <ChevronsRight className="h-4 w-4" />

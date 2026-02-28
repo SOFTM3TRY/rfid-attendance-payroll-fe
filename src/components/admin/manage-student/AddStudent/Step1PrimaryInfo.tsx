@@ -101,7 +101,7 @@ export default function Step1({
           disabled={loading}
         />
         {errors.lrn && (
-          <span className="text-xs text-red-500">{errors.lrn}</span>
+          <span className="text-sm text-red-500">{errors.lrn}</span>
         )}
       </div>
 
@@ -136,7 +136,7 @@ export default function Step1({
           </SelectContent>
         </Select>
         {errors.grade && (
-          <span className="text-xs text-red-500">{errors.grade}</span>
+          <span className="text-sm text-red-500">{errors.grade}</span>
         )}
       </div>
 
@@ -171,7 +171,7 @@ export default function Step1({
           </SelectContent>
         </Select>
         {errors.section && (
-          <span className="text-xs text-red-500">{errors.section}</span>
+          <span className="text-sm text-red-500">{errors.section}</span>
         )}
       </div>
 
@@ -204,7 +204,7 @@ export default function Step1({
           </SelectContent>
         </Select>
         {errors.school_year && (
-          <span className="text-xs text-red-500">{errors.school_year}</span>
+          <span className="text-sm text-red-500">{errors.school_year}</span>
         )}
       </div>
     </div>

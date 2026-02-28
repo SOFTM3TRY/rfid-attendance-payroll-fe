@@ -148,7 +148,7 @@ export default function EditStudent({ open, setOpen, id }: EditStudentProps) {
             Edit Student {student?.first_name} {student?.middle_name}
             {student?.last_name}
           </SheetTitle>
-          <SheetDescription className="text-xs">
+          <SheetDescription className="text-sm">
             Edit student information here and click update to save.
           </SheetDescription>
         </SheetHeader>

@@ -64,7 +64,7 @@ export default function AddStudent() {
             <UserRoundPlus className="mr-1 size-5 text-teal-500" />
             Add Student
           </SheetTitle>
-          <SheetDescription className="text-xs">
+          <SheetDescription className="text-sm">
             Enter details to add a new student to the system
           </SheetDescription>
         </SheetHeader>
@@ -81,7 +81,7 @@ export default function AddStudent() {
             >
               <div className="flex gap-2">
                 <div className="text-start">
-                  <small className="text-xs text-blue-700 dark:text-blue-500 flex gap-1 items-center justify-center">
+                  <small className="text-sm text-blue-700 dark:text-blue-500 flex gap-1 items-center justify-center">
                     <ShieldUser className="mr-1" /> Primary Information
                   </small>
                   <h1 className="text-lg font-semibold ml-0 flex items-center justify-start">
@@ -108,7 +108,7 @@ export default function AddStudent() {
             >
               <div className="flex gap-2">
                 <div className="text-start">
-                  <small className="text-xs text-green-700 dark:text-green-500 flex gap-1 items-center justify-center">
+                  <small className="text-sm text-green-700 dark:text-green-500 flex gap-1 items-center justify-center">
                     <UserLock className="mr-1" /> Basic Information
                   </small>
                   <h1 className="text-lg font-semibold ml-0 flex items-center justify-start">
@@ -133,7 +133,7 @@ export default function AddStudent() {
             >
               <div className="flex gap-2">
                 <div className="text-start">
-                  <small className="text-xs text-yellow-700 dark:text-yellow-500 flex gap-1 items-center justify-center">
+                  <small className="text-sm text-yellow-700 dark:text-yellow-500 flex gap-1 items-center justify-center">
                     <ContactRound className="mr-1" /> Additional Information
                   </small>
                   <h1 className="text-lg font-semibold ml-0 flex items-center justify-start">
@@ -160,7 +160,7 @@ export default function AddStudent() {
             >
               <div className="flex gap-2">
                 <div className="text-start">
-                  <small className="text-xs text-teal-700 dark:text-teal-500 flex gap-1 items-center justify-center">
+                  <small className="text-sm text-teal-700 dark:text-teal-500 flex gap-1 items-center justify-center">
                     <ScanEye className="mr-1" /> Review Student details -{" "}
                     <small>Last Step</small>
                   </small>

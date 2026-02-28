@@ -54,7 +54,7 @@ export default function AddYearModal({ token }: { token: string }) {
         <Button
           variant="outline"
           size="sm"
-          className="flex items-center rounded-full justify-center text-xs "
+          className="flex items-center rounded-full justify-center text-sm "
         >
           <PlusIcon className="text-white size-4" />
           Add School Year
@@ -67,12 +67,12 @@ export default function AddYearModal({ token }: { token: string }) {
             <GraduationCap className="w-4 text-primary" />
             Add School Year
           </DialogTitle>
-          <DialogDescription className="text-xs">Add New School Year</DialogDescription>
+          <DialogDescription className="text-sm">Add New School Year</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-xs font-medium mb-3">
+            <label className="text-sm font-medium mb-3">
               {" "}
               <span className="text-red-500 mr-1">*</span> School Year{" "}
               <small>(e.g. 2022-2023)</small>

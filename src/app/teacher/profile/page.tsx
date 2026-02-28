@@ -25,11 +25,11 @@ import { useChangeTeacherPassword } from "@/hooks/useTeacher"; // ✅ adjust pat
 import { User } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import Profile from "@/app/admin/manage-teacher/teacher-profile/[teacherId]/profile";
-import BasicInfo from "@/app/admin/manage-teacher/teacher-profile/[teacherId]/basic-info";
-import AddressInfo from "@/app/admin/manage-teacher/teacher-profile/[teacherId]/address-info";
-import TeacherSubjects from "@/app/admin/manage-teacher/teacher-profile/[teacherId]/teacher-subjects";
-import EmergencyInfo from "@/app/admin/manage-teacher/teacher-profile/[teacherId]/emergency-info";
+import Profile from "@/app/manage-teacher/teacher-profile/[teacherId]/profile";
+import BasicInfo from "@/app/manage-teacher/teacher-profile/[teacherId]/basic-info";
+import AddressInfo from "@/app/manage-teacher/teacher-profile/[teacherId]/address-info";
+import TeacherSubjects from "@/app/manage-teacher/teacher-profile/[teacherId]/teacher-subjects";
+import EmergencyInfo from "@/app/manage-teacher/teacher-profile/[teacherId]/emergency-info";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card"; // ✅ missing
@@ -92,7 +92,7 @@ export default function Dashboard() {
   }
 
   return (
-    <ProtectedRoute role="2">
+    <ProtectedRoute role={["1", "2", "3"]}>
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
         <AppSidebar />
         <main className="w-full h-auto">

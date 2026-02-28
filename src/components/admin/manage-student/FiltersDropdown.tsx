@@ -30,7 +30,7 @@ export function FiltersDropdown({ selectedFilters, setSelectedFilters, sectionTy
         <Button
           ref={buttonRef}
           variant="outline"
-          className="flex items-center gap-2 text-xs"
+          className="flex items-center gap-2 text-sm"
         >
           <TableIcon className="size-3 text-teal-500" />
           Filters Section
@@ -49,14 +49,14 @@ export function FiltersDropdown({ selectedFilters, setSelectedFilters, sectionTy
             key={section}
             checked={selectedFilters.includes(section)}
             onCheckedChange={() => toggleFilter(section)}
-            className="text-xs"
+            className="text-sm"
           >
             {section}
           </DropdownMenuCheckboxItem>
         ))}
         <DropdownMenuCheckboxItem
           onCheckedChange={removeAllFilters}
-          className="text-xs text-primary"
+          className="text-sm text-primary"
         >
           Default
         </DropdownMenuCheckboxItem>

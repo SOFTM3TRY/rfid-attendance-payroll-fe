@@ -263,7 +263,7 @@ export function StudentTable() {
       {/* ---------------- ✅ BOTTOM PAGINATION ---------------- */}
       <div className="flex items-center justify-between space-x-2 py-4">
         {/* Showing entries */}
-        <div className="text-muted-foreground flex-1 text-xs">
+        <div className="text-muted-foreground flex-1 text-sm">
           {`Showing ${
             table.getState().pagination.pageIndex *
               table.getState().pagination.pageSize +

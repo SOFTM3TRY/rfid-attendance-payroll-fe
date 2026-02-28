@@ -33,7 +33,7 @@ export default function Dashboard() {
     useTeacherSchedulesByGradeAndSection(token, gradeId, sectionId);
 
   return (
-    <ProtectedRoute role="3">
+    <ProtectedRoute role={["1", "2", "3", "4"]}>
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
         <AppSidebar />
 

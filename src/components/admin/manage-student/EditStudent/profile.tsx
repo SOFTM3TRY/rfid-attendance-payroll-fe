@@ -111,7 +111,7 @@ export default function Profile({ id }: { id: any }) {
               <PenSquare className="size-5 text-teal-500" />
               Change Avatar
             </DialogTitle>
-            <DialogDescription className="text-xs">
+            <DialogDescription className="text-sm">
               Make change student avatar here.
             </DialogDescription>
           </DialogHeader>
@@ -140,7 +140,7 @@ export default function Profile({ id }: { id: any }) {
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <div className="text-xs opacity-80">
+                <div className="text-sm opacity-80">
                   {selectedFile ? (
                     <>
                       <div className="font-medium">{selectedFile.name}</div>
@@ -181,11 +181,11 @@ export default function Profile({ id }: { id: any }) {
           <p className="text-center text-sm font-semibold leading-none uppercase">
             {fullName}
           </p>
-          <span className="text-xs">
+          <span className="text-sm">
             {student?.lrn || "N/A"}{" "}
             <span
               className={
-                student?.status ? "text-green-500 text-[10px]" : "text-red-500 text-[10px]"
+                student?.status ? "text-green-500 text-sm" : "text-red-500 text-sm"
               }
             >
               {student?.status ? "Active" : "Inactive"}
@@ -194,17 +194,17 @@ export default function Profile({ id }: { id: any }) {
         </span>
 
         <p className="text-sm my-1 flex flex-col items-center">
-          <span className="text-[10px]">School Year</span>
+          <span className="text-xs">School Year</span>
           <span className="text-blue-800 font-medium dark:text-blue-200">
             {student?.school_year || "N/A"}
           </span>
         </p>
 
         <div className="flex gap-2 mt-2">
-          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full shadow bg-accent">
+          <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full shadow bg-accent">
             {student?.grade?.grade_level || "N/A"}
           </span>
-          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full shadow bg-accent">
+          <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full shadow bg-accent">
             {student?.section?.section_name || "N/A"}
           </span>
         </div>

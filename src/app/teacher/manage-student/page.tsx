@@ -117,7 +117,7 @@ export default function ManageStudent() {
     .join(" ");
 
   return (
-    <ProtectedRoute role="2">
+    <ProtectedRoute role={["1", "2", "3"]}>
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
         <AppSidebar />
 

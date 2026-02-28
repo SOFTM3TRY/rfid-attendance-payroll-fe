@@ -13,8 +13,8 @@ export default function GuardianInfo({ lrn }: { lrn: string }) {
   const { token } = useAuth();
   const { data, isLoading, isError } = useGetStudentDetailsByLrn(token, lrn);
 
-  if (isLoading) return <div className="px-5 py-5 text-xs">Loading...</div>;
-  if (isError) return <div className="px-5 py-5 text-xs">Error loading guardian info</div>;
+  if (isLoading) return <div className="px-5 py-5 text-sm">Loading...</div>;
+  if (isError) return <div className="px-5 py-5 text-sm">Error loading guardian info</div>;
 
   const student = data?.data?.student;
   const info = student?.additional_info || {};
@@ -85,7 +85,7 @@ function SectionHeader({
 }) {
   return (
     <div className="col-span-1 md:col-span-2 mb-3">
-      <p className="text-xs font-medium flex items-center gap-1">
+      <p className="text-sm font-medium flex items-center gap-1">
         {icon} {title}
       </p>
     </div>

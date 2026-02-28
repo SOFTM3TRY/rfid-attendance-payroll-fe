@@ -67,12 +67,12 @@ export default function AddGradeModal({ token }: { token: string }) {
             <GraduationCap className="size-4 text-teal-500" />
             Add Grade
           </DialogTitle>
-          <DialogDescription className="text-xs">Add New Grade</DialogDescription>
+          <DialogDescription className="text-sm">Add New Grade</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-xs font-medium mb-3"> <span className="text-red-500 mr-1">*</span>Grade Level</label>
+            <label className="text-sm font-medium mb-3"> <span className="text-red-500 mr-1">*</span>Grade Level</label>
             <Input
               name="grade_level"
               placeholder="Enter grade level"
@@ -82,7 +82,7 @@ export default function AddGradeModal({ token }: { token: string }) {
             />
           </div>
           <div>
-            <label className="text-xs font-medium"><span className="text-red-500 mr-1">*</span>Description <small>(Optional)</small></label>
+            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Description <small>(Optional)</small></label>
             <Input
               name="description"
               placeholder="Enter description"

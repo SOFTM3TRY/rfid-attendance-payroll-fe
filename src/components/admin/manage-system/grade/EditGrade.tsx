@@ -73,12 +73,12 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
             <UserRoundPlus className="size-4 text-primary" />
             Edit Grade
           </DialogTitle>
-          <DialogDescription className="text-xs">Update Grade Information</DialogDescription>
+          <DialogDescription className="text-sm">Update Grade Information</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="text-xs font-medium">Grade Level</label>
+            <label className="text-sm font-medium">Grade Level</label>
             <Input
               name="grade_level"
               placeholder="Enter grade level"
@@ -89,7 +89,7 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
           </div>
 
           <div>
-            <label className="text-xs font-medium">Description <small>(Optional)</small></label>
+            <label className="text-sm font-medium">Description <small>(Optional)</small></label>
             <Input
               name="description"
               placeholder="Enter description"
@@ -99,7 +99,7 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
           </div>
 
           <div>
-            <label className="text-xs font-medium">Available</label>
+            <label className="text-sm font-medium">Available</label>
             <Select value={formData.status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select status" />

@@ -86,7 +86,7 @@ export default function Step3({
           disabled={loading}
         />
         {errors.street && (
-          <span className="text-xs text-red-500">{errors.street}</span>
+          <span className="text-sm text-red-500">{errors.street}</span>
         )}
       </div>
 
@@ -116,7 +116,7 @@ export default function Step3({
           disabled={loading}
         />
         {errors.guardian_first_name && (
-          <span className="text-xs text-red-500">
+          <span className="text-sm text-red-500">
             {errors.guardian_first_name}
           </span>
         )}
@@ -159,7 +159,7 @@ export default function Step3({
           disabled={loading}
         />
         {errors.guardian_last_name && (
-          <span className="text-xs text-red-500">
+          <span className="text-sm text-red-500">
             {errors.guardian_last_name}
           </span>
         )}
@@ -184,7 +184,7 @@ export default function Step3({
           disabled={loading}
         />
         {errors.guardian_occupation && (
-          <span className="text-xs text-red-500">
+          <span className="text-sm text-red-500">
             {errors.guardian_occupation}
           </span>
         )}
@@ -260,7 +260,7 @@ export default function Step3({
           disabled={loading}
         />
         {errors.guardian_contact && (
-          <span className="text-xs text-red-500">
+          <span className="text-sm text-red-500">
             {errors.guardian_contact}
           </span>
         )}
@@ -298,7 +298,7 @@ export default function Step3({
           autoComplete="off"
         />
         {errors.guardian_email && (
-          <span className="text-xs text-red-500">{errors.guardian_email}</span>
+          <span className="text-sm text-red-500">{errors.guardian_email}</span>
         )}
       </div>
 
@@ -331,7 +331,7 @@ export default function Step3({
           </SelectContent>
         </Select>
         {errors.relationship && (
-          <span className="text-xs text-red-500">{errors.relationship}</span>
+          <span className="text-sm text-red-500">{errors.relationship}</span>
         )}
       </div>
     </div>

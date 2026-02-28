@@ -71,7 +71,7 @@ export default function ShowProfile({
             <User className="mr-1 w-4 h-4 text-teal-500" />
             Student Profile
             <span
-              className={`text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
+              className={`text-sm ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
                 data.status == 1
                   ? "bg-green-200 text-green-900 dark:bg-green-100 dark:text-green-800"
                   : " bg-red-200 text-red-900 dark:bg-red-100 dark:text-red-800"

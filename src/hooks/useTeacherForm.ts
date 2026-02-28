@@ -14,6 +14,7 @@ export function useTeacherForm(existingData: any = null) {
   const { refetch: refetchTeachers } = useAllTeachers(token as string);
 
   const defaultFormData = {
+    employee_no: "",
     grade: "",
     section: "",
     school_year: "",
@@ -35,11 +36,11 @@ export function useTeacherForm(existingData: any = null) {
     city: "",
     barangay: "",
     street: "",
-    emergency_contact: "",
-    emergency_fname: "",
-    emergency_lname: "",
-    emergency_mname: "",
-    emergency_relationship: "",
+    emergency_contact: "--",
+    emergency_fname: "--",
+    emergency_lname: "--",
+    emergency_mname: "--",
+    emergency_relationship: "--",
   };
 
   const [formData, setFormData] = useState<any>(defaultFormData);
@@ -60,7 +61,7 @@ export function useTeacherForm(existingData: any = null) {
 
   // ✅ Step fields
   const stepFieldsMap: Record<number, string[]> = {
-    1: ["grade", "section", "school_year"],
+    1: ["employee_no", "grade", "section", "school_year"],
     2: [
       "first_name",
       "middle_name",
@@ -91,6 +92,7 @@ export function useTeacherForm(existingData: any = null) {
 
   // ✅ Fields that are OPTIONAL (hindi required kahit empty)
   const optionalFields = new Set([
+    "employee_no",
     "middle_name",
     "suffix",
     "role_id",

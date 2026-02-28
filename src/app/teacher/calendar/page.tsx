@@ -93,7 +93,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute role={["1", "2", "3"]}>
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
         <AppSidebar />
         <main className="w-full h-auto">

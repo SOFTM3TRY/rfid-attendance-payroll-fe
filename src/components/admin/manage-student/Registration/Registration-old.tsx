@@ -86,7 +86,7 @@ export default function FlipCardOLD({
             Student Attendance History {data.rfid_uid ? "" : "(No RFID)"}
             <span
               className={cn(
-                "text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium",
+                "text-sm ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium",
                 {
                   "bg-green-200 text-green-900 dark:bg-green-100 dark:text-green-800":
                     data.status == 1,

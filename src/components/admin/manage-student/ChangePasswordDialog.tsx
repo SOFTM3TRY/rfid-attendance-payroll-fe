@@ -80,7 +80,7 @@ export default function ChangePasswordDialog({
             <LockKeyhole className="size-4 text-teal-500" />
             Change Password
           </DialogTitle>
-          <DialogDescription className="text-xs">
+          <DialogDescription className="text-sm">
             Change password for <span className="font-medium">{studentName || "student"}</span>.
           </DialogDescription>
         </DialogHeader>

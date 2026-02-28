@@ -1,0 +1,163 @@
+"use client";
+
+import * as React from "react";
+import { useState, useEffect } from "react";
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  PlusIcon,
+  GraduationCap,
+  CalendarDays,
+  BookText,
+  LayoutPanelTop,
+} from "lucide-react";
+
+import { ManageGradeTable } from "./grade/GradeTable";
+import { ManageSectionTable } from "./section/SectionTable";
+import { ManageYearTable } from "./year/YearTable";
+import { ManageSubjectTable } from "./subject/SubjectTable";
+
+import { useAuth } from "@/context/AuthContext";
+import { useGrade } from "@/hooks/useGrade";
+import { useAllSections } from "@/hooks/useSection";
+import { useYear } from "@/hooks/useYear";
+import { useSubject } from "@/hooks/useSubjects";
+
+export default function SystemTabPage() {
+  const [selectedTab, setSelectedTab] = useState<string | null>(null);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [search, setSearch] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
+
+  const { token } = useAuth();
+  const { data: GradesData, isLoading: isLoadingGradesData } = useGrade(
+    token as string,
+  );
+  const { data: SectionsData, isLoading: isLoadingSectionsData } =
+    useAllSections(token as string);
+  const { data: YearsData, isLoading: isLoadingYearsData } = useYear(
+    token as string,
+  );
+  const { data: SubjectsData, isLoading: isLoadingSubjectsData } = useSubject(
+    token as string,
+  );
+  const { data, isLoading, isFetching } = useYear(token);
+  useEffect(() => {
+    if (GradesData?.data && !selectedTab) {
+      setSelectedTab("1");
+    }
+  }, [GradesData, selectedTab]);
+
+  return (
+    <main>
+      <Tabs value={selectedTab || ""} onValueChange={setSelectedTab}>
+        {/* Tabs Header */}
+        <div className="flex justify-between mb-10">
+          <TabsList className="flex-wrap gap-3 bg-accent/20 h-auto">
+            <TabsTrigger
+              key="1"
+              value="1"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-sm"
+            >
+              <CalendarDays
+                strokeWidth={2.5}
+                className="size-4  text-primary"
+              />
+              Manage Academic Year
+            </TabsTrigger>
+            <TabsTrigger
+              key="2"
+              value="2"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-sm"
+            >
+              <GraduationCap
+                strokeWidth={2.5}
+                className="size-4 text-primary"
+              />
+              Manage Grades
+            </TabsTrigger>
+            <TabsTrigger
+              key="3"
+              value="3"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-sm"
+            >
+              <LayoutPanelTop
+                strokeWidth={2.5}
+                className="size-4  text-primary"
+              />
+              Manage Sections
+            </TabsTrigger>
+            <TabsTrigger
+              key="4"
+              value="4"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-sm"
+            >
+              <BookText strokeWidth={2.5} className="size-4  text-primary" />
+              Manage Subjects
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* Tabs Content */}
+        <TabsContent key="1" value="1">
+          <ManageYearTable
+            data={data?.data || []}
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={(data?.data || []).length}
+            search={search}
+            selectedStatus={selectedStatus}
+            selectedFilters={selectedFilters}
+            isLoading={isLoading || isFetching}
+          />
+        </TabsContent>
+
+        <TabsContent key="2" value="2">
+          <ManageGradeTable
+            data={GradesData?.data || []}
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={GradesData?.data?.length || 0}
+            search={search}
+            selectedStatus={selectedStatus}
+            selectedFilters={selectedFilters}
+          />
+        </TabsContent>
+
+        <TabsContent key="3" value="3">
+          <ManageSectionTable
+            data={SectionsData?.data || []}
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={GradesData?.data?.length || 0}
+            search={search}
+            selectedStatus={selectedStatus}
+            selectedFilters={selectedFilters}
+          />
+        </TabsContent>
+
+        <TabsContent key="4" value="4">
+          <ManageSubjectTable
+            data={SubjectsData?.data || []} // Placeholder
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={0}
+            search={search}
+            selectedStatus={selectedStatus}
+            selectedFilters={selectedFilters}
+          />
+        </TabsContent>
+
+        {/* <TabsContent key="2" value="2">
+          <ManageSectinTable
+            data={[]} // Placeholder
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={0}
+          />
+        </TabsContent> */}
+      </Tabs>
+    </main>
+  );
+}

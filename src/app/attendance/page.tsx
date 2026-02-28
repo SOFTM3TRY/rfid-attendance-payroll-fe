@@ -246,7 +246,7 @@ export default function Attendance() {
 
             <div
               className={cn(
-                "text-xs font-semibold px-3 py-1 rounded-full border",
+                "text-sm font-semibold px-3 py-1 rounded-full border",
                 tapType === "TIME IN"
                   ? "bg-green-500/10 text-green-600 border-green-500/30"
                   : tapType === "TIME OUT"

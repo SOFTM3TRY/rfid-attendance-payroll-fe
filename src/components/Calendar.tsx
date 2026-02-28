@@ -168,26 +168,26 @@ export default function Calendar({ data }: { data: ApiResponse }) {
           </DialogHeader>
 
           {!selected ? (
-            <p className="text-xs text-muted-foreground">No event selected.</p>
+            <p className="text-sm text-muted-foreground">No event selected.</p>
           ) : mode === "view" ? (
-            <div className="space-y-3 text-xs">
+            <div className="space-y-3 text-sm">
               <div className="flex flex-col gap-2">
-                <Label className="text-xs text-muted-foreground">Title</Label>
+                <Label className="text-sm text-muted-foreground">Title</Label>
                 <p className="font-medium text-sm">{selected.title}</p>
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label className="text-xs text-muted-foreground">Description</Label>
+                <Label className="text-sm text-muted-foreground">Description</Label>
                 <p className="font-medium text-sm">{selected.description}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs text-muted-foreground">Start</Label>
+                  <Label className="text-sm text-muted-foreground">Start</Label>
                   <p className="font-medium text-sm">{selected.start_date}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs text-muted-foreground">End</Label>
+                  <Label className="text-sm text-muted-foreground">End</Label>
                   <p className="font-medium text-sm">{selected.end_date}</p>
                 </div>
               </div>
@@ -197,7 +197,7 @@ export default function Calendar({ data }: { data: ApiResponse }) {
                   type="button"
                   variant="default"
                   size="sm"
-                  className="text-xs"
+                  className="text-sm"
                   onClick={() => setMode("edit")}
                   disabled={isDeleting || isUpdating}
                 >

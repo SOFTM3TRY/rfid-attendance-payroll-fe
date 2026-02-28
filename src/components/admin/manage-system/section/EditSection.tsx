@@ -88,18 +88,18 @@ export default function EditSectionModal({
             <UserRoundPlus className="size-4 text-teal-500" />
             Edit Grade
           </DialogTitle>
-          <DialogDescription className="text-xs">Update Grade Information</DialogDescription>
+          <DialogDescription className="text-sm">Update Grade Information</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           <div className="mt-4 space-y-4">
             <div>
-              <label className="text-xs font-medium">
+              <label className="text-sm font-medium">
                 <span className="text-red-500 mr-1">*</span>Grade Level
               </label>
 
               {isLoading ? (
-                <p className="text-xs text-gray-500">Loading...</p>
+                <p className="text-sm text-gray-500">Loading...</p>
               ) : (
                 <Select
                   value={formData.grade_id}
@@ -123,7 +123,7 @@ export default function EditSectionModal({
             </div>
           </div>
           <div>
-            <label className="text-xs font-medium">
+            <label className="text-sm font-medium">
               <span className="text-red-500 mr-1">*</span>Section Name
             </label>
             <Input
@@ -135,7 +135,7 @@ export default function EditSectionModal({
           </div>
 
           <div>
-            <label className="text-xs font-medium">
+            <label className="text-sm font-medium">
               <span className="text-red-500 mr-1">*</span>Description <small>(Optional)</small>
             </label>
             <Input
@@ -147,7 +147,7 @@ export default function EditSectionModal({
           </div>
 
           <div>
-            <label className="text-xs font-medium"><span className="text-red-500 mr-1">*</span> Available</label>
+            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span> Available</label>
             <Select value={formData.status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select status" />

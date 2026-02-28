@@ -94,7 +94,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           disabled={loading}
         />
         {errors.first_name && (
-          <span className="text-xs text-red-500">{errors.first_name}</span>
+          <span className="text-sm text-red-500">{errors.first_name}</span>
         )}
       </div>
 
@@ -133,7 +133,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           disabled={loading}
         />
         {errors.last_name && (
-          <span className="text-xs text-red-500">{errors.last_name}</span>
+          <span className="text-sm text-red-500">{errors.last_name}</span>
         )}
       </div>
 
@@ -183,7 +183,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           ))}
         </select>
         {errors.gender && (
-          <span className="text-xs text-red-500">{errors.gender}</span>
+          <span className="text-sm text-red-500">{errors.gender}</span>
         )}
       </div>
 
@@ -206,7 +206,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           disabled={loading}
         />
         {errors.birth_place && (
-          <span className="text-xs text-red-500">{errors.birth_place}</span>
+          <span className="text-sm text-red-500">{errors.birth_place}</span>
         )}
       </div>
 
@@ -226,7 +226,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           disabled={loading}
         />
         {errors.birth_date && (
-          <span className="text-xs text-red-500">{errors.birth_date}</span>
+          <span className="text-sm text-red-500">{errors.birth_date}</span>
         )}
       </div>
 
@@ -251,7 +251,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           <option value={0}>Inactive</option>
         </select>
         {errors.status && (
-          <span className="text-xs text-red-500">{errors.status}</span>
+          <span className="text-sm text-red-500">{errors.status}</span>
         )}
       </div>
 
@@ -275,7 +275,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           disabled={loading}
         />
         {errors.last_school_attend && (
-          <span className="text-xs text-red-500">
+          <span className="text-sm text-red-500">
             {errors.last_school_attend}
           </span>
         )}

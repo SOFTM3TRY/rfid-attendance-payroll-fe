@@ -87,7 +87,7 @@ export function Navbar() {
       <div className="flex items-center justify-center gap-1 mr-2">
         <Sheet>
           <SheetTrigger className="size-4 flex items-center relative mr-3 hover:text-primary">
-            <span className="h-4 w-4 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
+            <span className="h-4 w-4 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-sm top-[-7px] right-[-7px]">
               0
             </span>
             <Megaphone className="h-5 w-5" />
@@ -103,14 +103,14 @@ export function Navbar() {
                     <DialogTrigger className="h-auto w-full bg-gray-50 dark:bg-gray-900 text-start hover:bg-teal-100 dark:hover:bg-primary text-black dark:text-white p-2 rounded-sm">
                       <li className="">
                         <span className="font-bold">Announcement</span>
-                        <p className="text-xs">
+                        <p className="text-sm">
                           @username{" "}
                           <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full">
                             role
                           </span>{" "}
                           - <span>date</span>
                         </p>
-                        <span className="text-xs mt-9 ml-5">
+                        <span className="text-sm mt-9 ml-5">
                           Announcements...
                         </span>
                       </li>
@@ -121,7 +121,7 @@ export function Navbar() {
                           <Megaphone className="h-5 w-5 mr-2" /> Announcement
                         </DialogTitle>
                         <DialogTitle className="flex items-center">
-                          <p className="text-xs">
+                          <p className="text-sm">
                             @username{" "}
                             <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full">
                               role
@@ -143,12 +143,12 @@ export function Navbar() {
 
         {/* <Popover>
           <PopoverTrigger className="mr-4 relative hover:text-primary">
-            <span className="h-4 w-4 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-xs top-[-7px] right-[-7px]">
+            <span className="h-4 w-4 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-sm top-[-7px] right-[-7px]">
               0
             </span>
             <Bell className="size-4" />
           </PopoverTrigger>
-          <PopoverContent className="w-72 h-auto text-xs">
+          <PopoverContent className="w-72 h-auto text-sm">
             Notification.
           </PopoverContent>
         </Popover> */}
@@ -184,7 +184,7 @@ export function Navbar() {
               </Avatar>
 
               <div className="flex flex-col text-start leading-2 text-white">
-                <p className="text-xs">
+                <p className="text-sm">
                   {" "}
                   {userDetails?.data.first_name +
                     " " +
@@ -192,15 +192,16 @@ export function Navbar() {
                 </p>
                 <small className="text-[10px]">
                   {userDetails?.data.role_id === 1
-                    ? "Admin"
+                    ? "Super Admin"
                     : userDetails?.data.role_id === 2
-                      ? "Teacher"
-                      : ""}
+                      ? "Admin"
+                      : userDetails?.data.role_id === 3
+                        ? "Teacher" : "Student"}
                 </small>
               </div>
             </div>
           </PopoverTrigger>
-          <PopoverContent className="w-48 h-auto py-0 px-0 text-xs">
+          <PopoverContent className="w-full  h-auto py-0 px-0 text-sm">
             <div className="px-2 py-2">
               <p className="font-semibold">
                 {userDetails?.data.first_name +
@@ -208,21 +209,22 @@ export function Navbar() {
                   userDetails?.data.last_name}
                 <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full ml-1">
                   {userDetails?.data.role_id === 1
-                    ? "Admin"
+                    ? "Super Admin"
                     : userDetails?.data.role_id === 2
-                      ? "Teacher"
-                      : "Student"}
+                      ? "Admin"
+                      : userDetails?.data.role_id === 3
+                        ? "Teacher" : "Student"}
                 </span>
               </p>
-              <p className="text-xs">{userDetails?.data.email}</p>
+              <p className="text-sm">{userDetails?.data.email}</p>
             </div>
 
             <ul className="flex flex-col mt-2">
               <li>
                 <Link
                   href={
-                    userDetails?.data.role_id === 1
-                      ? "/admin/profile"
+                    userDetails?.data.role_id === 1 || userDetails?.data.role_id === 2
+                      ? "/profile"
                       : userDetails?.data.role_id === 2
                         ? "/teacher/profile"
                         : "/student/profile"
@@ -231,7 +233,7 @@ export function Navbar() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full border-none flex justify-start rounded-none text-xs font-normal"
+                    className="w-full border-none flex justify-start rounded-none text-sm font-normal"
                   >
                     <User2 className="text-primary" />
                     Profile
@@ -243,7 +245,7 @@ export function Navbar() {
                   variant="outline"
                   size="sm"
                   onClick={handlelogout}
-                  className="w-full border-none flex justify-start rounded-none text-xs font-normal"
+                  className="w-full border-none flex justify-start rounded-none text-sm font-normal"
                 >
                   <LogOut className="text-destructive" /> Logout
                 </Button>

@@ -17,8 +17,8 @@ import {
   Rows4,
   Grip,
 } from "lucide-react";
-import EditProfile from "@/app/admin/manage-teacher/page/EditTeacher/EditTeacher";
-import Registration from "@/app/admin/manage-teacher/page/Registration/Registration";
+import EditProfile from "@/app/manage-teacher/page/EditTeacher/EditTeacher";
+import Registration from "@/app/manage-teacher/page/Registration/Registration";
 import { useState } from "react";
 
 import {

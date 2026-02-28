@@ -49,7 +49,7 @@ export const columns = (props: {
   {
     accessorKey: "lrn",
     header: () => (
-      <Button variant="outline" size="sm" className="text-xs">
+      <Button variant="outline" size="sm" className="text-sm">
         <ShieldUser className="text-blue-500" /> LRN
       </Button>
     ),
@@ -58,7 +58,7 @@ export const columns = (props: {
   {
     accessorKey: "FullName",
     header: () => (
-      <Button variant="outline" size="sm" className="text-xs">
+      <Button variant="outline" size="sm" className="text-sm">
         <User className="text-yellow-500" /> Full Name
       </Button>
     ),
@@ -82,7 +82,7 @@ export const columns = (props: {
           } ${row.original.middle_name || ""}  ${
             row.original.suffix || ""
           }`}</span>
-          <span className="text-[10px] text-primary">{row.original.email || ""}</span>
+          <span className="text-xs text-primary">{row.original.email || ""}</span>
         </div>
       </div>
     ),
@@ -90,7 +90,7 @@ export const columns = (props: {
   {
     accessorKey: "grade_id",
     header: () => (
-      <Button variant="outline" size="sm" className="text-xs">
+      <Button variant="outline" size="sm" className="text-sm">
         <GraduationCap className="text-green-500" /> Grade
       </Button>
     ),
@@ -99,7 +99,7 @@ export const columns = (props: {
   {
     accessorKey: "section_id",
     header: () => (
-      <Button variant="outline" size="sm" className="text-xs">
+      <Button variant="outline" size="sm" className="text-sm">
         <BookAudio className="text-violet-500" /> Section
       </Button>
     ),
@@ -112,14 +112,14 @@ export const columns = (props: {
   {
     accessorKey: "status",
     header: () => (
-      <Button variant="outline" size="sm" className="text-xs">
+      <Button variant="outline" size="sm" className="text-sm">
         <UserCog className="text-teal-500" /> Status
       </Button>
     ),
     cell: ({ row }) => {
       const status = row.original.status;
       return (
-        <span className="text-xs w-22 h-5 flex items-center justify-center rounded-full font-normal bg-accent">
+        <span className="text-sm w-22 h-5 flex items-center justify-center rounded-full font-normal bg-accent">
           {/* @ts-ignore */}
           {row.original.status == 1 ? "Active" : "Inactive"}
           <span
@@ -172,7 +172,7 @@ export const columns = (props: {
             <DropdownMenuContent>
               <DropdownMenuItem
                 onClick={() =>
-                  router.push(`/admin/manage-student/student-profile/${lrn}`)
+                  router.push(`/manage-student/student-profile/${lrn}`)
                 }
               >
                 <Eye className="size-4 text-muted-foreground" />

@@ -27,11 +27,11 @@ export default function PrimaryInfo({ lrn }: { lrn: string }) {
         <p className="text-sm font-semibold leading-none uppercase">
           {fullName || "—"}
         </p>
-        <p className="text-xs my-2 font-semibold leading-none">
+        <p className="text-sm my-2 font-semibold leading-none">
           {student?.email || "—"}
         </p>
 
-        <p className="text-xs my-1">
+        <p className="text-sm my-1">
           LRN: {student?.lrn || "—"}{" "}
           <span className="ml-3 text-blue-800 font-medium dark:text-blue-200">
             SY: {student?.school_year || "—"}
@@ -39,10 +39,10 @@ export default function PrimaryInfo({ lrn }: { lrn: string }) {
         </p>
 
         <div className="flex gap-2 mt-2">
-          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-accent">
+          <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-accent">
             {student?.grade?.grade_level || "—"}
           </span>
-          <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-accent">
+          <span className="uppercase font-medium text-sm px-3 h-6 flex items-center justify-center rounded-full bg-accent">
             {student?.section?.section_name || "—"}
           </span>
         </div>

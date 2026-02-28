@@ -142,7 +142,7 @@ export default function Registration({
             <User className="mr-1 size-4 text-teal-500" />
             Student RFID Registration
             <span
-              className={`text-white text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
+              className={`text-white text-sm ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
                 student.status == 1 ? "bg-green-500" : "bg-destructive"
               }`}
             >
@@ -161,7 +161,7 @@ export default function Registration({
 
         {isLoading && (
           <div className="w-full mb-5">
-            <p className="text-xs mb-2 font-medium text-muted-foreground">
+            <p className="text-sm mb-2 font-medium text-muted-foreground">
               Registering RFID... {progress}%
             </p>
 

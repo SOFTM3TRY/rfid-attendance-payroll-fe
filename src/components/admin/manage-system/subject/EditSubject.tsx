@@ -85,18 +85,18 @@ export default function EditSubjectModal({
             <BookPlus className="size-4 text-primary" />
             Edit Subject
           </DialogTitle>
-          <DialogDescription className="text-xs">Update Subject Information</DialogDescription>
+          <DialogDescription className="text-sm">Update Subject Information</DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
           {/* Grade */}
           <div>
-            <label className="text-xs font-medium">
+            <label className="text-sm font-medium">
               <span className="text-red-500 mr-1">*</span>Grade Level
             </label>
 
             {isLoadingGrades ? (
-              <p className="text-xs text-gray-500">Loading...</p>
+              <p className="text-sm text-gray-500">Loading...</p>
             ) : (
               <Select
                 value={formData.grade_id}
@@ -123,7 +123,7 @@ export default function EditSubjectModal({
 
           {/* Subject Name */}
           <div>
-            <label className="text-xs font-medium">
+            <label className="text-sm font-medium">
               <span className="text-red-500 mr-1">*</span>Subject Name
             </label>
             <Input

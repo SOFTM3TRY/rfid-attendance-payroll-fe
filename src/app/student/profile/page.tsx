@@ -22,9 +22,9 @@ import { useChangeStudentPassword } from "@/hooks/useStudentDetails";
 import { useAuth } from "@/context/AuthContext";
 
 import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
-import BasicInfo from "@/app/admin/manage-student/student-profile/[lrn]/basic-info";
-import AddressInfo from "@/app/admin/manage-student/student-profile/[lrn]/address-info";
-import EmergencyInfo from "@/app/admin/manage-student/student-profile/[lrn]/emergency-info";
+import BasicInfo from "@/app/manage-student/student-profile/[lrn]/basic-info";
+import AddressInfo from "@/app/manage-student/student-profile/[lrn]/address-info";
+import EmergencyInfo from "@/app/manage-student/student-profile/[lrn]/emergency-info";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -107,7 +107,7 @@ export default function Dashboard() {
   }
 
   return (
-    <ProtectedRoute role="3">
+    <ProtectedRoute role={["1", "2", "3", "4"]}>
       <SidebarProvider style={{ height: "100vh", width: "100%" }}>
         <AppSidebar />
 

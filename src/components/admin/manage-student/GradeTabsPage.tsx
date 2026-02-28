@@ -149,7 +149,7 @@ export default function GradeTabsPage() {
                 <TabsTrigger
                   key={grade.id}
                   value={grade.id}
-                  className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-xs"
+                  className="data-[state=active]:bg-white dark:data-[state=active]:bg-primary/10 text-sm"
                 >
                   <GraduationCap className="size-4 text-muted-foreground mr-1" />
                   {grade.grade_level}

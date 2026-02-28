@@ -65,14 +65,14 @@ export default function Login() {
           className="w-full max-w-sm space-y-6"
         >
           <div>
-            <Label htmlFor="email" className="block mb-2 font-normal text-xs">
+            <Label htmlFor="email" className="block mb-2 font-normal text-sm">
               Email
             </Label>
             <Input
               type="email"
               {...register("email", { required: true })}
               placeholder="email@gmail.com"
-              className="w-full rounded-md text-xs"
+              className="w-full rounded-md text-sm"
               required
             />
           </div>
@@ -80,7 +80,7 @@ export default function Login() {
           <div className="relative">
             <Label
               htmlFor="password"
-              className="block mb-2 font-normal text-xs"
+              className="block mb-2 font-normal text-sm"
             >
               Password
             </Label>
@@ -88,7 +88,7 @@ export default function Login() {
               type={showPassword ? "text" : "password"}
               {...register("password", { required: true })}
               placeholder="Enter Password"
-              className="w-ful rounded-md text-xs"
+              className="w-ful rounded-md text-sm"
               required
             />
             <button
@@ -109,11 +109,11 @@ export default function Login() {
                   onChange={() => setRemember(!remember)}
                   checked={remember}
                 />
-                <span className="select-none text-xs">Remember me</span>
+                <span className="select-none text-sm">Remember me</span>
             </div>
             {/* <a
               href="#"
-              className="text-xs font-normal mt-3 md:mt-0 text-blue-800 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
+              className="text-sm font-normal mt-3 md:mt-0 text-blue-800 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
             >
               Forgot your password?
             </a> */}

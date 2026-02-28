@@ -30,7 +30,7 @@ export function RefreshButton({ isLoading, onClick }: RefreshButtonProps) {
       </TooltipTrigger>
 
       <TooltipContent>
-        <p className="text-xs">{isLoading ? "Refreshing..." : "Refresh Table"}</p>
+        <p className="text-sm">{isLoading ? "Refreshing..." : "Refresh Table"}</p>
       </TooltipContent>
     </Tooltip>
   );

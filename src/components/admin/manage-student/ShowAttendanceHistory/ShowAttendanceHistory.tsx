@@ -80,7 +80,7 @@ export default function ShowAttendanceHistory({
             <User className="mr-1 size-4 text-teal-500" />
             Student Attendance History
             <span
-              className={`text-white text-xs ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
+              className={`text-white text-sm ml-2 w-20 h-5 flex shadow items-center justify-center rounded-full font-medium ${
                 data.status == 1
                   ? "bg-green-500"
                   : "bg-destructive"

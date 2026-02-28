@@ -77,7 +77,7 @@ export default function AddSubjectModal({ token }: { token: string }) {
             <BookPlus className="size-4 text-primary" />
             Add Subject
           </DialogTitle>
-          <DialogDescription className="text-xs">
+          <DialogDescription className="text-sm">
             Add new subject
           </DialogDescription>
         </DialogHeader>
@@ -85,12 +85,12 @@ export default function AddSubjectModal({ token }: { token: string }) {
         <div className="mt-4 space-y-4">
           {/* GRADE */}
           <div>
-            <label className="text-xs font-medium">
+            <label className="text-sm font-medium">
               <span className="text-red-500 mr-1">*</span>Grade Level
             </label>
 
             {isLoading ? (
-              <p className="text-xs text-gray-500">Loading...</p>
+              <p className="text-sm text-gray-500">Loading...</p>
             ) : (
               <Select
                 value={formData.grade_id}
@@ -117,7 +117,7 @@ export default function AddSubjectModal({ token }: { token: string }) {
 
           {/* SUBJECT NAME */}
           <div>
-            <label className="text-xs font-medium">
+            <label className="text-sm font-medium">
               <span className="text-red-500 mr-1">*</span>Subject Name
             </label>
             <Input
