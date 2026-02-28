@@ -21,7 +21,7 @@ export function useStudentForm() {
     middle_name: "",
     last_name: "",
     suffix: "",
-    role: "student",
+    role: "4",
     email: "",
     gender: "",
     birth_place: "",

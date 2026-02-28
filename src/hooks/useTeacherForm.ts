@@ -25,7 +25,7 @@ export function useTeacherForm(existingData: any = null) {
     suffix: "",
     contact_no: "",
     email: "",
-    role_id: "2",
+    role_id: "3",
     birth_date: "",
     birth_place: "",
     gender: "",
