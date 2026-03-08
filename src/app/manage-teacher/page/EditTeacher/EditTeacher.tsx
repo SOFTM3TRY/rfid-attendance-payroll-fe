@@ -45,6 +45,7 @@ export default function EditTeacher({ open, setOpen, id }: any) {
     if (!teacher) return;
 
     setFormData({
+      id: teacher.id,
       employee_no: teacher.employee_no,
       school_year: teacher?.additional_info?.school_year,
       grade: teacher?.additional_info?.grade,
@@ -75,11 +76,13 @@ export default function EditTeacher({ open, setOpen, id }: any) {
     });
   }, [teacher]);
 
+
   const handleSubmit = () => {
     editTeacherMutation.mutate(formData, {
       onSuccess: () => setOpen(false),
     });
   };
+
 
   const showLoading = isLoadingDetails;
   const showNotFound = !isLoadingDetails && !isError && !teacher;

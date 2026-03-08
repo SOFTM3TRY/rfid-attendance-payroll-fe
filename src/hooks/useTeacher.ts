@@ -1,46 +1,69 @@
-import { CountTeacherActive, GetAllTeachers, GetTeacherDetails, GetAllAdmin, GetTeacherProfile, EditTeacher, ChangeTeacherPassword, CreateTeacherSubject, UpdateTeacherAvatar } from "@/services/Teacher_service";
-import { UseMutationResult, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  CountTeacherActive,
+  GetAllTeachers,
+  GetTeacherDetails,
+  GetAllAdmin,
+  GetTeacherProfile,
+  EditTeacher,
+  ChangeTeacherPassword,
+  CreateTeacherSubject,
+  UpdateTeacherAvatar,
+  getHistoryLogsByUser,
+  getHistoryLogs,
+} from "@/services/Teacher_service";
+import {
+  UseMutationResult,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 export const useTeacherActiveCount = (token: string | null) => {
   return useQuery({
-    queryKey: ['count-active-teachers'],
+    queryKey: ["count-active-teachers"],
     queryFn: () => CountTeacherActive(token as string),
-    enabled: !!token,  
+    enabled: !!token,
     staleTime: 1000 * 60 * 5,
   });
-}
+};
 
-export const useAllAdmins  = (token: string | null) => {
+export const useAllAdmins = (token: string | null) => {
   return useQuery({
-    queryKey: ['admin-details'],
+    queryKey: ["admin-details"],
     queryFn: () => GetAllAdmin(token as string),
-    enabled: !!token,  
+    enabled: !!token,
     staleTime: 1000 * 60 * 5,
   });
-}
+};
 
-export const useAllTeachers  = (token: string | null) => {
+export const useAllTeachers = (token: string | null) => {
   return useQuery({
-    queryKey: ['teacher-details'],
+    queryKey: ["teacher-details"],
     queryFn: () => GetAllTeachers(token as string),
-    enabled: !!token,  
+    enabled: !!token,
     staleTime: 1000 * 60 * 5,
   });
-}
+};
 
-export const useTeacherDetails = (token: string | null, { id }: { id: string }) => {
+export const useTeacherDetails = (
+  token: string | null,
+  { id }: { id: string },
+) => {
   return useQuery({
-    queryKey: ['teacher-details', id],
+    queryKey: ["teacher-details", id],
     queryFn: () => GetTeacherDetails(token as string, id),
     enabled: !!token && !!id,
     staleTime: 1000 * 60 * 5,
   });
 };
 
-export const useTeacherProfile = (token: string | null, { id }: { id: string }) => {
+export const useTeacherProfile = (
+  token: string | null,
+  { id }: { id: string },
+) => {
   return useQuery({
-    queryKey: ['teacher-profile', id],
+    queryKey: ["teacher-profile", id],
     queryFn: () => GetTeacherProfile(token as string, id),
     enabled: !!token && !!id,
     staleTime: 1000 * 60 * 5,
@@ -49,19 +72,19 @@ export const useTeacherProfile = (token: string | null, { id }: { id: string }) 
 
 export const useEditTeacherMutation = (
   token: string | null,
-  id: string
+  id: string,
 ): UseMutationResult<any, Error, any, unknown> => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: any) => EditTeacher(token as string, id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["teacher-details"] }); 
+      queryClient.invalidateQueries({ queryKey: ["teacher-details"] });
       toast.success("Teacher updated successfully");
     },
     onError: () => {
       toast.error("Update failed");
-    }
+    },
   });
 };
 
@@ -75,7 +98,13 @@ export const useChangeTeacherPassword = (token: string | null) => {
       id: number;
       new_password: string;
       confirm_password: string;
-    }) => ChangeTeacherPassword(token as string, id, new_password, confirm_password),
+    }) =>
+      ChangeTeacherPassword(
+        token as string,
+        id,
+        new_password,
+        confirm_password,
+      ),
   });
 };
 
@@ -115,5 +144,23 @@ export const useCreateTeacherSubject = (token: string | null) => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.error || "Failed to create subject.");
     },
+  });
+};
+
+export const useGetHistoryLogsByUser = (token: string | null, id: number) => {
+  return useQuery({
+    queryKey: ["history-logs", id],
+    queryFn: () => getHistoryLogsByUser(token as string, id as number),
+    enabled: !!token && !!id,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useGetHistoryyLogs = (token: string | null) => {
+  return useQuery({
+    queryKey: ["history-logs"],
+    queryFn: () => getHistoryLogs(token as string),
+    enabled: !!token,
+    staleTime: 1000 * 60 * 5,
   });
 };

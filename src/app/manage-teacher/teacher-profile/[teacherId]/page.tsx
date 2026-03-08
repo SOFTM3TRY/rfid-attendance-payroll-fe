@@ -35,6 +35,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
+import HistoryLogs from "./history-logs";
 
 export default function TeacherProfile() {
   const { token } = useAuth();
@@ -105,7 +106,8 @@ export default function TeacherProfile() {
                   <Skeleton className="w-1/4 h-80 mb-6" />
                   <Skeleton className="w-3/4 h-80 mb-6" />
                 </div>
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5">
+                  <Skeleton className="w-full h-80 mb-6" />
                   <Skeleton className="w-full h-80 mb-6" />
                 </div>
                 <div className="flex gap-5">
@@ -120,8 +122,9 @@ export default function TeacherProfile() {
 
                   <BasicInfo id={teacher.id} />
                 </div>
-                <div className="flex gap-5 mt-5">
+                <div className="flex flex-col gap-5 mt-5">
                   <TeacherSubjects teacherId={teacher.id} />
+                  <HistoryLogs teacherId={teacher.id} />
                 </div>
                 <div className="flex gap-5">
                   <AddressInfo id={teacher.id} />
