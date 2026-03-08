@@ -14,8 +14,8 @@ export function useTeacherForm(existingData: any = null) {
   const { refetch: refetchTeachers } = useAllAdmins(token as string);
 
   const defaultFormData = {
-    grade: "na",
-    section: "na",
+    grade: "",
+    section: "",
     school_year: "",
     status: "",
     first_name: "",
@@ -24,7 +24,7 @@ export function useTeacherForm(existingData: any = null) {
     suffix: "",
     contact_no: "",
     email: "",
-    role_id: "1",
+    role_id: "2",
     birth_date: "",
     birth_place: "",
     gender: "",
@@ -55,7 +55,7 @@ export function useTeacherForm(existingData: any = null) {
   }, [existingData]);
 
   const stepFieldsMap: Record<number, string[]> = {
-    1: ["grade", "section", "school_year"],
+    1: [],
     2: [
       "first_name", "middle_name", "last_name", "suffix", "contact_no", "email", "role_id",
       "birth_place", "birth_date", "gender", "status",
@@ -72,7 +72,7 @@ export function useTeacherForm(existingData: any = null) {
     requiredFields.forEach(field => {
       if (
         !formData[field]?.toString().trim() &&
-        !["middle_name", "suffix", "role_id", "emergency_mname"].includes(field)
+        !["grade", "section", "school_year", "middle_name", "suffix", "role_id", "emergency_mname"].includes(field)
       ) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }

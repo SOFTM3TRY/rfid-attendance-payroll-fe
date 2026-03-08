@@ -42,7 +42,7 @@ export function AppSidebar() {
   const user = userDetails?.data;
 
   const roleLabel =
-    user?.role_id === 1 ? "Admin" : user?.role_id === 2 ? "Teacher" : user?.role_id === 3 ? "Student" : "";
+    user?.role_id === 1 ? "Admin" : user?.role_id === 3 ? "Teacher" : user?.role_id === 3 ? "Student" : "";
 
   return (
     <Sidebar

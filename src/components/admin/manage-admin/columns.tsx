@@ -1,142 +1,138 @@
+"use client";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-
-import {
-  Eye,
-  SquarePen,
-  History,
-  FilePlus,
-  ShieldUser,
-  User,
-  GraduationCap,
-  BookAudio,
-  UserCog,
-  UserCheck,
-  UserX,
-  Rows4,
-  Grip,
-} from "lucide-react";
-import EditProfile from "@/app/manage-teacher/page/EditTeacher/EditTeacher";
-import Registration from "@/app/manage-teacher/page/Registration/Registration";
-import { useState } from "react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Grip,
+  Pencil,
+  User,
+  UserCheck,
+  UserX,
+  UserCog,
+} from "lucide-react";
 
 export type Admin = {
-  id: number;
-  employee_number: string;
+  id: string;
+  avatar?: string;
+  email?: string;
+  employee_number?: string;
   first_name: string;
   middle_name?: string;
   last_name: string;
   suffix?: string;
-  grade: number;
-  section: string;
-  status: "Active" | "Inactive";
+  status: string; // "1" | "0"
+  role?: string;
+  contact_no?: string;
+  created_at?: string;
 };
 
-export const columns: ColumnDef<Admin>[] = [
+export const columns = ({
+  onChangePassword,
+}: {
+  onChangePassword: (id: string, name?: string) => void;
+}): ColumnDef<Admin>[] => [
   {
-    accessorKey: "employee_number",
+    accessorKey: "full_name",
     header: () => (
       <Button variant="outline" size="sm">
-        <ShieldUser className="text-blue-500" /> Emloyee No.
-      </Button>
-    ),
-  },
-  {
-    accessorKey: "FullName",
-    header: () => (
-      <Button variant="outline" size="sm">
-        <User className="text-yellow-500" /> Full Name
+        <User className="text-yellow-500" /> Admin
       </Button>
     ),
     cell: ({ row }) => {
-      const { last_name, first_name, middle_name, suffix } = row.original;
+      const fullName =
+        `${row.original.last_name} ${row.original.first_name} ${row.original.middle_name || ""} ${row.original.suffix || ""}`.trim();
+
       return (
-        <span>{`${last_name} ${first_name} ${middle_name || ""} ${
-          suffix || ""
-        }`}</span>
+        <div className="flex items-center gap-2">
+          <Avatar className="size-8">
+            <AvatarImage
+              src={
+                row.original.avatar
+                  ? `https://rfid-api.barangay185bms.com/storage/avatars/${row.original.avatar}`
+                  : "https://github.com/shadcn.png"
+              }
+              className="rounded-full hover:grayscale-100 transition-all duration-300"
+            />
+            <AvatarFallback>
+              {row.original.first_name?.[0] ?? "A"}
+              {row.original.last_name?.[0] ?? "D"}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="flex flex-col">
+            <span className="font-semibold uppercase">{fullName}</span>
+            <span className="text-xs text-primary">
+              {row.original.email || "No email"}
+            </span>
+          </div>
+        </div>
       );
     },
   },
   // {
-  //   accessorKey: "grade",
+  //   accessorKey: "employee_number",
   //   header: () => (
   //     <Button variant="outline" size="sm">
-  //       <GraduationCap className="text-green-500" /> Advisory Grade
+  //       Employee No.
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => <span>{row.original.employee_number || "N/A"}</span>,
+  // },
+  // {
+  //   accessorKey: "role",
+  //   header: () => (
+  //     <Button variant="outline" size="sm">
+  //       Role
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => <span>{row.original.role || "N/A"}</span>,
+  // },
+  // {
+  //   accessorKey: "status",
+  //   header: () => (
+  //     <Button variant="outline" size="sm">
+  //       <UserCog className="text-teal-500" /> Status
   //     </Button>
   //   ),
   //   cell: ({ row }) => {
-  //     return <span>{row.original.grade || "N/A"}</span>;
+  //     const isActive = String(row.original.status) === "1";
+
+  //     return (
+  //       <span className="text-xs w-24 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
+  //         {isActive ? "Active" : "Inactive"}
+  //         <span className={`ml-1 ${isActive ? "text-green-500" : "text-red-500"}`}>
+  //           {isActive ? (
+  //             <UserCheck className="w-4 h-4" />
+  //           ) : (
+  //             <UserX className="w-4 h-4" />
+  //           )}
+  //         </span>
+  //       </span>
+  //     );
   //   },
   // },
-  // {
-  //   accessorKey: "section",
-  //   header: () => (
-  //     <Button variant="outline" size="sm">
-  //       <BookAudio className="text-violet-500" /> Advisory Section
-  //     </Button>
-  //   ),
-  //   cell: ({ row }) => <span>{row.original.section || "N/A"}</span>,
-  // },
   {
-    accessorKey: "status",
-    header: () => (
-      <Button variant="outline" size="sm">
-        <UserCog className="text-teal-500" /> Status
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const status = row.original.status;
-      return (
-        <span className="text-xs w-22 h-6 flex items-center justify-center rounded-md font-normal bg-zinc-100 dark:bg-zinc-800">
-          {/* @ts-ignore */}
-          {row.original.status == 1 ? "Active" : "Inactive"}
-          <span
-            className={`ml-1 ${
-              // @ts-ignore
-              row.original.status == 1 ? "text-green-500" : "text-red-500"
-            }`}
-          >
-            {/* @ts-ignore */}
-            {row.original.status == 1 ? (
-              <UserCheck className="w-4 h-4" />
-            ) : (
-              <UserX className="w-4 h-4" />
-            )}
-          </span>
-        </span>
-      );
-    },
-  },
-  {
-    accessorKey: "Actions",
     id: "actions",
+    header: () => <span className="text-muted-foreground">Actions</span>,
     cell: ({ row }) => {
-      const router = useRouter();
-      const teacherId = row.original.id;
-
-      const [openEdit, setOpenEdit] = useState(false);
-      const [openRegister, setOpenRegister] = useState(false);
-      const [openTeacherClass, setOpenTeacherClass] = useState(false);
+      const adminId = row.original.id;
+      const adminName =
+        `${row.original.first_name || ""} ${row.original.last_name || ""}`.trim();
 
       return (
-        <div
-          className="flex justify-start items-center"
-          style={{ pointerEvents: "auto" }}
-        >
+        <div className="flex justify-start items-center" style={{ pointerEvents: "auto" }}>
           <DropdownMenu>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -149,49 +145,20 @@ export const columns: ColumnDef<Admin>[] = [
                   </Button>
                 </DropdownMenuTrigger>
               </TooltipTrigger>
-              <TooltipContent
-                side="top"
-                align="center"
-                className="block group-data-[collapsible=icon]:hidden"
-              >
+              <TooltipContent side="top" align="center">
                 Actions
               </TooltipContent>
             </Tooltip>
+
             <DropdownMenuContent>
               <DropdownMenuItem
-                onClick={() => window.open(`/admin/manage-teacher/teacher-profile/${teacherId}`, "_blank")}
+                onClick={() => onChangePassword(adminId, adminName)}
               >
-                <Eye className="w-4 h-4 text-teal-700 dark:text-teal-500" />
-                View Profile
+                <Pencil className="size-4 text-muted-foreground" />
+                Change Password
               </DropdownMenuItem>
-
-              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
-                <SquarePen className="w-4 h-4 text-sky-700 dark:text-sky-500" />
-                Edit Profile
-              </DropdownMenuItem>
-
-              {/* <DropdownMenuItem onClick={() => window.open(`/admin/manage-teacher/attendance-history/${teacherId}`, "_blank")}>
-                <History className="w-4 h-4 text-indigo-700 dark:text-indigo-500" />
-                Attendance History
-              </DropdownMenuItem> */}
-
-              {/* <DropdownMenuItem onClick={() => window.open(`/admin/manage-teacher/advisory-class/${teacherId}`, "_blank")}>
-                <Rows4 className="w-4 h-4 text-violet-700 dark:text-violet-500" />
-                Advisory Class
-              </DropdownMenuItem> */}
-
-              {/* <DropdownMenuItem onClick={() => setOpenRegister(true)}>
-                <FilePlus className="w-4 h-4 text-blue-700 dark:text-blue-500" />
-                Register
-              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* <EditProfile open={openEdit} setOpen={setOpenEdit} row={row} />
-          <Registration
-            open={openRegister}
-            setOpen={setOpenRegister}
-            row={row}
-          /> */}
         </div>
       );
     },

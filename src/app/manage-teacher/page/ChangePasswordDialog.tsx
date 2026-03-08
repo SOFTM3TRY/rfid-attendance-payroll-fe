@@ -23,7 +23,7 @@ import { useAuth } from "@/context/AuthContext";
 // ✅ student hook (existing)
 import { useChangeTeacherPassword } from "@/hooks/useTeacher";
 
-type ChangePasswordType = "student" | "teacher";
+type ChangePasswordType = "student" | "teacher" | "admin";
 
 export default function ChangePasswordDialog({
   open,

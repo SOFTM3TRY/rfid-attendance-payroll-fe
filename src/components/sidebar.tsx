@@ -199,10 +199,10 @@ export function AppSidebar() {
               {userDetails?.data.first_name + " " + userDetails?.data.last_name}
               <span className="text-[10px] px-2 py-0 bg-accent rounded-full">
                 {userDetails?.data.role_id === 1
-                  ? "Admin"
+                  ? "Super Admin"
                   : userDetails?.data.role_id === 2
-                    ? "Teacher"
-                    : ""}
+                    ? "Admin"
+                    : "Teacher"}
               </span>
             </p>
             <p className="text-sm">{userDetails?.data.email}</p>
