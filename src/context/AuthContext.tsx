@@ -45,9 +45,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       );
       if (response.role_id === 1 || response.role_id === 2) {
         router.push("/dashboard");
-      } else if (response.role_id === 2) {
-        router.push("/teacher/dashboard");
       } else if (response.role_id === 3) {
+        router.push("/teacher/dashboard");
+      } else if (response.role_id === 4) {
         router.push("/student/dashboard");
       }
     } catch (error) {

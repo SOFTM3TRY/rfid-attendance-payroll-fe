@@ -32,6 +32,7 @@ import { useUserDetails } from "@/hooks/useUserDetails";
 import { useClientOnly } from "@/hooks/useClientOnly";
 
 import SplitTextSide from "@/components/animata/text/split-text-side";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: Home, view: [1, 2] },
@@ -55,6 +56,18 @@ const items = [
     icon: Settings,
     view: [1, 2],
   },
+  {
+    title: "Teacher history",
+    url: "/teacher-history",
+    icon: Inbox,
+    view: [1, 2],
+  },
+  {
+    title: "Reports",
+    url: "/reports",
+    icon: Users,
+    view: [1, 2],
+  },
 ];
 
 export function AppSidebar() {
@@ -73,110 +86,140 @@ export function AppSidebar() {
       variant="floating"
       style={{ pointerEvents: "auto" }}
     >
+      <SidebarHeader>
+        <div className="flex flex-col items-center justify-center gap-5 p-3 group-data-[collapsible=icon]:mt-3 group-data-[collapsible=icon]:mb-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0">
+          <img
+            src="/logo.png"
+            alt="logo"
+            className="w-25 h-25 group-data-[collapsible=icon]:block group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8"
+          />
+
+          <SplitTextSide
+            text="Young Generation Academy"
+            className="group-data-[collapsible=icon]:hidden"
+          />
+        </div>
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarHeader>
-          <div className="flex flex-col items-center justify-center gap-5 p-3 group-data-[collapsible=icon]:mt-3 group-data-[collapsible=icon]:mb-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0">
-            <img
-              src="/logo.png"
-              alt="logo"
-              className="w-25 h-25 group-data-[collapsible=icon]:block group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8"
-            />
+        <ScrollArea className="h-full rounded-md border p-4">
+          <SidebarGroup>
+            {/* MAIN SECTION */}
+            <SidebarGroupLabel>Main</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="mt-2 gap-3">
+                {items
+                  .filter((i) => ["Dashboard", "Calendar"].includes(i.title))
+                  .map(({ title, url, icon: Icon }) => (
+                    <SidebarMenuItem key={title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={`h-8 rounded-sm text-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                          pathname === url ? "bg-accent" : ""
+                        }`}
+                        tooltip={title}
+                      >
+                        <a href={url}>
+                          <Icon className="size-4" />
+                          {title}
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-            <SplitTextSide
-              text="Young Generation Academy"
-              className="group-data-[collapsible=icon]:hidden"
-            />
-          </div>
-        </SidebarHeader>
+          <SidebarGroup>
+            {/* USER MANAGEMENT SECTION */}
+            <SidebarGroupLabel>User Management</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="mt-2 gap-3">
+                {items
+                  .filter(
+                    (i) =>
+                      [
+                        "Manage Student",
+                        "Manage Teacher",
+                        "Manage Admin",
+                      ].includes(i.title) &&
+                      i.view.includes(userDetails?.data.role_id),
+                  )
+                  .map(({ title, url, icon: Icon }) => (
+                    <SidebarMenuItem key={title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={`h-8 rounded-sm text-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                          pathname === url ? "bg-accent" : ""
+                        }`}
+                        tooltip={title}
+                      >
+                        <a href={url}>
+                          <Icon className="size-4" />
+                          {title}
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-        <SidebarGroup>
-          {/* MAIN SECTION */}
-          <SidebarGroupLabel>Main</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="mt-2 gap-3">
-              {items
-                .filter((i) => ["Dashboard", "Calendar"].includes(i.title))
-                .map(({ title, url, icon: Icon }) => (
-                  <SidebarMenuItem key={title}>
-                    <SidebarMenuButton
-                      asChild
-                      className={`h-8 rounded-sm text-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
-                        pathname === url ? "bg-accent" : ""
-                      }`}
-                      tooltip={title}
-                    >
-                      <a href={url}>
-                        <Icon className="size-4" />
-                        {title}
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+          <SidebarGroup>
+            {/* SETTINGS SECTION */}
+            <SidebarGroupLabel>System</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="mt-2 gap-3">
+                {items
+                  .filter((i) => ["Mange System"].includes(i.title))
+                  .map(({ title, url, icon: Icon }) => (
+                    <SidebarMenuItem key={title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={`h-8 rounded-sm text-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                          pathname === url ? "bg-accent" : ""
+                        }`}
+                        tooltip={title}
+                      >
+                        <a href={url}>
+                          <Icon className="size-4" />
+                          {title}
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-        <SidebarGroup>
-          {/* USER MANAGEMENT SECTION */}
-          <SidebarGroupLabel>User Management</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="mt-2 gap-3">
-              {items
-                .filter(
-                  (i) =>
-                    [
-                      "Manage Student",
-                      "Manage Teacher",
-                      "Manage Admin",
-                    ].includes(i.title) &&
-                    i.view.includes(userDetails?.data.role_id),
-                )
-                .map(({ title, url, icon: Icon }) => (
-                  <SidebarMenuItem key={title}>
-                    <SidebarMenuButton
-                      asChild
-                      className={`h-8 rounded-sm text-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
-                        pathname === url ? "bg-accent" : ""
-                      }`}
-                      tooltip={title}
-                    >
-                      <a href={url}>
-                        <Icon className="size-4" />
-                        {title}
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          {/* SETTINGS SECTION */}
-          <SidebarGroupLabel>System</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="mt-2 gap-3">
-              {items
-                .filter((i) => ["Mange System"].includes(i.title))
-                .map(({ title, url, icon: Icon }) => (
-                  <SidebarMenuItem key={title}>
-                    <SidebarMenuButton
-                      asChild
-                      className={`h-8 rounded-sm text-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
-                        pathname === url ? "bg-accent" : ""
-                      }`}
-                      tooltip={title}
-                    >
-                      <a href={url}>
-                        <Icon className="size-4" />
-                        {title}
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+          <SidebarGroup>
+            {/* SETTINGS SECTION */}
+            <SidebarGroupLabel>History & Reports</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="mt-2 gap-3">
+                {items
+                  .filter((i) =>
+                    ["Teacher history", "Reports"].includes(i.title),
+                  )
+                  .map(({ title, url, icon: Icon }) => (
+                    <SidebarMenuItem key={title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={`h-8 rounded-sm text-sm group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:gap-4 ${
+                          pathname === url ? "bg-accent" : ""
+                        }`}
+                        tooltip={title}
+                      >
+                        <a href={url}>
+                          <Icon className="size-4" />
+                          {title}
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </ScrollArea>
       </SidebarContent>
       <SidebarFooter className="py-5">
         <div className="flex items-center gap-4">
