@@ -17,7 +17,7 @@ export function useTeacherForm(existingData: any = null) {
     grade: "",
     section: "",
     school_year: "",
-    status: "",
+    status: "1",
     first_name: "",
     last_name: "",
     middle_name: "",
@@ -36,17 +36,18 @@ export function useTeacherForm(existingData: any = null) {
     emergency_fname: "",
     emergency_lname: "",
     emergency_mname: "",
+    region: "",
   };
 
   const [formData, setFormData] = useState<any>(defaultFormData);
 
-  // Prefill form for editing
   useEffect(() => {
     if (existingData) {
       const flatData = {
         ...existingData,
         ...existingData?.additional_info,
       };
+
       setFormData((prev: any) => ({
         ...prev,
         ...flatData,
@@ -54,43 +55,109 @@ export function useTeacherForm(existingData: any = null) {
     }
   }, [existingData]);
 
+  // ✅ Step 1 = Basic Information
+  // ✅ Step 2 = Additional Information
+  // ✅ Step 3 = Review only
   const stepFieldsMap: Record<number, string[]> = {
-    1: [],
+    1: [
+      "first_name",
+      "last_name",
+      "contact_no",
+      "email",
+      "birth_place",
+      "birth_date",
+      "gender",
+      "status",
+    ],
     2: [
-      "first_name", "middle_name", "last_name", "suffix", "contact_no", "email", "role_id",
-      "birth_place", "birth_date", "gender", "status",
+      "region",
+      "province",
+      "city",
+      "barangay",
+      "street",
+      "emergency_fname",
+      "emergency_lname",
+      "emergency_contact",
     ],
-    3: [
-      "province", "city", "barangay", "street",
-      "emergency_fname", "emergency_mname", "emergency_lname", "emergency_contact"
-    ],
+    3: [],
   };
+
+  const optionalFields = [
+    "grade",
+    "section",
+    "school_year",
+    "middle_name",
+    "suffix",
+    "role_id",
+    "emergency_mname",
+    "birth_place",
+    "birth_date",
+    "status",
+    "emergency_fname",
+    "emergency_lname",
+    "emergency_contact",
+  ];
 
   const validateStep = () => {
     const requiredFields = stepFieldsMap[step] || [];
     const newErrors: Record<string, string> = {};
-    requiredFields.forEach(field => {
+
+    requiredFields.forEach((field) => {
+      const value = formData[field];
+
       if (
-        !formData[field]?.toString().trim() &&
-        !["grade", "section", "school_year", "middle_name", "suffix", "role_id", "emergency_mname"].includes(field)
+        !optionalFields.includes(field) &&
+        (!value || !value.toString().trim())
       ) {
         newErrors[field] = `${field.replace(/_/g, " ")} is required`;
       }
     });
+
+    // extra email validation
+    if (step === 1 && formData.email) {
+      const email = String(formData.email).trim();
+      if (
+        !email.endsWith("@gmail.com") ||
+        email.length <= "@gmail.com".length
+      ) {
+        newErrors.email = "Email must end with @gmail.com";
+      }
+    }
+
+    // extra contact validation
+    if (step === 1 && formData.contact_no) {
+      const contact = String(formData.contact_no).trim();
+      if (!/^\+639\d{9}$/.test(contact)) {
+        newErrors.contact_no = "Contact number must be valid";
+      }
+    }
+
+    if (step === 2 && formData.emergency_contact) {
+      const emergency = String(formData.emergency_contact).trim();
+      if (!/^\+639\d{9}$/.test(emergency)) {
+        newErrors.emergency_contact = "Emergency contact must be valid";
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleNextStep = () => {
-    if (validateStep() && step < 4) setStep(step + 1);
+    if (validateStep() && step < 3) {
+      setStep((prev) => prev + 1);
+    }
   };
 
   const handlePrevStep = () => {
-    if (step > 1) setStep(step - 1);
+    if (step > 1) {
+      setStep((prev) => prev - 1);
+    }
   };
 
   const handleSubmit = async () => {
     setLoading(true);
+
     try {
       if (existingData?.id) {
         // await UpdateTeacher(token as string, existingData.id, formData);
@@ -102,15 +169,17 @@ export function useTeacherForm(existingData: any = null) {
 
       refetchTeachers();
       setOpen(false);
+      setStep(1);
 
-      // Reset only if creating
       if (!existingData) {
         setFormData(defaultFormData);
       }
-
     } catch (error: any) {
       const { data } = error.response || {};
-      setErrors({ ...errors, ...data?.errors });
+      setErrors((prev) => ({
+        ...prev,
+        ...(data?.errors || {}),
+      }));
       toast.error(data?.message || "An error occurred");
     } finally {
       setTimeout(() => setLoading(false), 1000);
@@ -118,12 +187,17 @@ export function useTeacherForm(existingData: any = null) {
   };
 
   return {
-    step, setStep,
-    open, setOpen,
+    step,
+    setStep,
+    open,
+    setOpen,
     loading,
-    errors, setErrors,
-    handlePrevStep, handleNextStep,
+    errors,
+    setErrors,
+    handlePrevStep,
+    handleNextStep,
     handleSubmit,
-    formData, setFormData,
+    formData,
+    setFormData,
   };
 }

@@ -1,7 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import { UserRound, CalendarDays, School, UserLock } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -10,6 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { UserRound, CalendarDays, UserLock } from "lucide-react";
+
 export default function Step2({
   formData,
   setFormData,
@@ -17,16 +17,47 @@ export default function Step2({
   setErrors,
   loading,
 }: any) {
-  const handleChange = (
+  const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
+
     setFormData((prev: any) => ({ ...prev, [name]: value }));
+
     setErrors((prev: any) => {
-      const n = { ...prev };
-      delete n[name];
-      return n;
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
     });
+
+    // --- Age Validation (18+) ---
+    if (name === "birth_date") {
+      const today = new Date();
+      const birth = new Date(value);
+
+      if (isNaN(birth.getTime())) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Invalid birth date.",
+        }));
+        return;
+      }
+
+      const age =
+        today.getFullYear() -
+        birth.getFullYear() -
+        (today <
+        new Date(today.getFullYear(), birth.getMonth(), birth.getDate())
+          ? 1
+          : 0);
+
+      if (age < 21) {
+        setErrors((prev: any) => ({
+          ...prev,
+          birth_date: "Age must be 21 years old or above.",
+        }));
+      }
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -38,15 +69,17 @@ export default function Step2({
     });
   };
 
+  const isEmailValid = (email: string) => {
+    return email.endsWith("@gmail.com") && email.length > "@gmail.com".length;
+  };
+
   const suffixOptions = ["Jr.", "Sr.", "I", "II", "III", "IV", "V"];
-  const genderOptions = ["Male", "Female", "Other"];
-  const teacherStatusOption = ["active", "inactive"];
-  const teacherStatusValue = ["1", "0"];
+  const genderOptions = ["Male", "Female"];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-20">
       <span className="col-span-1 md:col-span-4">
-        <h1 className="text-2xl font-bold flex items-center">
+        <h1 className="text-xl font-bold flex items-center">
           <UserLock className="text-green-500 h-6 w-6 mr-1" />
           Basic Information
         </h1>
@@ -62,17 +95,17 @@ export default function Step2({
           id="first_name"
           name="first_name"
           value={formData.first_name}
-          onChange={handleChange}
+          onChange={handleInputChange}
           placeholder="Enter First Name"
           className={
             errors.first_name
-              ? "border-red-500 border py-1 px-3 rounded-sm"
-              : "border py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
         {errors.first_name && (
-          <span className="text-xs text-red-500">{errors.first_name}</span>
+          <span className="text-sm text-red-500">{errors.first_name}</span>
         )}
       </div>
 
@@ -85,7 +118,7 @@ export default function Step2({
           id="middle_name"
           name="middle_name"
           value={formData.middle_name}
-          onChange={handleChange}
+          onChange={handleInputChange}
           placeholder="Enter Middle Name"
           disabled={loading}
         />
@@ -101,17 +134,17 @@ export default function Step2({
           id="last_name"
           name="last_name"
           value={formData.last_name}
-          onChange={handleChange}
+          onChange={handleInputChange}
           placeholder="Enter Last Name"
           className={
             errors.last_name
-              ? "border-red-500 border py-1 px-3 rounded-sm"
-              : "border py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
         {errors.last_name && (
-          <span className="text-xs text-red-500">{errors.last_name}</span>
+          <span className="text-sm text-red-500">{errors.last_name}</span>
         )}
       </div>
 
@@ -128,8 +161,8 @@ export default function Step2({
           <SelectTrigger
             className={
               errors.suffix
-                ? "border-red-500 border py-1 px-3 rounded-sm w-56"
-                : "border py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border  py-1 px-3 rounded-sm w-56"
+                : "border  py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select Suffix" />
@@ -142,6 +175,9 @@ export default function Step2({
             ))}
           </SelectContent>
         </Select>
+        {errors.suffix && (
+          <span className="text-sm text-red-500">{errors.suffix}</span>
+        )}
       </div>
 
       <div className="grid gap-2">
@@ -149,15 +185,15 @@ export default function Step2({
           <span className="text-red-500 mr-[-0.3rem]">*</span>Gender
         </Label>
         <Select
-          value={formData.gender}
+          value={formData.gender || ""}
           onValueChange={(value) => handleSelectChange("gender", value)}
           disabled={loading}
         >
           <SelectTrigger
             className={
               errors.gender
-                ? "border-red-500 border py-1 px-3 rounded-sm w-56"
-                : "border py-1 px-3 rounded-sm w-56"
+                ? "border-red-500 border  py-1 px-3 rounded-sm w-56"
+                : "border  py-1 px-3 rounded-sm w-56"
             }
           >
             <SelectValue placeholder="Select Gender" />
@@ -171,11 +207,11 @@ export default function Step2({
           </SelectContent>
         </Select>
         {errors.gender && (
-          <span className="text-xs text-red-500">{errors.gender}</span>
+          <span className="text-sm text-red-500">{errors.gender}</span>
         )}
       </div>
 
-      <div className="hidden">
+      <div className="grid gap-2">
         <Label htmlFor="birth_place">
           <span className="text-red-500 mr-[-0.3rem]">*</span>
           Birth Place
@@ -184,66 +220,52 @@ export default function Step2({
           id="birth_place"
           name="birth_place"
           value={formData.birth_place}
-          onChange={handleChange}
+          onChange={handleInputChange}
           placeholder="Enter birth_place"
           className={
             errors.birth_place
-              ? "border-red-500 border py-1 px-3 rounded-sm"
-              : "border py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
         {errors.birth_place && (
-          <span className="text-xs text-red-500">{errors.birth_place}</span>
+          <span className="text-sm text-red-500">{errors.birth_place}</span>
         )}
       </div>
 
-      <div className="hidden">
+      <div className="grid gap-2">
         <Label htmlFor="birth_date">
           <span className="text-red-500 mr-[-0.3rem]">*</span>
           <CalendarDays className="text-violet-500 h-3 w-3" />
           Birth Date
         </Label>
+
         <Input
           id="birth_date"
           name="birth_date"
           type="date"
           value={formData.birth_date}
-          onChange={handleChange}
+          onChange={handleInputChange}
           placeholder="YYYY-MM-DD"
           disabled={loading}
         />
+
         {errors.birth_date && (
-          <span className="text-xs text-red-500">{errors.birth_date}</span>
+          <span className="text-sm text-red-500">{errors.birth_date}</span>
         )}
       </div>
 
-      <div className="hidden">
+      <div className="gap-2 hidden">
         <Label htmlFor="status">
           <span className="text-red-500 mr-[-0.3rem]">*</span>Status
         </Label>
-        <select
+        <Input
+          type="hidden"
+          value={formData.status}
           id="status"
           name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className={
-            errors.status
-              ? "border-red-500 border py-1 px-3 rounded-sm"
-              : "border py-1 px-3 rounded-sm"
-          }
-          disabled={loading}
-        >
-          <option value="">Select Status</option>
-          {teacherStatusOption.map((status, i) => (
-            <option key={status} value={teacherStatusValue[i]}>
-              {status}
-            </option>
-          ))}
-        </select>
-        {errors.status && (
-          <span className="text-xs text-red-500">{errors.status}</span>
-        )}
+        />
       </div>
 
       <div className="grid gap-2">
@@ -259,12 +281,7 @@ export default function Step2({
             setFormData((prev: any) => ({ ...prev, email: value }));
             setErrors((prev: any) => {
               const n = { ...prev };
-              // Validate for @gmail.com
-              if (
-                value &&
-                (!value.endsWith("@gmail.com") ||
-                  value.length <= "@gmail.com".length)
-              ) {
+              if (!isEmailValid(value)) {
                 n.email = "Email must end with @gmail.com";
               } else {
                 delete n.email;
@@ -272,18 +289,18 @@ export default function Step2({
               return n;
             });
           }}
-          placeholder="Enter Guardian Email"
+          placeholder="Enter Personal Email"
           className={
             errors.email
-              ? "border-red-500 border py-1 px-3 rounded-sm"
-              : "border py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
           type="email"
           autoComplete="off"
         />
         {errors.email && (
-          <span className="text-xs text-red-500">{errors.email}</span>
+          <span className="text-sm text-red-500">{errors.email}</span>
         )}
       </div>
 
@@ -351,13 +368,13 @@ export default function Step2({
           }}
           className={
             errors.contact_no
-              ? "border-red-500 border py-1 px-3 rounded-sm"
-              : "border py-1 px-3 rounded-sm"
+              ? "border-red-500 border  py-1 px-3 rounded-sm"
+              : "border  py-1 px-3 rounded-sm"
           }
           disabled={loading}
         />
         {errors.contact_no && (
-          <span className="text-xs text-red-500">{errors.contact_no}</span>
+          <span className="text-sm text-red-500">{errors.contact_no}</span>
         )}
       </div>
     </div>
