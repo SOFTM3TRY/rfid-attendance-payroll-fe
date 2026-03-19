@@ -179,7 +179,7 @@ function generatePdf(args: {
         r.fullname,
         r.status,
         formatTime12(r.time_in),
-        r.time_out || "",
+        formatTime12(r.time_out),
         d ? formatDate(d) : "",
       ];
     }),
