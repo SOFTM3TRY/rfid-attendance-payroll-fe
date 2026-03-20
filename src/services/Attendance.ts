@@ -3,7 +3,7 @@ import axios from "axios";
 export type AttendanceChartRange = "7d" | "30d" | "90d";
 
 export type AttendanceChartItem = {
-  date: string;     // "2026-01-25"
+  date: string;
   present: number;
   late: number;
   absent: number;
@@ -24,6 +24,14 @@ export type AttendanceBySectionItem = {
 export type AttendanceBySectionResponse = {
   status: boolean;
   data: AttendanceBySectionItem[];
+};
+
+export type GenerateAbsentResponse = {
+  status: boolean;
+  message: string;
+  date: string;
+  created: number;
+  skipped: number;
 };
 
 export const GetAttendanceChart = async (
@@ -58,29 +66,29 @@ export const GetAttendanceChart = async (
 };
 
 export const AttendanceTimeIn = async (rfid_uid: string) => {
-    try {
-        const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-timein`,
-            { rfid_uid }
-        );
-        return response.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-timein`,
+      { rfid_uid }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const AttendanceTimeOut = async (rfid_uid: string) => {
-    try {
-        const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-timeout`,
-            { rfid_uid }
-        );
-        return response.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-timeout`,
+      { rfid_uid }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const AttendanceTap = async (rfid_uid: string) => {
@@ -129,4 +137,35 @@ export const GetAttendanceBySection = async (
   );
 
   return res.data;
+};
+
+export const GenerateAbsent = async (
+  token: string,
+  date?: string
+): Promise<GenerateAbsentResponse> => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance/generate-absent`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          date,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("GenerateAbsent Error:", error);
+
+    const msg =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      "Failed to generate absent students.";
+
+    throw new Error(msg);
+  }
 };

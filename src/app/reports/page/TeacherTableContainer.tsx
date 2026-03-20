@@ -16,6 +16,7 @@ import { TeacherData } from "@/types/Teacher";
 import EditTeacher from "./EditTeacher/EditTeacher";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import AddTeacherSubjectDialog from "./AddTeacherSubjectDialog";
+import GenerateAbsentModal  from "@/components/GenerateAbsent";
 
 export function TeacherTableContainer() {
   const router = useRouter();
@@ -99,6 +100,8 @@ export function TeacherTableContainer() {
           <Table2 className="size-4 text-violet-500" />
           Reports Management
         </p>
+
+        <GenerateAbsentModal />
       </div>
 
       {isError ? (

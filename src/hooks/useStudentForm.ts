@@ -45,8 +45,17 @@ export function useStudentForm() {
   // 🔹 Automatically generate email when first_name or last_name changes
   useEffect(() => {
     const { first_name, last_name } = formData;
+
     if (first_name && last_name) {
-      const email = `${first_name.toLowerCase()}${last_name.toLowerCase()}@yga.edu.ph`;
+      const cleanFirstName = first_name
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "");
+
+      const cleanLastName = last_name.trim().toLowerCase().replace(/\s+/g, "");
+
+      const email = `${cleanFirstName}${cleanLastName}@yga.edu.ph`;
+
       setFormData((prev: any) => ({ ...prev, email }));
     }
   }, [formData.first_name, formData.last_name]);

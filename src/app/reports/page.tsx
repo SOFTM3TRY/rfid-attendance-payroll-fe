@@ -3,7 +3,14 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/context/AuthContext";
@@ -18,7 +25,9 @@ export default function ManageTeacher() {
   const { token } = useAuth();
   const isClient = useClientOnly();
 
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(token as string);
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
+    token as string,
+  );
 
   if (!isClient || isLoadingUserDetails) {
     return <Loader />;

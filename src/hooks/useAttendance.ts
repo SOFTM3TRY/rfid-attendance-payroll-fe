@@ -1,6 +1,5 @@
 import { toast } from "react-hot-toast";
 import {
-  UseMutationResult,
   useQuery,
   useMutation,
   useQueryClient,
@@ -9,12 +8,11 @@ import {
   GetAttendanceToday,
   GetAttendanceChart,
   AttendanceChartRange,
+  GenerateAbsent,
 } from "@/services/Attendance";
 
-import { StdioNull } from "child_process";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-
 import { GetAttendanceBySection } from "@/services/Attendance";
 
 /* =========================
@@ -45,7 +43,6 @@ function parseToDate(value?: string | null): Date | null {
 
   const v = value.trim();
 
-  // YYYY-MM-DD or YYYY-MM-DD HH:mm:ss
   if (v.includes("-") && v.length >= 10) {
     const [yyyy, mm, dd] = v.slice(0, 10).split("-");
     return new Date(Number(yyyy), Number(mm) - 1, Number(dd));
@@ -77,7 +74,7 @@ function formatTime12(dt?: string | null) {
 }
 
 /* =========================
-   PDF GENERATOR (Screenshot Layout)
+   PDF GENERATOR
 ========================= */
 function generatePdf(args: {
   schoolName: string;
@@ -102,22 +99,18 @@ function generatePdf(args: {
   const pageWidth = doc.internal.pageSize.getWidth();
   const marginX = 40;
 
-  // Header lines
   doc.setDrawColor(120);
   doc.line(marginX, 35, pageWidth - marginX, 35);
   doc.line(marginX, 90, pageWidth - marginX, 90);
 
-  // School name
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
   doc.text(schoolName, marginX, 60);
 
-  // Title
   doc.setFont("helvetica", "normal");
   doc.setFontSize(15);
   doc.text("ATTENDANCE REPORT", pageWidth / 2, 80, { align: "center" });
 
-  // Info box
   const boxX = marginX;
   const boxY = 120;
   const boxW = pageWidth - marginX * 2;
@@ -159,7 +152,6 @@ function generatePdf(args: {
   doc.setFont("helvetica", "normal");
   doc.text(String(rows.length), boxX + 120, y);
 
-  // Table
   autoTable(doc, {
     startY: boxY + boxH + 20,
     head: [[
@@ -198,7 +190,7 @@ function generatePdf(args: {
 }
 
 /* =========================
-   MAIN HOOK
+   PDF HOOK
 ========================= */
 export const useDownloadAttendanceReportPdf = () => {
   return useMutation({
@@ -223,17 +215,12 @@ export const useDownloadAttendanceReportPdf = () => {
         teacherName,
       } = args;
 
-      console.log("SECTION PARAM:", section);
-
-      // ✅ API CALL (same as Postman)
       const res = (await GetAttendanceBySection(
         token,
         section,
         startDate,
         endDate
       )) as AttendanceResponse;
-
-      console.log("FULL RESPONSE:", res);
 
       const rows = res.data || [];
 
@@ -242,7 +229,6 @@ export const useDownloadAttendanceReportPdf = () => {
         return 0;
       }
 
-      // ✅ Generate PDF
       generatePdf({
         schoolName,
         gradeLabel,
@@ -266,6 +252,9 @@ export const useDownloadAttendanceReportPdf = () => {
   });
 };
 
+/* =========================
+   QUERY HOOKS
+========================= */
 export const useAttendanceChart = (
   token: string | null,
   range: AttendanceChartRange,
@@ -283,5 +272,32 @@ export const useAttendanceToday = (token: string | null) => {
     queryFn: () => GetAttendanceToday(token as string),
     enabled: !!token,
     staleTime: 1000 * 60 * 5,
+  });
+};
+
+/* =========================
+   GENERATE ABSENT HOOK
+========================= */
+export const useGenerateAbsent = (token: string | null) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (date?: string) => {
+      if (!token) throw new Error("No token found.");
+      return await GenerateAbsent(token, date);
+    },
+
+    onSuccess: (data) => {
+      toast.success(
+        `${data.created} absent generated. Skipped: ${data.skipped}`
+      );
+
+      queryClient.invalidateQueries({ queryKey: ["attendance-today"] });
+      queryClient.invalidateQueries({ queryKey: ["attendance-chart"] });
+    },
+
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to generate absent.");
+    },
   });
 };
