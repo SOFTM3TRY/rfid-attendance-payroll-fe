@@ -206,7 +206,7 @@ export default function Attendance() {
       setCooldown(5);
     } catch (err: any) {
       if (err?.response?.data?.message) toast.error(err.response.data.message);
-      else toast.error("Attendance tap failed.");
+      else toast.error("No schedule for Saturday and Sundayay.");
     } finally {
       setIsSubmitting(false);
       reset({ rfid_uid: "" });

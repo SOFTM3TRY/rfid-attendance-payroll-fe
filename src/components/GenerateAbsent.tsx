@@ -56,7 +56,7 @@ export default function GenerateAbsentModal() {
           disabled={!token}
         >
           <CalendarX2 className="h-4 w-4 " />
-          Generate Absent
+          Record Absent
         </Button>
       </DialogTrigger>
 

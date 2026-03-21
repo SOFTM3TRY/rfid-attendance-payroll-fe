@@ -27,6 +27,7 @@ import {
   ClockArrowDown,
   Stamp,
   KeyRound,
+  RefreshCw,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -196,7 +197,9 @@ const columns: ColumnDef<AttendanceEntry>[] = [
     cell: ({ row }) => {
       const value = row.getValue("remarks") as string;
 
-      return <div className="text-[10px] text-center text-primary">{value}</div>;
+      return (
+        <div className="text-[10px] text-center text-primary">{value}</div>
+      );
     },
   },
 ];
@@ -213,10 +216,11 @@ export function AttendanceHistory({ id }: { id: string }) {
   const [rowSelection, setRowSelection] = useState({});
 
   // ✅ Fetch Attendance
-  const { data: attendanceRes } = useGetStudentAttendanceById(
-    token as string,
-    id,
-  );
+  const {
+    data: attendanceRes,
+    isRefetching,
+    refetch,
+  } = useGetStudentAttendanceById(token as string, id);
 
   // ✅ Fetch Grades for dynamic dropdown + mapping
   const { data: gradesRes } = useGrade(token as string);
@@ -300,6 +304,18 @@ export function AttendanceHistory({ id }: { id: string }) {
         />
 
         <div className="flex gap-3">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+          >
+            {isRefetching ? (
+              <RefreshCw className="animate-spin size-4" />
+            ) : (
+              <RefreshCw className="size-4" />
+            )}
+          </Button>
           <FilterTable pagination={pagination} setPagination={setPagination} />
 
           {/* ✅ Dynamic Grade filter */}
