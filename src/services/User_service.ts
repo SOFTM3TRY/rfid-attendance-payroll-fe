@@ -1,75 +1,28 @@
- 
-import axios from "axios";
-import { User } from "@/types/Login";
+import { apiClient, unwrapData, withAuth } from "@/lib/api";
+import type { AxiosRequestConfig } from "axios";
+import { type User } from "@/types/Login";
 
+export const login = async (user: User) =>
+  unwrapData(
+    apiClient.post("/login", {
+      email: user.email,
+      password: user.password,
+    }),
+  );
 
-export const login = async (user: User) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/login`,
-      {
-        email: user.email,
-        password: user.password,
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const userdetails = async (
+  token: string,
+  config?: AxiosRequestConfig,
+) =>
+  unwrapData(
+    apiClient.get("/user-details", {
+      ...withAuth(token),
+      ...config,
+    }),
+  );
 
-export const userdetails = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/user-details`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+export const logout = async (token: string) =>
+  unwrapData(apiClient.post("/logout", {}, withAuth(token)));
 
-export const logout = async (token: string) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/logout`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const checkToken = async (token: string) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/check-token`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Token validation failed:', error);
-    throw error;
-  }
-};
-
- 
+export const checkToken = async (token: string) =>
+  unwrapData(apiClient.post("/check-token", {}, withAuth(token)));

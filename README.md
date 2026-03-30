@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RFID Attendance Payroll FE
 
-## Getting Started
+Frontend for the Young Generation Academy attendance and payroll workflow, built with Next.js App Router, React Query, and a Service + Hook architecture.
 
-First, run the development server:
+## Setup
+
+Requirements:
+- Node.js 20+
+- npm 10+
+- Backend API reachable from `NEXT_PUBLIC_BASE_URL_API`
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+npm run typecheck
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`lint` currently runs the TypeScript safety pass. The previous `next lint` script was invalid for the current Next.js version and was replaced with a working validation command.
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a local `.env` file with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_BASE_URL_API=http://127.0.0.1:8000/api
+NEXT_PUBLIC_BASE_URL_API_STATUS=http://127.0.0.1:8000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Architecture
 
-## Deploy on Vercel
+This repo now follows these boundaries:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `src/services`
+  API and remote data access only. Services use the centralized client in `src/lib/api.ts`.
+- `src/hooks`
+  Stateful logic, data fetching, mutations, and UI-side orchestration. Hooks call services, not raw HTTP clients.
+- `src/components`
+  Reusable UI building blocks and feature UI.
+- `src/app`
+  Route-level screens and page composition.
+- `src/lib`
+  Shared utilities such as the API client and auth token helpers.
+- `src/types`
+  Shared TypeScript types.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Service + Hook Pattern
+
+1. Services call the backend through the shared Axios client.
+2. Hooks wrap services with state, loading, errors, and React Query integration.
+3. Components and pages consume hooks and focus on rendering and interaction.
+
+## Folder Structure
+
+```text
+src/
+  app/
+  components/
+  context/
+  hooks/
+  lib/
+  services/
+  types/
+  utils/
+public/
+```
+
+Recommended future additions:
+
+- `src/constants/`
+- `src/config/`
+- `src/assets/`
+
+## Refactor Highlights
+
+- Centralized API access in `src/lib/api.ts`
+- Centralized API error parsing and API-availability detection in `src/lib/api-error.ts`
+- Centralized auth cookie helpers in `src/lib/auth.ts`
+- Moved PSGC remote lookups into `src/services/locationService.ts`
+- Replaced duplicated per-service Axios base URL and auth header setup with shared helpers
+- Replaced repeated `if (!isClient || isLoadingUserDetails) return <Loader />;` page guards with the reusable `PageLoaderBoundary`
+- Replaced the shared full-screen `Loader` fallbacks with Shadcn `Skeleton`-based loading states through `PageSkeleton` and page-specific skeletons
+- Redirected authenticated users away from `/` with `router.replace(...)` so dashboard, teacher, and student flows do not navigate back to the login screen
+- Fixed broken validation scripts for the current Next.js version
+
+## Error Handling
+
+- Use `getApiErrorMessage` from `src/lib/api-error.ts` for user-facing API and mutation errors.
+- Use `isApiUnavailableError` only for true backend outages or unreachable API checks.
+- The global API-down toast should only appear for network-level failures and `502/503/504` responses from the health endpoint.
+- Do not show the API-down message for empty datasets, validation failures, `401/403/404/422`, or successful responses with no records.
+- While the API is reachable, no API-down toast should be shown during normal loading states or successful app startup.
+
+## Validation
+
+Run:
+
+```bash
+npm run typecheck
+npm run build
+```
+
+Notes:
+
+- `typecheck` is expected to pass after this refactor.
+- `build` may require clearing the local `.next` folder first if a stale Node process is holding it open on Windows.
+- An ESLint migration is still recommended for full lint coverage.
+
+## Known Follow-Up Work
+
+- Introduce a real ESLint setup for Next.js 16 flat config
+- Replace broad `any` types in form-heavy flows
+- Continue deduplicating repeated `AddTeacher`, `AddStudent`, and `AddAdmin` step components
+- Add `.env.example`
+- Add automated tests for hooks and route-level flows

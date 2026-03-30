@@ -1,34 +1,21 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import { useClientOnly } from "@/hooks/useClientOnly";
-
 import { Map, MapPinHouse } from "lucide-react";
+import type { AdditionalInfo, TeacherData } from "@/types/Teacher";
 
-import { useAuth } from "@/context/AuthContext";
-import { useTeacherDetails } from "@/hooks/useTeacher";
-
-export default function AddressInfo({ id }: { id: string }) {
-
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const { data: teacherDetails,  } =
-    useTeacherDetails(token, { id });
-
-  const teacher = teacherDetails?.data?.teacher?.[0] || null;
-  const additional_info = teacher?.additional_info || {};
+export default function AddressInfo({ teacher }: { teacher: TeacherData }) {
+  const additionalInfo: Partial<AdditionalInfo> = teacher.additional_info ?? {};
 
   return (
     <div className="w-full py-5 flex flex-col gap-4 px-5 mt-5 rounded-md bg-accent/20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SectionHeader icon={<Map className="text-red-500 size-4" />} title="Address" />
 
-        <InputField label="Region" value={additional_info.region} />
-        <InputField label="Province" value={additional_info.province} />
-        <InputField label="City" value={additional_info.city} />
-        <InputField label="Barangay" value={additional_info.barangay} />
-        <InputField label="Street" value={additional_info.street} full />
+        <InputField label="Region" value={additionalInfo.region || ""} />
+        <InputField label="Province" value={additionalInfo.province || ""} />
+        <InputField label="City" value={additionalInfo.city || ""} />
+        <InputField label="Barangay" value={additionalInfo.barangay || ""} />
+        <InputField label="Street" value={additionalInfo.street || ""} full />
       </div>
     </div>
   );

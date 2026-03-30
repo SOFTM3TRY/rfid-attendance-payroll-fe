@@ -1,72 +1,16 @@
-import axios from "axios";
+import { apiClient, unwrapData, withAuth } from "@/lib/api";
 
-export const GetallGrades = async (token: string) => {
-  try {
-    const response = await axios(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-all-grades`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const GetallGrades = async (token: string) =>
+  unwrapData(apiClient.get("/get-all-grades", withAuth(token)));
 
-export const CreateGrade = async (token: string, gradeData: any) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/create-grade`,
-      gradeData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const CreateGrade = async (token: string, gradeData: unknown) =>
+  unwrapData(apiClient.post("/create-grade", gradeData, withAuth(token)));
 
-export const GetGradeById = async (token: string, id: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-grade-by-id/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const GetGradeById = async (token: string, id: string) =>
+  unwrapData(apiClient.get(`/get-grade-by-id/${id}`, withAuth(token)));
 
-export const EditGrade = async (token: string, id: string, data: any) => {
-  try {
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/edit-grade/${id}`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const EditGrade = async (
+  token: string,
+  id: string,
+  data: unknown,
+) => unwrapData(apiClient.put(`/edit-grade/${id}`, data, withAuth(token)));

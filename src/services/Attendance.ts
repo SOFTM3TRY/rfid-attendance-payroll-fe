@@ -1,4 +1,4 @@
-import axios from "axios";
+import { apiClient, unwrapData, withAuth } from "@/lib/api";
 
 export type AttendanceChartRange = "7d" | "30d" | "90d";
 
@@ -39,17 +39,12 @@ export const GetAttendanceChart = async (
   range: AttendanceChartRange = "90d"
 ) => {
   try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance/chart`,
-      {
+    return await unwrapData(
+      apiClient.get("/attendance/chart", {
+        ...withAuth(token),
         params: { range },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      }),
     );
-
-    return res.data;
   } catch (error: any) {
     console.error("GetAttendanceChart Error:", error);
 
@@ -66,60 +61,19 @@ export const GetAttendanceChart = async (
 };
 
 export const AttendanceTimeIn = async (rfid_uid: string) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-timein`,
-      { rfid_uid }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return unwrapData(apiClient.post("/attendance-timein", { rfid_uid }));
 };
 
 export const AttendanceTimeOut = async (rfid_uid: string) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-timeout`,
-      { rfid_uid }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return unwrapData(apiClient.post("/attendance-timeout", { rfid_uid }));
 };
 
 export const AttendanceTap = async (rfid_uid: string) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance-tap`,
-      { rfid_uid }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return unwrapData(apiClient.post("/attendance-tap", { rfid_uid }));
 };
 
 export const GetAttendanceToday = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/ShowTodayAttendance`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return unwrapData(apiClient.get("/ShowTodayAttendance", withAuth(token)));
 };
 
 export const GetAttendanceBySection = async (
@@ -128,15 +82,12 @@ export const GetAttendanceBySection = async (
   start_date?: string,
   end_date?: string
 ) => {
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-attendance-by-section/${section}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  return unwrapData(
+    apiClient.get(`/get-attendance-by-section/${section}`, {
+      ...withAuth(token),
       params: { start_date, end_date },
-    }
+    }),
   );
-
-  return res.data;
 };
 
 export const GenerateAbsent = async (
@@ -144,20 +95,16 @@ export const GenerateAbsent = async (
   date?: string
 ): Promise<GenerateAbsentResponse> => {
   try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/attendance/generate-absent`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    return await unwrapData(
+      apiClient.post(
+        "/attendance/generate-absent",
+        {},
+        {
+          ...withAuth(token),
+          params: { date },
         },
-        params: {
-          date,
-        },
-      }
+      ),
     );
-
-    return response.data;
   } catch (error: any) {
     console.error("GenerateAbsent Error:", error);
 

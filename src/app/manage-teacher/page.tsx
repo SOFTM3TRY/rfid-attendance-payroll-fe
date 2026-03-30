@@ -6,23 +6,14 @@ import { Navbar } from "@/components/navbar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
-import { useAuth } from "@/context/AuthContext";
-import { useUserDetails } from "@/hooks/useUserDetails";
-import { useClientOnly } from "@/hooks/useClientOnly";
-import Loader from "@/components/Loader";
-import { TeacherTableContainer } from "@/app/manage-teacher/page/TeacherTableContainer";
+import { ManageTeacherPageContent } from "@/components/manage-teacher/ManageTeacherPageContent";
+import { useManageTeacherPage } from "@/hooks/useManageTeacherPage";
 import { Users } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
 export default function ManageTeacher() {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(token as string);
-
-  if (!isClient || isLoadingUserDetails) {
-    return <Loader />;
-  }
+  const { teachers, isLoading, isRefreshing, isError, refresh } =
+    useManageTeacherPage();
 
   return (
     <ProtectedRoute role={["1", "2"]}>
@@ -49,9 +40,13 @@ export default function ManageTeacher() {
               </Breadcrumb>
             </div>
 
-            <div className="p-2 h-full mt-10 z-1">
-              <TeacherTableContainer />
-            </div>
+            <ManageTeacherPageContent
+              teachers={teachers}
+              isLoading={isLoading}
+              isRefreshing={isRefreshing}
+              isError={isError}
+              onRefresh={refresh}
+            />
           </div>
           <Footer />
         </main>

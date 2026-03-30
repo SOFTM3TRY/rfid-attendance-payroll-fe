@@ -18,6 +18,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export const useTeacherActiveCount = (token: string | null) => {
   return useQuery({
@@ -82,8 +83,8 @@ export const useEditTeacherMutation = (
       queryClient.invalidateQueries({ queryKey: ["teacher-details"] });
       toast.success("Teacher updated successfully");
     },
-    onError: () => {
-      toast.error("Update failed");
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "Update failed"));
     },
   });
 };
@@ -141,8 +142,8 @@ export const useCreateTeacherSubject = (token: string | null) => {
       queryClient.invalidateQueries({ queryKey: ["teacher-profile"] });
     },
 
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.error || "Failed to create subject.");
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "Failed to create subject."));
     },
   });
 };

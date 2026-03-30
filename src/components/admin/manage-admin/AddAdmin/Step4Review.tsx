@@ -47,7 +47,7 @@ export default function Step4({ formData }: any) {
       }
 
       if (formData.city) {
-        let cities = [];
+        let cities: any[] = [];
 
         if (formData.region === "130000000") {
           cities = await fetchCities(formData.region);

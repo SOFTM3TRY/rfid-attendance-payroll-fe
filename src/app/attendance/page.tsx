@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
 import SplitText from "@/components/animata/text/split-text";
+import { getApiErrorMessage } from "@/lib/api-error";
 import { cn } from "@/lib/utils";
 
 import { AttendanceTap } from "@/services/Attendance";
@@ -205,8 +206,7 @@ export default function Attendance() {
 
       setCooldown(5);
     } catch (err: any) {
-      if (err?.response?.data?.message) toast.error(err.response.data.message);
-      else toast.error("No schedule for Saturday and Sunday.");
+      toast.error(getApiErrorMessage(err, "Failed to record attendance."));
     } finally {
       setIsSubmitting(false);
       reset({ rfid_uid: "" });

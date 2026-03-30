@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 import { useClientOnly } from "@/hooks/useClientOnly";
@@ -23,17 +23,21 @@ import {
 import { Camera, CircleX, PenSquare, Save, UserCircle } from "lucide-react";
 
 import { useAuth } from "@/context/AuthContext";
-import { useTeacherDetails, useUpdateTeacherAvatar } from "@/hooks/useTeacher";
+import { useUpdateTeacherAvatar } from "@/hooks/useTeacher";
+import type { TeacherData } from "@/types/Teacher";
 
-export default function Profile({ id }: { id: string }) {
+type ProfileProps = {
+  teacher: TeacherData;
+  onRefetch?: () => Promise<unknown> | void;
+};
+
+export default function Profile({ teacher, onRefetch }: ProfileProps) {
   const { token } = useAuth();
   const isClient = useClientOnly();
 
-  const { data: teacherDetails, refetch } = useTeacherDetails(token, { id });
-
   const { mutateAsync, isPending } = useUpdateTeacherAvatar(token);
-
-  const teacher = teacherDetails?.data?.teacher?.[0] || null;
+  const id = teacher.id;
+  const refetch = onRefetch ?? (() => undefined);
 
   const fullName = `${teacher?.first_name || ""} ${teacher?.middle_name || ""} ${teacher?.last_name || ""} ${teacher?.suffix || ""}`
     .replace(/\s+/g, " ")
@@ -63,7 +67,9 @@ export default function Profile({ id }: { id: string }) {
   // ✅ cleanup preview object url
   useEffect(() => {
     return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
     };
   }, [previewUrl]);
 
@@ -74,7 +80,7 @@ export default function Profile({ id }: { id: string }) {
     }
 
     try {
-      const res = await mutateAsync({ id: Number(id), avatar: selectedFile });
+      const res = await mutateAsync({ id: teacher.id, avatar: selectedFile });
       toast.success(res?.message || "Avatar updated!");
 
       await refetch(); // ✅ refresh teacher details (avatar)

@@ -16,30 +16,30 @@ import {
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 import { Footer } from "@/components/footer";
-
-import { useAuth } from "@/context/AuthContext";
-// @ts-ignore
-import { useUserDetails } from "@/hooks/useUserDetails";
-import { useClientOnly } from "@/hooks/useClientOnly";
-
-import Loader from "@/components/Loader";
-
+import { useSession } from "@/context/SessionContext";
 import GradeTabsPage from "@/components/admin/manage-student/GradeTabsPage";
-
 import { Users } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function ManageStudentSkeleton() {
+  return (
+    <div className="h-full mt-10 space-y-4">
+      <div className="flex gap-3">
+        <Skeleton className="h-10 w-28" />
+        <Skeleton className="h-10 w-28" />
+        <Skeleton className="h-10 w-28" />
+      </div>
+      <Skeleton className="h-12 w-full" />
+      {Array.from({ length: 7 }).map((_, index) => (
+        <Skeleton key={index} className="h-14 w-full" />
+      ))}
+    </div>
+  );
+}
 
 export default function ManageStudent() {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
-    token as string
-  );
-
-  if (!isClient || isLoadingUserDetails) {
-    return <Loader />;
-  }
+  const { isLoading: isLoadingUserDetails } = useSession();
 
   return (
     <ProtectedRoute role={["1", "2"]}>
@@ -66,9 +66,13 @@ export default function ManageStudent() {
               </Breadcrumb>
             </div>
 
-            <div className="h-full mt-10 z-1">
-              <GradeTabsPage />
-            </div>
+            {isLoadingUserDetails ? (
+              <ManageStudentSkeleton />
+            ) : (
+              <div className="h-full mt-10 z-1">
+                <GradeTabsPage />
+              </div>
+            )}
           </div>
           <Footer />
         </main>

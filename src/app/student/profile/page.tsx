@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import toast from "react-hot-toast";
-
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/student-sidebar";
 import { Navbar } from "@/components/navbar";
@@ -16,51 +15,32 @@ import {
 } from "@/components/ui/breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
-
-import { useUserDetails } from "@/hooks/useUserDetails";
+import { useSession } from "@/context/SessionContext";
 import { useChangeStudentPassword } from "@/hooks/useStudentDetails";
-import { useAuth } from "@/context/AuthContext";
-
-import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
 import BasicInfo from "@/app/manage-student/student-profile/[lrn]/basic-info";
 import AddressInfo from "@/app/manage-student/student-profile/[lrn]/address-info";
 import EmergencyInfo from "@/app/manage-student/student-profile/[lrn]/emergency-info";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
 import { User, LockKeyhole, Save } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Profile from "@/components/admin/manage-student/EditStudent/profile";
 
 export default function Dashboard() {
-  const tokenLS =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const { token, user, isError } = useSession();
+  const { mutateAsync, isPending } = useChangeStudentPassword(token);
 
-  // ✅ useAuth token (preferred if you already have it)
-  const { token } = useAuth();
-  const authToken = (token as string) || tokenLS;
-
-  // ✅ user details
-  const { data: user, isError, error } = useUserDetails(authToken);
-
-  // ✅ change password mutation
-  const { mutateAsync, isPending } = useChangeStudentPassword(authToken);
-
-  const studentId = user?.data?.id ? String(user.data.id) : "";
-  const studentName = user?.data
-    ? `${user.data.first_name || ""} ${user.data.last_name || ""}`.trim()
+  const studentId = user?.id ? String(user.id) : "";
+  const studentName = user
+    ? `${user.first_name || ""} ${user.last_name || ""}`.trim()
     : "student";
 
-  // ✅ form states
   const [newPassword, setNewPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
-  // optional: clear fields when switching tabs
   const handleResetPasswordFields = React.useCallback(() => {
     setNewPassword("");
     setConfirmPassword("");
@@ -99,11 +79,7 @@ export default function Dashboard() {
   };
 
   if (isError) {
-    return (
-      <div className="p-5 text-red-500">
-        Error loading user details: {String(error)}
-      </div>
-    );
+    return <div className="p-5 text-red-500">Error loading user details.</div>;
   }
 
   return (
@@ -139,8 +115,10 @@ export default function Dashboard() {
             <Tabs
               defaultValue="profile"
               className="w-full mt-4"
-              onValueChange={(v) => {
-                if (v !== "change-password") handleResetPasswordFields();
+              onValueChange={(value) => {
+                if (value !== "change-password") {
+                  handleResetPasswordFields();
+                }
               }}
             >
               <TabsList className="w-full justify-start text-xs">
@@ -152,7 +130,6 @@ export default function Dashboard() {
                 </TabsTrigger>
               </TabsList>
 
-              {/* PROFILE TAB */}
               <TabsContent value="profile">
                 {!user ? (
                   <div className="p-2 h-full z-10">
@@ -169,19 +146,18 @@ export default function Dashboard() {
                   <div className="p-2 h-full z-10">
                     <div className="h-full mt-10 z-10">
                       <div className="flex flex-col lg:flex-row gap-5">
-                        <Profile id={user?.data?.id} />
-                        <BasicInfo student={user?.data} />
+                        <Profile id={user.id} />
+                        <BasicInfo student={user} />
                       </div>
                       <div className="flex flex-col lg:flex-row gap-5">
-                        <AddressInfo student={user?.data} />
-                        <EmergencyInfo student={user?.data} />
+                        <AddressInfo student={user} />
+                        <EmergencyInfo student={user} />
                       </div>
                     </div>
                   </div>
                 )}
               </TabsContent>
 
-              {/* CHANGE PASSWORD TAB */}
               <TabsContent value="change-password">
                 <Card className="mt-4 max-w-2xl rounded-2xl">
                   <CardHeader className="pb-2">
@@ -196,7 +172,6 @@ export default function Dashboard() {
                   </CardHeader>
 
                   <CardContent className="pt-4">
-                    {/* skeleton while user not loaded */}
                     {!user ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="grid gap-2">
@@ -256,11 +231,6 @@ export default function Dashboard() {
                 </Card>
               </TabsContent>
             </Tabs>
-
-            {/* debug (optional) */}
-            {/* <pre className="mt-10 whitespace-pre-wrap text-xs bg-zinc-900 text-white p-3 rounded">
-              {JSON.stringify(user, null, 2)}
-            </pre> */}
           </div>
 
           <Footer />

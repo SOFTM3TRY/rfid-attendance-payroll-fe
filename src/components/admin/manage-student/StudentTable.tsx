@@ -23,6 +23,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Student } from "@/types/Student";
 
 interface Props<TData> {
   columns: ColumnDef<TData>[];
@@ -48,16 +49,21 @@ export function StudentTable<TData>({
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
     pageCount: Math.ceil(totalRows / pagination.pageSize),
+    getRowId: (originalRow, index) => {
+      const studentRow = originalRow as Student;
+      return String(studentRow.lrn || studentRow.id || index);
+    },
   });
 
-  const start = pagination.pageIndex * pagination.pageSize + 1;
-  const end = Math.min(start + data.length - 1, totalRows);
+  const start = totalRows === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1;
+  const end = totalRows === 0 ? 0 : Math.min(start + data.length - 1, totalRows);
   const totalPages = Math.ceil(totalRows / pagination.pageSize);
 
   return (
     <div className="w-full">
-      <div className="rounded-md border">
-        <Table>
+      <div className="rounded-md border overflow-hidden">
+        <div className="overflow-x-auto">
+        <Table className="min-w-[980px]">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -98,6 +104,7 @@ export function StudentTable<TData>({
             )}
           </TableBody>
         </Table>
+        </div>
 
         <div className="flex items-center justify-between px-5 py-4 space-x-2 mt-3">
           <div className="text-sm text-muted-foreground flex-1">

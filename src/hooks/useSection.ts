@@ -2,6 +2,7 @@ import { GetSectionsByGrade, GetAllSections, CreateSection, EditSection, getSect
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export const useSection = (token: string | null, gradeId: string) => {
   return useQuery({
@@ -32,11 +33,7 @@ export const useCreateSection = () => {
       queryClient.invalidateQueries({ queryKey: ["get-all-sections"] });
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to create new grade");
-      }
+      toast.error(getApiErrorMessage(error, "Failed to create new section"));
     },
   });
 };
@@ -62,11 +59,7 @@ export const  useEditSection = () => {
       queryClient.invalidateQueries({ queryKey: ["get-all-sections"] });
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to update grade");
-      }
+      toast.error(getApiErrorMessage(error, "Failed to update section"));
     },
   });
 };

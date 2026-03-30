@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import { RegisterRFIDToStudent } from "@/services/Student_service";
 import toast from "react-hot-toast";
-import Loader from "@/components/Loader";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import PrimaryInfo from "@/components/admin/manage-student/ShowProfile/PrimaryInfoStudent";
 import BasicInfo from "@/components/admin/manage-student/ShowProfile/BasicInfo";
@@ -34,6 +34,15 @@ import SplitText from "@/components/animata/text/split-text";
 import FlipCardUI from "@/components/admin/manage-student/Registration/irefid";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+
+function RegistrationSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+      <Skeleton className="h-72 rounded-xl" />
+      <Skeleton className="h-72 rounded-xl md:col-span-2" />
+    </div>
+  );
+}
 
 export default function FlipCardOLD({
   open,
@@ -71,7 +80,7 @@ export default function FlipCardOLD({
   };
 
   if (isLoading) {
-    return <Loader />;
+    return <RegistrationSkeleton />;
   }
 
   return (

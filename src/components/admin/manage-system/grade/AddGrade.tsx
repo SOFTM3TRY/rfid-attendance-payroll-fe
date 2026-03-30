@@ -16,6 +16,13 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { PlusIcon, GraduationCap , CircleX, Send, Loader2 } from "lucide-react";
 
@@ -26,6 +33,7 @@ export default function AddGradeModal({ token }: { token: string }) {
   const [formData, setFormData] = useState({
     grade_level: "",
     description: "",
+    schedule: "",
     status: "active",
   });
 
@@ -33,6 +41,13 @@ export default function AddGradeModal({ token }: { token: string }) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleScheduleChange = (value: string) => {
+    setFormData({
+      ...formData,
+      schedule: value,
     });
   };
 
@@ -45,6 +60,7 @@ export default function AddGradeModal({ token }: { token: string }) {
           setFormData({
             grade_level: "",
             description: "",
+            schedule: "",
             status: "active",
           });
         },
@@ -89,6 +105,18 @@ export default function AddGradeModal({ token }: { token: string }) {
               value={formData.description}
               onChange={handleChange}
             />
+          </div>
+          <div>
+            <label className="text-sm font-medium"><span className="text-red-500 mr-1">*</span>Schedule <small>(Optional)</small></label>
+            <Select value={formData.schedule} onValueChange={handleScheduleChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select schedule" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="AM">AM</SelectItem>
+                <SelectItem value="PM">PM</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

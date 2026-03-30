@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { GetallGrades, CreateGrade, GetGradeById, EditGrade } from "@/services/Grade_service";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export const useGrade = (token: string | null) => {
   return useQuery({
@@ -23,11 +24,7 @@ export const useCreateGrade = () => {
       queryClient.invalidateQueries({ queryKey: ["grade-details"] });
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to create new grade");
-      }
+      toast.error(getApiErrorMessage(error, "Failed to create new grade"));
     },
   });
 };
@@ -53,11 +50,7 @@ export const useEditGrade = () => {
       queryClient.invalidateQueries({ queryKey: ["grade-details"] });
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to update grade");
-      }
+      toast.error(getApiErrorMessage(error, "Failed to update grade"));
     },
   });
 };

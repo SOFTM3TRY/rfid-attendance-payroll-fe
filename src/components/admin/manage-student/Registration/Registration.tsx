@@ -21,9 +21,10 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import { RegisterRFIDToStudent } from "@/services/Student_service";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { useGetStudentDetailsByLrn } from "@/hooks/useStudentDetails";
-import FlipCardUI from "./irefid";
+import StudentIdCard from "./StudentIdCard";
 
 // ✅ shadcn progress only
 import { Progress } from "@/components/ui/progress";
@@ -38,6 +39,7 @@ export default function Registration({
   lrn: string;
 }) {
   const { token } = useAuth();
+  const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -104,16 +106,52 @@ export default function Registration({
     setIsLoading(true);
 
     try {
-      await RegisterRFIDToStudent(token as string, student?.lrn, formData);
+      const response = await RegisterRFIDToStudent(
+        token as string,
+        student?.lrn,
+        formData,
+      );
+      const nextRfid = response?.data?.student?.rfid_uid ?? formData.rfid_uid;
+
+      queryClient.setQueryData(["get-student-by-lrn", student.lrn], (old: any) => {
+        if (!old?.data?.student) return old;
+
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            student: {
+              ...old.data.student,
+              rfid_uid: nextRfid,
+            },
+          },
+        };
+      });
+
+      queryClient.setQueryData(["student-details"], (old: any) => {
+        if (!old?.data || !Array.isArray(old.data)) return old;
+
+        return {
+          ...old,
+          data: old.data.map((item: any) =>
+            String(item.lrn) === String(student.lrn)
+              ? { ...item, rfid_uid: nextRfid }
+              : item,
+          ),
+        };
+      });
 
       // ✅ finish progress smoothly
       setProgress(100);
 
       toast.success("RFID Successfully Registered");
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 600);
+      queryClient.invalidateQueries({
+        queryKey: ["get-student-by-lrn", student.lrn],
+      });
+      queryClient.invalidateQueries({ queryKey: ["student-details"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-registered-student", token],
+      });
     } catch (error) {
       toast.error("RFID Registration Failed");
     } finally {
@@ -130,7 +168,64 @@ export default function Registration({
     return <div className="p-5 text-red-500">Failed to load student</div>;
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <>
+      <style jsx global>{`
+        .student-id-print-root {
+          display: none;
+        }
+
+        @media print {
+          @page {
+            margin: 8mm;
+          }
+
+          body * {
+            visibility: hidden !important;
+          }
+
+          .student-id-print-root,
+          .student-id-print-root * {
+            visibility: visible !important;
+          }
+
+          .student-id-print-root {
+            position: fixed;
+            inset: 0;
+            display: flex !important;
+            justify-content: center;
+            align-items: flex-start;
+            background: white;
+            padding: 0;
+          }
+
+          .student-id-print-panel {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            padding-top: 4mm;
+          }
+
+          .student-id-card {
+            transform: scale(0.43);
+            transform-origin: top center;
+            margin-bottom: -300px;
+            break-inside: avoid;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+        }
+      `}</style>
+
+      <div className="student-id-print-root" aria-hidden="true">
+        <div className="student-id-print-panel">
+          <StudentIdCard student={student} mode="print-front" />
+          <StudentIdCard student={student} mode="print-back" />
+        </div>
+      </div>
+
+      <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
         className="bottom-0 h-[95vh] rounded-t-md overflow-y-auto p-3 overflow-x-hidden"
         side="bottom"
@@ -209,7 +304,7 @@ export default function Registration({
             </div>
 
             <div className="mt-10 p-5 flex justify-center items-center">
-              <FlipCardUI student={student} rotate="y" />
+              <StudentIdCard student={student} rotate="y" />
             </div>
 
             {!student.rfid_uid &&
@@ -266,5 +361,6 @@ export default function Registration({
         </SheetFooter>
       </SheetContent>
     </Sheet>
+    </>
   );
 }

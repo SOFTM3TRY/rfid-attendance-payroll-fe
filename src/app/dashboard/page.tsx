@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import Link from "next/link";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
-
 import {
   SquareArrowOutUpRight,
   Users,
@@ -12,60 +11,95 @@ import {
   HouseIcon,
   GraduationCap,
 } from "lucide-react";
-
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
 import { Button } from "@/components/ui/button";
-
 import {
   Card,
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/ProtectedRoute";
-
-//Table
 import { StudentTable } from "@/components/admin/dashboard/dashboard-student-table";
-import { TeacherTable } from "@/components/admin/dashboard/dashboard-teacher-table";
-
-//Chart
 import { ChartAreaInteractive } from "@/components/admin/dashboard/student-chart";
-import { TeacherChart } from "@/components/admin/dashboard/teacher-chart";
-
 import { Footer } from "@/components/footer";
-
-import { useAuth } from "@/context/AuthContext";
-// @ts-ignore
-import { useUserDetails } from "@/hooks/useUserDetails";
-import { useClientOnly } from "@/hooks/useClientOnly";
-
-import Loader from "@/components/Loader";
+import { useSession } from "@/context/SessionContext";
 import {
   useCountActiveStudents,
   useCountStudentsPerGrade,
+  useGetRegisteredStudent,
 } from "@/hooks/useStudentDetails";
 import { useTeacherActiveCount } from "@/hooks/useTeacher";
 import { Label } from "@/components/ui/label";
-import { useGetRegisteredStudent } from "@/hooks/useStudentDetails";
+
+function SummaryCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-4 w-4 rounded-full" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+        <Skeleton className="h-8 w-24" />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-12 w-24" />
+        <Skeleton className="mt-3 h-4 w-32" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function GradeCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-4 w-4 rounded-full" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-12 w-20" />
+        <Skeleton className="mt-3 h-4 w-24" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function SectionSkeleton({
+  rows = 5,
+  showHeaderAction = true,
+}: {
+  rows?: number;
+  showHeaderAction?: boolean;
+}) {
+  return (
+    <Card className="mt-5">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <Skeleton className="h-5 w-40" />
+        {showHeaderAction ? <Skeleton className="h-9 w-32" /> : null}
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <Skeleton className="h-10 w-full" />
+        {Array.from({ length: rows }).map((_, index) => (
+          <Skeleton key={index} className="h-12 w-full" />
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function Dashboard() {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
-    token as string,
-  );
+  const { token, isLoading: isLoadingUserDetails } = useSession();
   const {
     data: countStudentsPerGrade,
     isLoading: isLoadingCountStudentsPerGrade,
@@ -76,9 +110,16 @@ export default function Dashboard() {
     useTeacherActiveCount(token as string);
   const { data: registeredStudents, isLoading: isLoadingRegisteredStudents } =
     useGetRegisteredStudent(token as string);
-  if (!isClient || isLoadingUserDetails) {
-    return <Loader />;
-  }
+
+  const isLoadingSummary =
+    isLoadingUserDetails ||
+    isLoadingCountActiveStudents ||
+    isLoadingCountActiveTeachers ||
+    isLoadingRegisteredStudents;
+
+  const gradeCards = Array.isArray(countStudentsPerGrade?.data)
+    ? countStudentsPerGrade.data
+    : [];
 
   return (
     <ProtectedRoute role={["1", "2"]}>
@@ -109,77 +150,95 @@ export default function Dashboard() {
             </div>
 
             <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              <Card>
-                <CardHeader className="flex items-center justify-between">
-                  <CardDescription className="flex items-center">
-                    <Users className="size-4 text-primary mr-2" />
-                    Active Students
-                  </CardDescription>
+              {isLoadingSummary ? (
+                <>
+                  <SummaryCardSkeleton />
+                  <SummaryCardSkeleton />
+                  <SummaryCardSkeleton />
+                </>
+              ) : (
+                <>
+                  <Card>
+                    <CardHeader className="flex items-center justify-between">
+                      <CardDescription className="flex items-center">
+                        <Users className="size-4 text-primary mr-2" />
+                        Active Students
+                      </CardDescription>
 
-                  <CardAction>
-                    <Button variant="link" size="sm">
-                      <a href="/manage-student">Go to Page</a>
-                      <SquareArrowOutUpRight className="size-3" />
-                    </Button>
-                  </CardAction>
-                </CardHeader>
+                      <CardAction>
+                        <Button variant="link" size="sm" asChild>
+                          <Link href="/manage-student">
+                            Go to Page
+                            <SquareArrowOutUpRight className="size-3" />
+                          </Link>
+                        </Button>
+                      </CardAction>
+                    </CardHeader>
 
-                <CardContent>
-                  <div className="text-5xl font-bold">
-                    {countActiveStudents?.active_students_count}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Total active students
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex items-center justify-between">
-                  <CardDescription className="flex items-center">
-                    <Users className="size-4 text-primary mr-2" />
-                    Active Teachers
-                  </CardDescription>
+                    <CardContent>
+                      <div className="text-5xl font-bold">
+                        {countActiveStudents?.active_students_count ?? 0}
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Total active students
+                      </p>
+                    </CardContent>
+                  </Card>
 
-                  <CardAction>
-                    <Button variant="link" size="sm">
-                      <a href="/manage-teacher">Go to Page</a>
-                      <SquareArrowOutUpRight className="size-3" />
-                    </Button>
-                  </CardAction>
-                </CardHeader>
+                  <Card>
+                    <CardHeader className="flex items-center justify-between">
+                      <CardDescription className="flex items-center">
+                        <Users className="size-4 text-primary mr-2" />
+                        Active Teachers
+                      </CardDescription>
 
-                <CardContent>
-                  <div className="text-5xl font-bold">
-                    {CountActiveTeachers?.count}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Total active teachers
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex items-center justify-between">
-                  <CardDescription className="flex items-center">
-                    <Users className="size-4 text-primary mr-2" />
-                    Total Registered Students
-                  </CardDescription>
+                      <CardAction>
+                        <Button variant="link" size="sm" asChild>
+                          <Link href="/manage-teacher">
+                            Go to Page
+                            <SquareArrowOutUpRight className="size-3" />
+                          </Link>
+                        </Button>
+                      </CardAction>
+                    </CardHeader>
 
-                  <CardAction>
-                    <Button variant="link" size="sm">
-                      <a href="/manage-student">Go to Page</a>
-                      <SquareArrowOutUpRight className="size-3" />
-                    </Button>
-                  </CardAction>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-5xl font-bold">
-                    {registeredStudents?.registered_students_count}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Total registered students
-                  </p>
-                </CardContent>
-              </Card>
+                    <CardContent>
+                      <div className="text-5xl font-bold">
+                        {CountActiveTeachers?.count ?? 0}
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Total active teachers
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="flex items-center justify-between">
+                      <CardDescription className="flex items-center">
+                        <Users className="size-4 text-primary mr-2" />
+                        Total Registered Students
+                      </CardDescription>
+
+                      <CardAction>
+                        <Button variant="link" size="sm" asChild>
+                          <Link href="/manage-student">
+                            Go to Page
+                            <SquareArrowOutUpRight className="size-3" />
+                          </Link>
+                        </Button>
+                      </CardAction>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-5xl font-bold">
+                        {registeredStudents?.registered_students_count ?? 0}
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Total registered students
+                      </p>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
             </div>
 
             <div>
@@ -191,15 +250,11 @@ export default function Dashboard() {
 
             <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-6">
               {isLoadingCountStudentsPerGrade ? (
-                <Card>
-                  <CardHeader>
-                    <CardDescription>Loading...</CardDescription>
-                    <CardTitle className="text-3xl">...</CardTitle>
-                  </CardHeader>
-                </Card>
-              ) : countStudentsPerGrade?.status &&
-                Array.isArray(countStudentsPerGrade?.data) ? (
-                countStudentsPerGrade.data.map(
+                Array.from({ length: 6 }).map((_, index) => (
+                  <GradeCardSkeleton key={index} />
+                ))
+              ) : countStudentsPerGrade?.status && gradeCards.length ? (
+                gradeCards.map(
                   (item: { grade: string; count: number }, idx: number) => (
                     <Card key={`${item.grade}-${idx}`}>
                       <CardHeader>
@@ -234,10 +289,14 @@ export default function Dashboard() {
                 Student Attendance Today
               </h1>
             </div>
-            <StudentTable />
+            {isLoadingUserDetails ? <SectionSkeleton /> : <StudentTable />}
 
             <div className="my-5 mt-10">
-              <ChartAreaInteractive />
+              {isLoadingUserDetails ? (
+                <SectionSkeleton rows={4} showHeaderAction={false} />
+              ) : (
+                <ChartAreaInteractive />
+              )}
             </div>
 
             {/* <div className="mt-5 p-3 grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
@@ -290,7 +349,7 @@ export default function Dashboard() {
                 </Card>
               </div>
             </div> */}
-          </div>..
+          </div>
           <Footer />
         </main>
       </SidebarProvider>

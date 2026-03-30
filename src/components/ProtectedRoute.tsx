@@ -2,60 +2,38 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getCookie } from "cookies-next";
 import toast from "react-hot-toast";
-import { checkToken } from "@/services/User_service";
-import { useUserDetails } from "@/hooks/useUserDetails";
+import { useSession } from "@/context/SessionContext";
 
 export default function ProtectedRoute({
   children,
   role,
 }: {
   children: React.ReactNode;
-  role?: string[]; // ✅ multiple roles
+  role?: string[];
 }) {
   const router = useRouter();
+  const { token, roleId, isLoading, isAuthenticated, isError } = useSession();
 
-  const { data: userDetails, isLoading: isLoadingUserDetails } =
-    useUserDetails(getCookie("token") as string);
-
-  // ✅ Role check
   useEffect(() => {
-    if (!isLoadingUserDetails && userDetails) {
-      const userRole = userDetails?.data.role_id;
-
-      if (role && !role.includes(String(userRole))) {
-        toast.error("You do not have access to this page.");
-        router.push("/unauthorized");
-      }
+    if (!isLoading && roleId !== null && role && !role.includes(String(roleId))) {
+      toast.error("You do not have access to this page.");
+      router.replace("/unauthorized");
     }
-  }, [isLoadingUserDetails, userDetails, role, router]);
+  }, [isLoading, role, roleId, router]);
 
-  // ✅ Token validation
   useEffect(() => {
-    const validateToken = async () => {
-      const token = getCookie("token");
-
-      try {
-        await checkToken(token as string);
-      } catch (error) {
-        toast.error("Your token is invalid or expired. Please log in again.");
-        router.push("/");
-      }
-    };
-
-    validateToken();
-  }, []);
-
-  // ✅ Check if logged in
-  useEffect(() => {
-    const token = getCookie("token");
-
     if (!token) {
-      router.push("/");
       toast.error("You must be logged in to access this page.");
+      router.replace("/");
+      return;
     }
-  }, [router]);
+
+    if (!isLoading && (isError || !isAuthenticated)) {
+      toast.error("Your token is invalid or expired. Please log in again.");
+      router.replace("/");
+    }
+  }, [isAuthenticated, isError, isLoading, router, token]);
 
   return <>{children}</>;
 }

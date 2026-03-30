@@ -12,10 +12,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageLoaderFallback } from "@/components/PageLoaderBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/context/AuthContext";
-import Loader from "@/components/Loader";
 import { useGetStudentDetailsByLrn } from "@/hooks/useStudentDetails";
 
 import { User } from "lucide-react";
@@ -49,7 +49,7 @@ export default function StudentProfile() {
   const lrn = params?.lrn as string;
 
   // keep this simple
-  if (!lrn) return <Loader />;
+  if (!lrn) return <PageLoaderFallback />;
 
   const { data, isLoading, isFetching, isError } = useGetStudentDetailsByLrn(
     token,

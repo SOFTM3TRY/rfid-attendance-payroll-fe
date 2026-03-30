@@ -25,23 +25,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
 
-import { useAuth } from "@/context/AuthContext";
-// @ts-ignore
-import { useUserDetails } from "@/hooks/useUserDetails";
+import { useSession } from "@/context/SessionContext";
 import { useTeacherDetails } from "@/hooks/useTeacher";
+import { TeacherAttendanceMonitor } from "@/components/teacher/TeacherAttendanceMonitor";
 
 import { Badge } from "@/components/ui/badge";
 import { Users, BookOpen, CalendarDays, GraduationCap, HouseIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
 export default function Dashboard() {
-  const { token } = useAuth();
+  const { token, user, isLoading: userLoading } = useSession();
 
-  const { data: user, isLoading: userLoading } = useUserDetails(
-    token as string,
-  );
-
-  const userId = user?.data?.id ? String(user.data.id) : "";
+  const userId = user?.id ? String(user.id) : "";
 
   const { data: teacherRes, isLoading: teacherLoading } = useTeacherDetails(
     token as string,
@@ -233,6 +228,15 @@ export default function Dashboard() {
                   )}
                 </CardContent>
               </Card>
+            </div>
+
+            <div className="mt-10">
+              <TeacherAttendanceMonitor
+                token={token}
+                teacherSubjects={teacherSubjects}
+                advisorySectionId={teacher?.section?.id}
+                advisorySectionName={teacher?.section?.section_name}
+              />
             </div>
           </div>
 

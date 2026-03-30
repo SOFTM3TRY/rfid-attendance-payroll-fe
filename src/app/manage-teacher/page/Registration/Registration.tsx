@@ -38,7 +38,16 @@ import { on } from "events";
 import { useAuth } from "@/context/AuthContext";
 import { RegisterRFIDToStudent } from "@/services/Student_service";
 import toast from "react-hot-toast";
- import Loader from "@/components/Loader";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function RegistrationSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+      <Skeleton className="h-72 rounded-xl" />
+      <Skeleton className="h-72 rounded-xl md:col-span-2" />
+    </div>
+  );
+}
 
 export default function FlipCard({
   open,
@@ -76,11 +85,9 @@ const {register,handleSubmit,} =useForm()
   }
   
   
- if(isLoading){
-  
-  return <Loader />
-  
-}
+  if (isLoading) {
+    return <RegistrationSkeleton />;
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

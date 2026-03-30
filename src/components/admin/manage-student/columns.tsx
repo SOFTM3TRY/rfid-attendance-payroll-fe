@@ -82,7 +82,10 @@ export const columns = (props: {
           } ${row.original.middle_name || ""}  ${
             row.original.suffix || ""
           }`}</span>
-          <span className="text-xs text-primary">{row.original.email || ""}</span>
+          <span className="text-xs text-primary">
+            {row.original.email || ""}
+            {row.original.lrn ? ` • LRN: ${row.original.lrn}` : ""}
+          </span>
         </div>
       </div>
     ),
@@ -186,7 +189,12 @@ export const columns = (props: {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
-                  props.onChangePassword(studentId.toString(), studentName)
+                  props.onChangePassword(
+                    studentId.toString(),
+                    [studentName, row.original.lrn ? `LRN: ${row.original.lrn}` : ""]
+                      .filter(Boolean)
+                      .join(" • "),
+                  )
                 }
               >
                 <Pencil className="size-4 text-muted-foreground" />

@@ -21,6 +21,7 @@ import {
   CountRegisteredStudents
 } from "@/services/Student_service";
 import { StdioNull } from "child_process";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export const useStudentDetails = (token: string | null) => {
   return useQuery({
@@ -84,8 +85,8 @@ export const useEditStudnentMutation = (
       queryClient.invalidateQueries({ queryKey: ["student-details"] });
       toast.success("Student updated successfully");
     },
-    onError: () => {
-      toast.error("Update failed");
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "Update failed"));
     },
   });
 };
@@ -133,12 +134,8 @@ export const useChangeStudentStatus = () => {
       queryClient.invalidateQueries({ queryKey: ["student-details"] });
     },
 
-    onError: (error: any) => {
-      const msg =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to update status";
-      toast.error(msg);
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "Failed to update status"));
     },
   });
 };

@@ -13,25 +13,29 @@ import {
 } from "@/components/ui/breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
-import { useAuth } from "@/context/AuthContext";
-import { useUserDetails } from "@/hooks/useUserDetails";
-import { useClientOnly } from "@/hooks/useClientOnly";
-import Loader from "@/components/Loader";
+import { useSession } from "@/context/SessionContext";
 import { TeacherTableContainer } from "@/app/reports/page/TeacherTableContainer";
 import { Users } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function ReportsTableSkeleton() {
+  return (
+    <div className="p-2 h-full mt-10 space-y-4">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-10 w-40" />
+        <Skeleton className="h-10 w-64" />
+      </div>
+      <Skeleton className="h-12 w-full" />
+      {Array.from({ length: 7 }).map((_, index) => (
+        <Skeleton key={index} className="h-14 w-full" />
+      ))}
+    </div>
+  );
+}
 
 export default function ManageTeacher() {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
-    token as string,
-  );
-
-  if (!isClient || isLoadingUserDetails) {
-    return <Loader />;
-  }
+  const { isLoading: isLoadingUserDetails } = useSession();
 
   return (
     <ProtectedRoute role={["1", "2"]}>
@@ -58,9 +62,13 @@ export default function ManageTeacher() {
               </Breadcrumb>
             </div>
 
-            <div className="p-2 h-full mt-10 z-1">
-              <TeacherTableContainer />
-            </div>
+            {isLoadingUserDetails ? (
+              <ReportsTableSkeleton />
+            ) : (
+              <div className="p-2 h-full mt-10 z-1">
+                <TeacherTableContainer />
+              </div>
+            )}
           </div>
           <Footer />
         </main>

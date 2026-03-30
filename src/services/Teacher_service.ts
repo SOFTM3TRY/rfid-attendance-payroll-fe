@@ -1,125 +1,25 @@
-import axios from "axios";
+import { apiClient, unwrapData, withAuth } from "@/lib/api";
 
-export const CountTeacherActive = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/count-active-teachers`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+export const CountTeacherActive = async (token: string) =>
+  unwrapData(apiClient.get("/count-active-teachers", withAuth(token)));
 
-export const CreateTeacher = async (token: string, teacherData: any) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/employee-register`,
-      teacherData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+export const CreateTeacher = async (token: string, teacherData: any) =>
+  unwrapData(apiClient.post("/employee-register", teacherData, withAuth(token)));
 
-export const GetAllAdmin = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-all-admins`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+export const GetAllAdmin = async (token: string) =>
+  unwrapData(apiClient.get("/get-all-admins", withAuth(token)));
 
-export const GetAllTeachers = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-all-teachers`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+export const GetAllTeachers = async (token: string) =>
+  unwrapData(apiClient.get("/get-all-teachers", withAuth(token)));
 
-export const GetTeacherDetails = async (token: string, id: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-teacher-by-id/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const GetTeacherDetails = async (token: string, id: string) =>
+  unwrapData(apiClient.get(`/get-teacher-by-id/${id}`, withAuth(token)));
 
-export const GetTeacherProfile = async (token: string, id: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-teacher-profile/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const GetTeacherProfile = async (token: string, id: string) =>
+  unwrapData(apiClient.get(`/get-teacher-profile/${id}`, withAuth(token)));
 
-export const EditTeacher = async (token: string, id: string, data: any) => {
-  try {
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/update-employee/${id}`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const EditTeacher = async (token: string, id: string, data: any) =>
+  unwrapData(apiClient.put(`/update-employee/${id}`, data, withAuth(token)));
 
 export const ChangeTeacherPassword = async (
   token: string,
@@ -128,14 +28,10 @@ export const ChangeTeacherPassword = async (
   confirm_password: string
 ) => {
   try {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/change-password/${id}`,
+    const res = await apiClient.post(
+      `/change-password/${id}`,
       { new_password, confirm_password },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      withAuth(token)
     );
 
     return res.data;
@@ -166,12 +62,13 @@ export const UpdateTeacherAvatar = async (
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/employee/avatar/${id}`,
+    const response = await apiClient.post(
+      `/employee/avatar/${id}`,
       formData,
       {
+        ...withAuth(token),
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...withAuth(token).headers,
           "Content-Type": "multipart/form-data",
         },
       }
@@ -207,11 +104,10 @@ export const CreateTeacherSubject = async (
   }
 ) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/create-teacher-subject`;
-
-    const res = await axios.post(url, payload, {
+    const res = await apiClient.post("/create-teacher-subject", payload, {
+      ...withAuth(token),
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...withAuth(token).headers,
         "Content-Type": "application/json",
       },
     });
@@ -229,36 +125,8 @@ export const CreateTeacherSubject = async (
   }
 };
 
-export const getHistoryLogsByUser = async (token: string, id: number) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/history-logs/user/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const getHistoryLogsByUser = async (token: string, id: number) =>
+  unwrapData(apiClient.get(`/history-logs/user/${id}`, withAuth(token)));
 
-export const getHistoryLogs = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/history-logs`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const getHistoryLogs = async (token: string) =>
+  unwrapData(apiClient.get("/history-logs", withAuth(token)));

@@ -1,74 +1,16 @@
-import axios from "axios";
+import { apiClient, unwrapData, withAuth } from "@/lib/api";
 
-export const GetStudentDetails = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-all-students`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const GetStudentDetails = async (token: string) =>
+  unwrapData(apiClient.get("/get-all-students", withAuth(token)));
 
-export const CreateStudent = async (token: string, studentData: any) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/create-student`,
-      studentData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const CreateStudent = async (token: string, studentData: any) =>
+  unwrapData(apiClient.post("/create-student", studentData, withAuth(token)));
 
-export const CountActiveStudents = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/count-active-students`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+export const CountActiveStudents = async (token: string) =>
+  unwrapData(apiClient.get("/count-active-students", withAuth(token)));
 
-export const CountByGradeStudents = async (token: string, grade: number) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/count-students-by-grade/${grade}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+export const CountByGradeStudents = async (token: string, grade: number) =>
+  unwrapData(apiClient.get(`/count-students-by-grade/${grade}`, withAuth(token)));
 
 // export async function UpdateStudent(token: string, studentId: string, data: any) {
 //   const response = await axios.put(`/api/update-student/${studentId}`, data, {
@@ -98,52 +40,20 @@ export const CountByGradeStudents = async (token: string, grade: number) => {
 // };
 
 export const EditStudent = async (token: string, id: any, data: any) => {
-  try {
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/edit-student/${id}`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return unwrapData(apiClient.put(`/edit-student/${id}`, data, withAuth(token)));
 };
 
 export const RegisterRFIDToStudent = async (token: string, lrn: any, data: any) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/register-student-by-lrn/${lrn}`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return unwrapData(
+    apiClient.post(`/register-student-by-lrn/${lrn}`, data, withAuth(token)),
+  );
 }
 
 export const GetStudentDetailsById = async (token: string, id: number) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-student-by-id/${id}`;
-    
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data;
+    return await unwrapData(
+      apiClient.get(`/get-student-by-id/${id}`, withAuth(token)),
+    );
 
   } catch (error) {
     throw error;
@@ -154,43 +64,18 @@ export const GetStudentDetailsByLrn = async (
   token: string,
   lrn: string
 ) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL_API}/get-student-by-lrn/${lrn}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return res.json();
+  return unwrapData(apiClient.get(`/get-student-by-lrn/${lrn}`, withAuth(token)));
 };
 
 export const CountStudentsPerGrade = async (token: string) => {
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/students/count-by-grade`;
-  
-  const response = await axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  
-  return response.data;
+  return unwrapData(apiClient.get("/students/count-by-grade", withAuth(token)));
 }
 
 export const ChangeStudentStatus = async (token: string, id: string) => {
   try {
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/change-student-status/${id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    return await unwrapData(
+      apiClient.put(`/change-student-status/${id}`, {}, withAuth(token)),
     );
-
-    return response.data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -199,15 +84,9 @@ export const ChangeStudentStatus = async (token: string, id: string) => {
 
 export const getStudentAttendanceById = async (token: string, id: number) => {
   try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/student-attendanceby-id/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    return await unwrapData(
+      apiClient.get(`/student-attendanceby-id/${id}`, withAuth(token)),
     );
-    return response.data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -223,12 +102,13 @@ export const UpdateStudentAvatar = async (
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/students/avatar/${id}`,
+    const response = await apiClient.post(
+      `/students/avatar/${id}`,
       formData,
       {
+        ...withAuth(token),
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...withAuth(token).headers,
           "Content-Type": "multipart/form-data",
         },
       }
@@ -259,14 +139,10 @@ export const ChangeStudentPassword = async (
   confirm_password: string
 ) => {
   try {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/students/change-password/${id}`,
+    const res = await apiClient.post(
+      `/students/change-password/${id}`,
       { new_password, confirm_password },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      withAuth(token)
     );
 
     return res.data;
@@ -288,19 +164,5 @@ export const ChangeStudentPassword = async (
   }
 };
 
-export const CountRegisteredStudents = async (token: string) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/students-registered`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+export const CountRegisteredStudents = async (token: string) =>
+  unwrapData(apiClient.get("/students-registered", withAuth(token)));

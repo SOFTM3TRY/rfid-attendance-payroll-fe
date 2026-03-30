@@ -138,7 +138,10 @@ export const teacherStudentColumns = (): ColumnDef<Student>[] => [
 
           <div className="flex flex-col">
             <span className="font-semibold text-xs uppercase">{fullName}</span>
-            <span className="text-[10px] text-primary">{s.email || ""}</span>
+            <span className="text-[10px] text-primary">
+              {s.email || ""}
+              {s.lrn ? ` • LRN: ${s.lrn}` : ""}
+            </span>
           </div>
         </div>
       );
@@ -322,6 +325,7 @@ export default function TeacherStudentTable({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getRowId: (row) => String(row.lrn || row.id),
     meta: {
       onOpenHistory: (row: any) => {
         setSelectedRow(row);

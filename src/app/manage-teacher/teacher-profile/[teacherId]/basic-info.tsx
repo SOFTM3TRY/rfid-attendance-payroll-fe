@@ -1,8 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import { useClientOnly } from "@/hooks/useClientOnly";
-
 import {
   ShieldUser,
   Calendar,
@@ -16,18 +13,10 @@ import {
   Phone,
   Mail,
 } from "lucide-react";
+import type { AdditionalInfo, TeacherData } from "@/types/Teacher";
 
-import { useAuth } from "@/context/AuthContext";
-import { useTeacherDetails } from "@/hooks/useTeacher";
-
-export default function BasicInfo({ id }: { id: string }) {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const { data: teacherDetails } = useTeacherDetails(token, { id });
-
-  const teacher = teacherDetails?.data?.teacher?.[0] || null;
-  const additional_info = teacher?.additional_info || {};
+export default function BasicInfo({ teacher }: { teacher: TeacherData }) {
+  const additionalInfo: Partial<AdditionalInfo> = teacher.additional_info ?? {};
 
   return (
     <div className="w-full py-5 flex flex-col gap-4 px-5 rounded-xl bg-accent/20">
@@ -85,17 +74,17 @@ export default function BasicInfo({ id }: { id: string }) {
         />
         <InputField
           label="Birth Date"
-          value={additional_info.birth_date || ""}
+          value={additionalInfo.birth_date || ""}
           icon={<CalendarDays className="size-3 text-muted-foreground" />}
         />
         <InputField
           label="Birth Place"
-          value={additional_info.birth_place || ""}
+          value={additionalInfo.birth_place || ""}
           icon={<MapPinHouse className="size-3 text-muted-foreground" />}
         />
         <InputField
           label="Gender"
-          value={additional_info.gender || ""}
+          value={additionalInfo.gender || ""}
           icon={<CircleSmall className="size-3 text-muted-foreground" />}
         />
         <InputField

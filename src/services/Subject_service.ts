@@ -1,97 +1,39 @@
-import axios from "axios";
+import { apiClient, unwrapData, withAuth } from "@/lib/api";
 
-export const GetallSubjects = async (token: string) => {
-  try {
-    const response = await axios(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/getall-subject`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const GetallSubjects = async (token: string) =>
+  unwrapData(apiClient.get("/getall-subject", withAuth(token)));
 
-export const CreateSubject = async (token: string, data: any) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/create-subject`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const CreateSubject = async (token: string, data: unknown) =>
+  unwrapData(apiClient.post("/create-subject", data, withAuth(token)));
 
 export const EditSubject = async (
   token: string,
   subjectId: string,
-  data: { name: string; grade_id: number }
-) => {
-  const response = await axios.put(
-    `${process.env.NEXT_PUBLIC_BASE_URL_API}/edit-subject/${subjectId}`,
-    data,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return response.data;
-};
+  data: { name: string; grade_id: number },
+) =>
+  unwrapData(apiClient.put(`/edit-subject/${subjectId}`, data, withAuth(token)));
 
 export const DeleteSubject = async (token: string, id: number | string) => {
   try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/delete-subject`,
-      { id },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+    return await unwrapData(
+      apiClient.post("/delete-subject", { id }, withAuth(token)),
     );
-
-    return response.data;
   } catch (error: any) {
-    console.error("DeleteYear error:", error);
-
-    if (error?.response?.data?.message) throw new Error(error.response.data.message);
-    if (error?.response?.data?.error) throw new Error(error.response.data.error);
-    throw new Error("Failed to delete School Year.");
+    if (error?.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+    if (error?.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    }
+    throw new Error("Failed to delete subject.");
   }
 };
 
 export const GetTeacherSchedulesByGradeAndSection = async (
   token: string,
   gradeId: string,
-  sectionId: string
-) => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/teacher-schedules/${gradeId}/${sectionId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+  sectionId: string,
+) =>
+  unwrapData(
+    apiClient.get(`/teacher-schedules/${gradeId}/${sectionId}`, withAuth(token)),
+  );

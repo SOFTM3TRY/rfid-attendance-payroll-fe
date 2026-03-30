@@ -62,7 +62,8 @@ export function ManageGradeTable({
     const searchMatch =
       search === "" ||
       row.grade_level.toLowerCase().includes(search.toLowerCase()) ||
-      row.description?.toLowerCase().includes(search.toLowerCase());
+      row.description?.toLowerCase().includes(search.toLowerCase()) ||
+      row.schedule?.toLowerCase().includes(search.toLowerCase());
 
     const statusMatch =
       selectedStatus.length === 0 || selectedStatus.includes(row.status);

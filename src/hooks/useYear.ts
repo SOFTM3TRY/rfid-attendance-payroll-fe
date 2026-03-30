@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { GetallYears, CreateYear, UpdateYear, DeleteYear } from "@/services/Year-service";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export const useYear = (token: string | null) => {
   return useQuery({
@@ -23,11 +24,7 @@ export const useCreateYear = () => {
       queryClient.invalidateQueries({ queryKey: ["year-details"] });
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to create new School Year");
-      }
+      toast.error(getApiErrorMessage(error, "Failed to create new School Year"));
     },
   });
 };
@@ -51,8 +48,8 @@ export const useUpdateYear = () => {
       queryClient.invalidateQueries({ queryKey: ["year-details"] });
     },
 
-    onError: () => {
-      toast.error("Failed to update School Year");
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "Failed to update School Year"));
     },
   });
 };
@@ -68,7 +65,7 @@ export const useDeleteYear = () => {
       queryClient.invalidateQueries({ queryKey: ["year-details"] });
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to delete School Year");
+      toast.error(getApiErrorMessage(error, "Failed to delete School Year"));
     },
   });
 };

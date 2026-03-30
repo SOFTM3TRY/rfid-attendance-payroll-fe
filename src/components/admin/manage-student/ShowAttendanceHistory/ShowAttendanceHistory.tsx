@@ -72,7 +72,7 @@ export default function ShowAttendanceHistory({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
-        className="bottom-0 h-[95vh] rounded-t-md overflow-y-auto p-3"
+        className="bottom-0 h-[100vh] rounded-t-md overflow-y-auto overflow-x-hidden p-3"
         side="bottom"
       >
         <SheetHeader>
@@ -104,7 +104,7 @@ export default function ShowAttendanceHistory({
                   className="absolute top-15 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 /> */}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 ">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20 pb-20">
           {/* Avatar + Primary */}
           <div className="col-span-1 rounded-md">
             <PrimaryInfo lrn={data.lrn} />
@@ -129,7 +129,7 @@ export default function ShowAttendanceHistory({
           </div>
         </div>
 
-        <SheetFooter className="fixed bottom-5 right-5">
+        <SheetFooter className="fixed bottom-5 right-5 overflow-y-none">
           <div className="flex items-center justify-end gap-5">
             {/* <Button onClick={handleSubmit} className="w-40" disabled={loading}>
               {loading ? (

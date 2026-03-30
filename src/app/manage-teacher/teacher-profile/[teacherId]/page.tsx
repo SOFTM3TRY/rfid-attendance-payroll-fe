@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
@@ -13,51 +12,32 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageLoaderFallback } from "@/components/PageLoaderBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
-import { useAuth } from "@/context/AuthContext";
-import { useClientOnly } from "@/hooks/useClientOnly";
-import Loader from "@/components/Loader";
-
-import { User, TriangleAlert, UserCheck, UserX } from "lucide-react";
-
-import { useTeacherDetails } from "@/hooks/useTeacher";
-
-import Profile from "./profile";
-import BasicInfo from "./basic-info";
-import AddressInfo from "./address-info";
-import EmergencyInfo from "./emergency-info";
-import TeacherSubjects from "./teacher-subjects";
-
-import { Skeleton } from "@/components/ui/skeleton";
-// import { Attendance } from "./attendance";
-// import { TotalStatus } from "./total-status";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import HistoryLogs from "./history-logs";
+import { TeacherProfilePageContent } from "@/components/manage-teacher/TeacherProfilePageContent";
+import { TeacherProfilePageSkeleton } from "@/components/manage-teacher/TeacherProfilePageSkeleton";
+import { useTeacherProfilePage } from "@/hooks/useTeacherProfilePage";
 
 export default function TeacherProfile() {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
   const params = useParams();
 
   const teacherId = params?.teacherId;
 
   if (!teacherId || typeof teacherId !== "string") {
-    return <Loader />;
+    return <PageLoaderFallback />;
   }
 
-  const { data: teacherDetails } = useTeacherDetails(token, { id: teacherId });
-
-  const teacher = teacherDetails?.data?.teacher?.[0] || null;
-  const additional_info = teacher?.additional_info || {};
-
-  const fullName = teacher
-    ? `${teacher?.last_name}, ${teacher?.first_name} ${
-        teacher?.middle_name || ""
-      } ${teacher?.suffix || ""}`
-    : "Unknown";
+  const {
+    teacher,
+    fullName,
+    teacherSubjects,
+    historyLogs,
+    refetchTeacher,
+    isLoading,
+  } = useTeacherProfilePage(teacherId);
 
   return (
     <ProtectedRoute role={["1", "2"]}>
@@ -100,37 +80,17 @@ export default function TeacherProfile() {
               </Breadcrumb>
             </div>
 
-            {!teacherDetails ? (
-              <div className="p-2 h-full mt-10 z-10">
-                <div className="flex gap-5">
-                  <Skeleton className="w-1/4 h-80 mb-6" />
-                  <Skeleton className="w-3/4 h-80 mb-6" />
-                </div>
-                <div className="flex flex-col gap-5">
-                  <Skeleton className="w-full h-80 mb-6" />
-                  <Skeleton className="w-full h-80 mb-6" />
-                </div>
-                <div className="flex gap-5">
-                  <Skeleton className="w-full h-80 mb-2" />
-                  <Skeleton className="w-full h-80 mb-2" />
-                </div>
-              </div>
+            {isLoading || !teacher ? (
+              <TeacherProfilePageSkeleton />
             ) : (
-              <div className="p-2 h-full mt-10 z-10">
-                <div className="flex gap-5">
-                  <Profile id={teacher.id} />
-
-                  <BasicInfo id={teacher.id} />
-                </div>
-                <div className="flex flex-col gap-5 mt-5">
-                  <TeacherSubjects teacherId={teacher.id} />
-                  <HistoryLogs teacherId={teacher.id} />
-                </div>
-                <div className="flex gap-5">
-                  <AddressInfo id={teacher.id} />
-                  <EmergencyInfo id={teacher.id} />
-                </div>
-              </div>
+              <TeacherProfilePageContent
+                teacher={teacher}
+                teacherSubjects={teacherSubjects}
+                historyLogs={historyLogs}
+                onRefetchTeacher={() => {
+                  void refetchTeacher();
+                }}
+              />
             )}
           </div>
           <Footer />

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-// import { ModeToggle } from "@/components/mode-toggle";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Megaphone, Maximize, Shrink, User2, LogOut } from "lucide-react";
@@ -11,51 +10,44 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
 import Link from "next/link";
-import { useUserDetails } from "@/hooks/useUserDetails";
-import { useClientOnly } from "@/hooks/useClientOnly";
 import { useAuth } from "@/context/AuthContext";
+import { useSession } from "@/context/SessionContext";
+import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { logout } from "@/services/User_service";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { NavbarProfileSkeleton } from "@/components/skeletons/NavbarProfileSkeleton";
+import { AnnouncementSheetContent } from "@/components/announcements/AnnouncementSheetContent";
 
-export function Navbar() {
+export const Navbar = memo(function Navbar() {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
-    token as string,
-  );
-  const router = useRouter();
+  const { token, logout: logoutUser } = useAuth();
+  const { user, roleId, isLoading } = useSession();
+  const { data: announcementsResponse } = useAnnouncements(token);
+
+  const announcementCount = Array.isArray(announcementsResponse?.data)
+    ? announcementsResponse.data.length
+    : 0;
+
   const handlelogout = async () => {
     try {
-      const response = await logout(token as string);
+      await logout(token as string);
       toast.success("Logged out successfully");
-      router.push("/");
     } catch (error) {
       console.error("Error during logout:", error);
+    } finally {
+      logoutUser();
     }
   };
+
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(document.fullscreenElement !== null);
@@ -87,9 +79,11 @@ export function Navbar() {
       <div className="flex items-center justify-center gap-1 mr-2">
         <Sheet>
           <SheetTrigger className="size-4 flex items-center relative mr-3 hover:text-primary">
-            <span className="h-4 w-4 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-sm top-[-7px] right-[-7px]">
-              0
-            </span>
+            {announcementCount > 0 ? (
+              <span className="h-4 min-w-4 px-1 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-sm top-[-7px] right-[-7px]">
+                {announcementCount}
+              </span>
+            ) : null}
             <Megaphone className="h-5 w-5" />
           </SheetTrigger>
           <SheetContent>
@@ -97,135 +91,79 @@ export function Navbar() {
               <SheetTitle className="flex items-center">
                 <Megaphone className="h-5 w-5 mr-2" /> Announcement
               </SheetTitle>
-              <SheetDescription className="mt-5">
-                <ul className="w-full">
-                  <Dialog>
-                    <DialogTrigger className="h-auto w-full bg-gray-50 dark:bg-gray-900 text-start hover:bg-teal-100 dark:hover:bg-primary text-black dark:text-white p-2 rounded-sm">
-                      <li className="">
-                        <span className="font-bold">Announcement</span>
-                        <p className="text-sm">
-                          @username{" "}
-                          <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full">
-                            role
-                          </span>{" "}
-                          - <span>date</span>
-                        </p>
-                        <span className="text-sm mt-9 ml-5">
-                          Announcements...
-                        </span>
-                      </li>
-                    </DialogTrigger>
-                    <DialogContent className="w-full">
-                      <DialogHeader>
-                        <DialogTitle className="flex items-center">
-                          <Megaphone className="h-5 w-5 mr-2" /> Announcement
-                        </DialogTitle>
-                        <DialogTitle className="flex items-center">
-                          <p className="text-sm">
-                            @username{" "}
-                            <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full">
-                              role
-                            </span>{" "}
-                            - <span>date</span>
-                          </p>
-                        </DialogTitle>
-                        <DialogDescription className="px-5 mt-5">
-                          Announcement
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-                </ul>
-              </SheetDescription>
             </SheetHeader>
+            <AnnouncementSheetContent />
           </SheetContent>
         </Sheet>
 
-        {/* <Popover>
-          <PopoverTrigger className="mr-4 relative hover:text-primary">
-            <span className="h-4 w-4 bg-primary/50 text-white dark:bg-primary rounded-full absolute flex items-center justify-center text-sm top-[-7px] right-[-7px]">
-              0
-            </span>
-            <Bell className="size-4" />
-          </PopoverTrigger>
-          <PopoverContent className="w-72 h-auto text-sm">
-            Notification.
-          </PopoverContent>
-        </Popover> */}
-
         <button
           onClick={toggleFullscreen}
-          className="h-5 w-5  mr-2 hover:text-primary"
+          className="h-5 w-5 mr-2 hover:text-primary"
         >
-          {isFullscreen ? (
-            <Shrink className="size-4" />
-          ) : (
-            <Maximize className="size-4" />
-          )}
+          {isFullscreen ? <Shrink className="size-4" /> : <Maximize className="size-4" />}
         </button>
 
         <AnimatedThemeToggler />
 
         <Popover>
           <PopoverTrigger>
-            <div className="flex items-center gap-1 pr-5 pl-2 py-1 ml-5 bg-primary/50 hover:bg-primary dark:bg-primary/50 dark:hover:bg-primary rounded-full">
-              <Avatar className="h-8 w-8 flex-shrink-0">
-                <AvatarImage
-                  src={
-                    userDetails?.data.avatar
-                      ? `https://rfid-api.barangay185bms.com/storage/avatars/${userDetails?.data.avatar}`
-                      : "https://github.com/shadcn.png"
-                  }
-                />
-                <AvatarFallback>
-                  {userDetails?.data.first_name.charAt(0)}
-                  {userDetails?.data.last_name.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
+            {isLoading ? (
+              <NavbarProfileSkeleton />
+            ) : (
+              <div className="flex items-center gap-1 pr-5 pl-2 py-1 ml-5 bg-primary/50 hover:bg-primary dark:bg-primary/50 dark:hover:bg-primary rounded-full">
+                <Avatar className="h-8 w-8 flex-shrink-0">
+                  <AvatarImage
+                    src={
+                      user?.avatar
+                        ? `https://rfid-api.barangay185bms.com/storage/avatars/${user.avatar}`
+                        : "https://github.com/shadcn.png"
+                    }
+                  />
+                  <AvatarFallback>
+                    {user?.first_name?.charAt(0) ?? "U"}
+                    {user?.last_name?.charAt(0) ?? "U"}
+                  </AvatarFallback>
+                </Avatar>
 
-              <div className="flex flex-col text-start leading-2 text-white">
-                <p className="text-sm">
-                  {" "}
-                  {userDetails?.data.first_name +
-                    " " +
-                    userDetails?.data.last_name}
-                </p>
-                <small className="text-[10px]">
-                  {userDetails?.data.role_id === 1
-                    ? "Super Admin"
-                    : userDetails?.data.role_id === 2
-                      ? "Admin"
-                      : userDetails?.data.role_id === 3
-                        ? "Teacher" : "Student"}
-                </small>
+                <div className="flex flex-col text-start leading-2 text-white">
+                  <p className="text-sm">{[user?.first_name, user?.last_name].filter(Boolean).join(" ")}</p>
+                  <small className="text-[10px]">
+                    {roleId === 1
+                      ? "Super Admin"
+                      : roleId === 2
+                        ? "Admin"
+                        : roleId === 3
+                          ? "Teacher"
+                          : "Student"}
+                  </small>
+                </div>
               </div>
-            </div>
+            )}
           </PopoverTrigger>
-          <PopoverContent className="w-full  h-auto py-0 px-0 text-sm">
+          <PopoverContent className="w-full h-auto py-0 px-0 text-sm">
             <div className="px-2 py-2">
               <p className="font-semibold">
-                {userDetails?.data.first_name +
-                  " " +
-                  userDetails?.data.last_name}
+                {[user?.first_name, user?.last_name].filter(Boolean).join(" ")}
                 <span className="text-[10px] px-2 py-0 bg-primary/50 text-white rounded-full ml-1">
-                  {userDetails?.data.role_id === 1
+                  {roleId === 1
                     ? "Super Admin"
-                    : userDetails?.data.role_id === 2
+                    : roleId === 2
                       ? "Admin"
-                      : userDetails?.data.role_id === 3
-                        ? "Teacher" : "Student"}
+                      : roleId === 3
+                        ? "Teacher"
+                        : "Student"}
                 </span>
               </p>
-              <p className="text-sm">{userDetails?.data.email}</p>
+              <p className="text-sm">{user?.email}</p>
             </div>
 
             <ul className="flex flex-col mt-2">
               <li>
                 <Link
                   href={
-                    userDetails?.data.role_id === 1 || userDetails?.data.role_id === 2
+                    roleId === 1 || roleId === 2
                       ? "/profile"
-                      : userDetails?.data.role_id === 2
+                      : roleId === 3
                         ? "/teacher/profile"
                         : "/student/profile"
                   }
@@ -254,8 +192,6 @@ export function Navbar() {
           </PopoverContent>
         </Popover>
       </div>
-
-      {/* <ModeToggle /> */}
     </nav>
   );
-}
+});

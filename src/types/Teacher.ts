@@ -27,7 +27,18 @@ export interface TeacherData {
   additional_info: AdditionalInfo | null;
 
   grade: Grade | null;      
-  section: ClassSection | null; 
+  section: ClassSection | null;
+  teacher_subjects?: TeacherSubjectAssignment[] | null;
+}
+
+export interface TeacherSubjectAssignment {
+  id: number | string;
+  subject_name?: string | null;
+  grade_level?: string | null;
+  section_name?: string | null;
+  schedule_day?: string | null;
+  schedule?: string | null;
+  created_at?: string | null;
 }
 
 export interface AdditionalInfo {

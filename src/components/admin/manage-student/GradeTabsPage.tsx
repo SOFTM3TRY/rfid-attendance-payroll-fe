@@ -71,7 +71,23 @@ export default function GradeTabsPage() {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
   const baseData: Student[] = Array.isArray(studentDetails?.data)
-    ? studentDetails?.data
+    ? [...studentDetails.data].sort((left, right) => {
+        const leftName = `${left.last_name || ""} ${left.first_name || ""} ${left.middle_name || ""}`.trim();
+        const rightName = `${right.last_name || ""} ${right.first_name || ""} ${right.middle_name || ""}`.trim();
+        const nameResult = leftName.localeCompare(rightName, undefined, {
+          sensitivity: "base",
+        });
+
+        if (nameResult !== 0) {
+          return nameResult;
+        }
+
+        return String(left.lrn || left.id).localeCompare(
+          String(right.lrn || right.id),
+          undefined,
+          { sensitivity: "base" },
+        );
+      })
     : [];
 
   const filteredDataWithoutSectionFilter = React.useMemo(() => {

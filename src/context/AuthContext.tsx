@@ -1,10 +1,11 @@
 "use client";
 
-import React, { createContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useState, ReactNode } from "react";
 import { login } from "@/services/User_service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { getCookie, setCookie } from "cookies-next";
+import { clearAuthToken, getAuthToken, setAuthToken } from "@/lib/auth";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AuthContextType {
   user: string | null;
@@ -21,8 +22,9 @@ interface AuthProviderProps {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
-  const token = getCookie("token") as string | null;
+  const token = getAuthToken();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const loginUser = async ({
     email,
@@ -33,22 +35,18 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }) => {
     try {
       const response = await login({ email, password });
-      setCookie("token", response.token, {
-        maxAge: 60 * 60 * 24 * 7,
-        secure: true,
-        sameSite: "lax",
-      });
+      setAuthToken(response.token);
       setUser(response);
-      console.log("User logged in:", response);
+      await queryClient.invalidateQueries({ queryKey: ["user-details"] });
       toast.success(
         `Login successful as ${response?.role_id === 1 ? "Super Admin" : response?.role_id === 2 ? "Admin" : response?.role_id === 3 ? "Teacher" : response?.role_id === 4 && "Student"}`,
       );
       if (response.role_id === 1 || response.role_id === 2) {
-        router.push("/dashboard");
+        router.replace("/dashboard");
       } else if (response.role_id === 3) {
-        router.push("/teacher/dashboard");
+        router.replace("/teacher/dashboard");
       } else if (response.role_id === 4) {
-        router.push("/student/dashboard");
+        router.replace("/student/dashboard");
       }
     } catch (error) {
       throw error;
@@ -56,7 +54,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logoutUser = () => {
-    localStorage.removeItem("token");
+    clearAuthToken();
+    setUser(null);
+    queryClient.clear();
+    router.replace("/");
   };
 
   return (

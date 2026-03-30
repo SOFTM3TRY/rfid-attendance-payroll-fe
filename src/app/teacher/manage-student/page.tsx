@@ -1,15 +1,12 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
-import { useUserDetails } from "@/hooks/useUserDetails";
+import { useSession } from "@/context/SessionContext";
 import { useTeacherDetails } from "@/hooks/useTeacher";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/teacher-sidebar";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { useClientOnly } from "@/hooks/useClientOnly";
-
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,18 +15,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
 import { User } from "lucide-react";
 import TeacherStudentTable from "./student-table";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import DownloadAttendanceReportPdfModal from "@/components/DownloadAttendanceReportPdfModal";
-import { use } from "react";
 
 function ManageStudentSkeleton() {
   return (
     <div className="p-3">
-      {/* chips skeleton */}
       <div className="mt-10 flex justify-between items-center">
         <div className="flex items-center gap-5">
           <Skeleton className="h-6 w-28 rounded-full" />
@@ -38,7 +32,6 @@ function ManageStudentSkeleton() {
         </div>
       </div>
 
-      {/* table skeleton */}
       <div className="mt-10 space-y-3">
         <div className="flex items-center justify-between">
           <Skeleton className="h-9 w-44" />
@@ -81,16 +74,14 @@ function ManageStudentSkeleton() {
 }
 
 export default function ManageStudent() {
-  const isClient = useClientOnly();
-  const { token } = useAuth();
-
   const {
-    data: userDetails,
+    token,
+    user,
     isLoading: isLoadingUserDetails,
-    error: userError,
-  } = useUserDetails(token as string);
+    isError: userError,
+  } = useSession();
 
-  const teacherId = userDetails?.data?.id ?? null;
+  const teacherId = user?.id ? String(user.id) : "";
 
   const {
     data: teacherDetails,
@@ -98,20 +89,20 @@ export default function ManageStudent() {
     error: teacherError,
   } = useTeacherDetails(token as string, { id: teacherId });
 
-  if (!isClient) return null;
-
   const isLoading = isLoadingUserDetails || isLoadingTeacher;
 
-  if (userError)
-    return <div>Error loading user details: {String(userError)}</div>;
-  if (teacherError)
+  if (userError) {
+    return <div>Error loading user details.</div>;
+  }
+  if (teacherError) {
     return <div>Error loading teacher details: {String(teacherError)}</div>;
+  }
 
   const fullName = [
-    userDetails?.data?.last_name,
-    userDetails?.data?.first_name,
-    userDetails?.data?.middle_name,
-    userDetails?.data?.suffix,
+    user?.last_name,
+    user?.first_name,
+    user?.middle_name,
+    user?.suffix,
   ]
     .filter(Boolean)
     .join(" ");
@@ -153,46 +144,36 @@ export default function ManageStudent() {
                 <div className="mt-10 flex justify-between items-center">
                   <div className="flex items-center justify-between gap-5">
                     <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-accent/20 border">
-                      Grade: {userDetails?.data?.grade?.grade_level || "N/A"}
+                      Grade: {user?.grade?.grade_level || "N/A"}
                     </span>
 
                     <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-accent/20 border">
-                      Section:{" "}
-                      {userDetails?.data?.section?.section_name || "N/A"}
+                      Section: {user?.section?.section_name || "N/A"}
                     </span>
 
                     <span className="uppercase font-medium text-xs px-3 h-6 flex items-center justify-center rounded-full bg-accent/20 border">
-                      School Year:{" "}
-                      {userDetails?.data?.additional_info?.school_year || "N/A"}
+                      School Year: {user?.additional_info?.school_year || "N/A"}
                     </span>
                   </div>
                 </div>
 
                 <div className="mt-10">
-                  
-                {token && userDetails?.data ? (
-                  <DownloadAttendanceReportPdfModal
-                    token={token}
-                    // ✅ IMPORTANT: dapat numeric id/number para tumama sa backend where('section', $section)
-                    sectionId={String(
-                      userDetails.data?.section?.id ??
-                        userDetails.data?.additional_info?.section ??
-                        "",
-                    )}
-                    gradeLabel={String(
-                      userDetails.data?.grade?.grade_level ??
-                        userDetails.data?.grade ??
-                        "N/A",
-                    )}
-                    sectionLabel={String(
-                      userDetails.data?.section?.section_name ??
-                        userDetails.data?.section ??
-                        "N/A",
-                    )}
-                    teacherName={fullName}
-                    schoolName="Young Generation Academy"
-                  />
-                ) : null}
+                  {token && user ? (
+                    <DownloadAttendanceReportPdfModal
+                      token={token}
+                      sectionId={String(
+                        user.section?.id ?? user.additional_info?.section ?? "",
+                      )}
+                      gradeLabel={String(
+                        user.grade?.grade_level ?? user.grade ?? "N/A",
+                      )}
+                      sectionLabel={String(
+                        user.section?.section_name ?? user.section ?? "N/A",
+                      )}
+                      teacherName={fullName}
+                      schoolName="Young Generation Academy"
+                    />
+                  ) : null}
                   <TeacherStudentTable
                     students={teacherDetails?.data?.students || []}
                     isLoading={false}

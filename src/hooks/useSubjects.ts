@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { GetallSubjects, CreateSubject, EditSubject, DeleteSubject, GetTeacherSchedulesByGradeAndSection  } from "@/services/Subject_service";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export const useSubject = (token: string | null) => {
   return useQuery({
@@ -23,11 +24,7 @@ export const useCreateSubject = () => {
       queryClient.invalidateQueries({ queryKey: ["subject-details"] });
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to create new Subject");
-      }
+      toast.error(getApiErrorMessage(error, "Failed to create new Subject"));
     },
   });
 };
@@ -51,8 +48,8 @@ export const useEditSubject = () => {
       queryClient.invalidateQueries({ queryKey: ["subject-details"] });
     },
 
-    onError: () => {
-      toast.error("Failed to update Subject");
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "Failed to update Subject"));
     },
   });
 };
@@ -68,7 +65,7 @@ export const useDeleteSubject = () => {
       queryClient.invalidateQueries({ queryKey: ["subject-details"] });
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to delete School Year");
+      toast.error(getApiErrorMessage(error, "Failed to delete subject"));
     },
   });
 };

@@ -10,12 +10,23 @@ import { Footer } from "@/components/footer";
 
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { EmailTable } from "@/components/admin/email/email-table";
-import { useAuth } from "@/context/AuthContext";
-// @ts-ignore
-import { useUserDetails } from "@/hooks/useUserDetails";
-import { useClientOnly } from "@/hooks/useClientOnly";
+import { useSession } from "@/context/SessionContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import Loader from "@/components/Loader";
+function EmailTableSkeleton() {
+  return (
+    <div className="p-5 h-full mt-5 space-y-4">
+      <div className="flex items-center justify-between gap-4">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-10 w-32" />
+      </div>
+      <Skeleton className="h-12 w-full" />
+      {Array.from({ length: 6 }).map((_, index) => (
+        <Skeleton key={index} className="h-14 w-full" />
+      ))}
+    </div>
+  );
+}
 
 const allEmails = Array.from({ length: 50 }).map((_, i) => ({
   id: String(i + 1),
@@ -48,17 +59,7 @@ export default function Inbox() {
     return filteredEmails.slice(start, start + pageSize);
   }, [filteredEmails, page]);
 
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useUserDetails(
-    token as string
-  );
-
-  if (!isClient || isLoadingUserDetails) {
-    return <Loader />;
-  }
-  
+  const { isLoading: isLoadingUserDetails } = useSession();
 
   return (
     <ProtectedRoute>
@@ -85,19 +86,23 @@ export default function Inbox() {
               </Breadcrumb>
             </div>
 
-            <div className="p-5 h-full mt-5">
-              <EmailTable
-                emails={paginatedEmails}
-                page={page}
-                onPageChange={setPage}
-                search={search}
-                onSearch={setSearch}
-                filter={filter}
-                onFilter={setFilter}
-                totalEmails={filteredEmails.length}
-                pageSize={pageSize}
-              />
-            </div>
+            {isLoadingUserDetails ? (
+              <EmailTableSkeleton />
+            ) : (
+              <div className="p-5 h-full mt-5">
+                <EmailTable
+                  emails={paginatedEmails}
+                  page={page}
+                  onPageChange={setPage}
+                  search={search}
+                  onSearch={setSearch}
+                  filter={filter}
+                  onFilter={setFilter}
+                  totalEmails={filteredEmails.length}
+                  pageSize={pageSize}
+                />
+              </div>
+            )}
           </div>
 
           <Footer />

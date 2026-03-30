@@ -14,14 +14,19 @@ import { LogIn } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { useRouter } from "next/navigation";
+import { useSession } from "@/context/SessionContext";
+import { PageLoaderFallback } from "@/components/PageLoaderBoundary";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const { remember, setRemember, saveEmail, clearEmail, getEmail } =
     useRememberMe();
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, setValue } = useForm<User>();
+  const { token, roleId, isLoading: isLoadingUserDetails } = useSession();
 
   useEffect(() => {
     const email = getEmail();
@@ -29,6 +34,20 @@ export default function Login() {
       setValue("email", email);
     }
   }, [getEmail, setValue]);
+
+  useEffect(() => {
+    if (!token || isLoadingUserDetails || roleId === null) {
+      return;
+    }
+
+    if (roleId === 1 || roleId === 2) {
+      router.replace("/dashboard");
+    } else if (roleId === 3) {
+      router.replace("/teacher/dashboard");
+    } else if (roleId === 4) {
+      router.replace("/student/dashboard");
+    }
+  }, [isLoadingUserDetails, roleId, router, token]);
 
   const { login } = useAuth();
   const onSubmit = async (data: User) => {
@@ -47,6 +66,10 @@ export default function Login() {
       setLoading(false);
     }
   };
+
+  // if (token && isLoadingUserDetails) {
+  //   return <PageLoaderFallback />;
+  // }
 
   return (
     <main className="min-h-screen flex flex-col md:flex-row-reverse">

@@ -1,8 +1,3 @@
-import axios from "axios";
+import { apiStatusClient } from "@/lib/api";
 
-export const apihealth = async () => {
-  const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/health`
-    );
-    return response;
-};
+export const apihealth = async () => apiStatusClient.get("/health");

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateEvent, DeleteEvent, GetEvents, UpdateEvent } from "@/services/event_service";
 import { toast } from "react-hot-toast";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export const useEvent = (token: string | null) => {
   return useQuery({
@@ -21,7 +22,7 @@ export const useCreateEvent = () => {
       queryClient.invalidateQueries({ queryKey: ["event-details"] });
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to create new Event");
+      toast.error(getApiErrorMessage(error, "Failed to create new Event"));
     },
   });
 };
@@ -44,7 +45,7 @@ export const useUpdateEvent = () => {
       queryClient.invalidateQueries({ queryKey: ["event-details"] });
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to update Event");
+      toast.error(getApiErrorMessage(error, "Failed to update Event"));
     },
   });
 };
@@ -60,7 +61,7 @@ export const useDeleteEvent = () => {
       queryClient.invalidateQueries({ queryKey: ["event-details"] });
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to delete Event");
+      toast.error(getApiErrorMessage(error, "Failed to delete Event"));
     },
   });
 };

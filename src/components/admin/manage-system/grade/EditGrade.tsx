@@ -33,6 +33,7 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
   const [formData, setFormData] = useState({
     grade_level: "",
     description: "",
+    schedule: "",
     status: "active",
   });
 
@@ -41,6 +42,10 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
       setFormData({
         grade_level: data.data.grade_level,
         description: data.data.description || "",
+        schedule:
+          data.data.schedule === "AM" || data.data.schedule === "PM"
+            ? data.data.schedule
+            : "",
         status: data.data.status,
       });
     }
@@ -52,6 +57,10 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
 
   const handleStatusChange = (value: string) => {
     setFormData({ ...formData, status: value });
+  };
+
+  const handleScheduleChange = (value: string) => {
+    setFormData({ ...formData, schedule: value });
   };
 
   const handleSubmit = () => {
@@ -96,6 +105,19 @@ export default function EditGradeModal({ token, gradeId, open, onClose }: EditGr
               value={formData.description}
               onChange={handleChange}
             />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Schedule <small>(Optional)</small></label>
+            <Select value={formData.schedule} onValueChange={handleScheduleChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select schedule" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="AM">AM</SelectItem>
+                <SelectItem value="PM">PM</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>

@@ -52,21 +52,11 @@ export type AttendanceRow = {
 };
 
 export type Payment = {
+  user_id: number;
   lrn: string;
   grade: string;
-  status: "late" | "present" | "absent";
+  remarks: string;
 };
-
-/* ---------------- STATUS HELPER ---------------- */
-function getStatusFromRemarks(remarks?: string | null): Payment["status"] {
-  const r = (remarks || "").toUpperCase();
-
-  if (r.includes("LATE")) return "late";
-  if (r.includes("ON TIME")) return "present";
-  if (r.includes("NO CLASS")) return "present";
-
-  return "absent";
-}
 
 /* ---------------- TABLE COLUMNS ---------------- */
 const columns: ColumnDef<Payment>[] = [
@@ -92,10 +82,10 @@ const columns: ColumnDef<Payment>[] = [
   },
 
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "remarks",
+    header: "Remarks",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div>{row.getValue("remarks") || "N/A"}</div>
     ),
   },
 ];
@@ -128,9 +118,10 @@ export function StudentTable() {
       : [];
 
     return list.map((row) => ({
+      user_id: row.user_id,
       lrn: row.lrn,
       grade: gradeMap[row.grade] || `Grade ${row.grade}`,
-      status: getStatusFromRemarks(row.remarks),
+      remarks: row.remarks || "N/A",
     }));
   }, [attendanceRes, gradeMap]);
 
@@ -163,6 +154,7 @@ export function StudentTable() {
       columnVisibility,
       rowSelection,
     },
+    getRowId: (row) => String(row.user_id || row.lrn),
 
     initialState: {
       pagination: {

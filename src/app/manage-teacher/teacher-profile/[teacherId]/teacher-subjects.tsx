@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useAuth } from "@/context/AuthContext";
-import { useTeacherDetails } from "@/hooks/useTeacher";
 
 import {
   Table,
@@ -13,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   BookOpen,
   ChevronsLeft,
@@ -22,22 +19,17 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import type { TeacherSubjectAssignment } from "@/types/Teacher";
 
 type Props = {
-  teacherId: string;
+  subjects: TeacherSubjectAssignment[];
 };
 
-export default function TeacherSubjects({ teacherId }: Props) {
-  const { token } = useAuth();
-
-  const { data, isLoading, isFetching } = useTeacherDetails(token, {
-    id: teacherId,
-  });
-
-  const teacher = data?.data?.teacher?.[0] || null;
-  const teacherSubjects: any[] = teacher?.teacher_subjects || [];
-
-  const loading = isLoading || isFetching;
+export default function TeacherSubjects({ subjects }: Props) {
+  const teacherSubjects = React.useMemo(
+    () => (Array.isArray(subjects) ? subjects : []),
+    [subjects],
+  );
 
   // ✅ pagination (5 per page)
   const [pagination, setPagination] = React.useState({
@@ -48,7 +40,7 @@ export default function TeacherSubjects({ teacherId }: Props) {
   // ✅ reset page when teacher changes or list changes
   React.useEffect(() => {
     setPagination((p) => ({ ...p, pageIndex: 0 }));
-  }, [teacherId, teacherSubjects.length]);
+  }, [teacherSubjects.length]);
 
   const totalRows = teacherSubjects.length;
   const totalPages = Math.max(1, Math.ceil(totalRows / pagination.pageSize));
@@ -68,39 +60,6 @@ export default function TeacherSubjects({ teacherId }: Props) {
 
   const canPrev = pageIndex > 0;
   const canNext = pageIndex < totalPages - 1;
-
-  if (loading) {
-    return (
-      <div className="w-full rounded-lg border bg-background p-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-5 w-5 rounded" />
-          <Skeleton className="h-4 w-40" />
-        </div>
-
-        <div className="space-y-2">
-          <div className="grid grid-cols-4 gap-3">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-          </div>
-
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="grid grid-cols-4 gap-3">
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full rounded-lg h-auto p-5 bg-accent/20">
@@ -123,26 +82,28 @@ export default function TeacherSubjects({ teacherId }: Props) {
 
           <TableBody>
             {pageData.length ? (
-              pageData.map((s: any) => (
-                <TableRow key={s.id} className="hover:bg-accent/40">
+              pageData.map((subject) => (
+                <TableRow key={subject.id} className="hover:bg-accent/40">
                   <TableCell className="text-sm font-medium py-5">
-                    {s.subject_name || "N/A"}
+                    {subject.subject_name || "N/A"}
                   </TableCell>
                   <TableCell className="text-sm">
-                    {s.grade_level || "N/A"}
-                  </TableCell>
-                  <TableCell className="text-sm">{s.section_name || "N/A"}</TableCell>
-                  <TableCell className="text-sm">
-                    {s.schedule_day || "N/A"}
+                    {subject.grade_level || "N/A"}
                   </TableCell>
                   <TableCell className="text-sm">
-                    {s.schedule || "N/A"}
+                    {subject.section_name || "N/A"}
                   </TableCell>
                   <TableCell className="text-sm">
-                    {s.created_at
+                    {subject.schedule_day || "N/A"}
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {subject.schedule || "N/A"}
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {subject.created_at
                       ? new Intl.DateTimeFormat("en-US", {
                           year: "numeric",
-                        }).format(new Date(s.created_at))
+                        }).format(new Date(subject.created_at))
                       : "—"}
                   </TableCell> 
                 </TableRow>

@@ -13,11 +13,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageLoaderFallback } from "@/components/PageLoaderBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/context/AuthContext";
 import { useClientOnly } from "@/hooks/useClientOnly";
-import Loader from "@/components/Loader";
 
 import { User, TriangleAlert, UserCheck, UserX } from "lucide-react";
 
@@ -45,7 +45,7 @@ export default function TeacherProfile() {
   const teacherId = params?.teacherId;
 
   if (!teacherId || typeof teacherId !== "string") {
-    return <Loader />;
+    return <PageLoaderFallback />;
   }
 
   const { data: teacherDetails } = useTeacherDetails(token, { id: teacherId });

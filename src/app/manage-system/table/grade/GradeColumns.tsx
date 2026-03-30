@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Grade } from "@/types/grade";
 import { Button } from "@/components/ui/button";
-import { Pencil, GraduationCap, Dot } from "lucide-react";
+import { Pencil, GraduationCap, Dot, Clock3 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -20,6 +20,16 @@ export const GradeColumns = (
       </Button>
     ),
     cell: (info) => info.getValue(),
+  },
+
+  {
+    accessorKey: "schedule",
+    header: () => (
+      <Button variant="outline" size="sm" className="font-normal text-sm">
+        <Clock3 className="text-amber-500" /> Schedule
+      </Button>
+    ),
+    cell: ({ row }) => row.original.schedule || "N/A",
   },
 
   {

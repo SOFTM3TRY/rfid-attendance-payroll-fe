@@ -8,12 +8,11 @@ import { Navbar } from "@/components/navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
 
-import { useUserDetails } from "@/hooks/useUserDetails";
 import { useTeacherSchedulesByGradeAndSection } from "@/hooks/useSubjects";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "@/context/SessionContext";
 
 import { GraduationCap, BookOpen, User, Layers, HouseIcon } from "lucide-react";
 
@@ -22,12 +21,10 @@ import { Label } from "@/components/ui/label";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb";
 
 export default function Dashboard() {
-  const { token } = useAuth();
+  const { token, user, isLoading: userLoading } = useSession();
 
-  const { data: user, isLoading: userLoading } = useUserDetails(token);
-
-  const gradeId = user?.data?.grade_id;
-  const sectionId = user?.data?.section_id;
+  const gradeId = user?.grade_id;
+  const sectionId = user?.section_id;
 
   const { data: schedules, isLoading: scheduleLoading } =
     useTeacherSchedulesByGradeAndSection(token, gradeId, sectionId);
@@ -66,7 +63,7 @@ export default function Dashboard() {
                     <Skeleton className="h-6 w-40" />
                   ) : (
                     <p className="font-bold text-lg">
-                      {user?.data?.grade?.grade_level || "N/A"}
+                      {user?.grade?.grade_level || "N/A"}
                     </p>
                   )}
                 </CardContent>
@@ -83,7 +80,7 @@ export default function Dashboard() {
                     <Skeleton className="h-6 w-32" />
                   ) : (
                     <p className="font-bold text-lg">
-                      {user?.data?.section?.section_name || "N/A"}
+                      {user?.section?.section_name || "N/A"}
                     </p>
                   )}
                 </CardContent>
@@ -106,21 +103,21 @@ export default function Dashboard() {
                       <div className="flex flex-col items-center gap-3">
                         <Avatar className="w-20 h-20 ">
                           <AvatarImage
-                            src={user?.data?.teacher?.avatar || "https://github.com/shadcn.png"}
-                            alt={user?.data?.teacher?.first_name}
+                            src={user?.teacher?.avatar || "https://github.com/shadcn.png"}
+                            alt={user?.teacher?.first_name}
                           />
                           <AvatarFallback className="uppercase">
-                            {user?.data?.teacher?.first_name?.charAt(0)}
-                            {user?.data?.teacher?.last_name?.charAt(0)}
+                            {user?.teacher?.first_name?.charAt(0)}
+                            {user?.teacher?.last_name?.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <p className="font-semibold text-center text-sm uppercase">
-                          {user?.data?.teacher
-                            ? `Teacher ${user.data.teacher.first_name} ${user.data.teacher.middle_name} ${user.data.teacher.last_name} ${user.data.teacher.suffix}`
+                          {user?.teacher
+                            ? `Teacher ${user.teacher.first_name} ${user.teacher.middle_name} ${user.teacher.last_name} ${user.teacher.suffix}`
                             : "No Teacher"}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {user?.data?.teacher?.email || ""}
+                          {user?.teacher?.email || ""}
                         </p>
                       </div>
                     </>
@@ -142,8 +139,8 @@ export default function Dashboard() {
                       <Skeleton className="h-5 w-5/6" />
                       <Skeleton className="h-5 w-4/6" />
                     </>
-                  ) : user?.data?.subjects?.length ? (
-                    user.data.subjects.map((sub: any) => (
+                  ) : user?.subjects?.length ? (
+                    user.subjects.map((sub: any) => (
                       <p
                         key={sub.id}
                         className="text-xs font-medium bg-accent/20 px-2 py-1 rounded-md"

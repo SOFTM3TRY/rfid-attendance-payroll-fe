@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
 import { Navbar } from "@/components/navbar";
@@ -14,41 +14,17 @@ import {
 } from "@/components/ui/breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Footer } from "@/components/footer";
-import { useAuth } from "@/context/AuthContext";
-import { useUserDetails } from "@/hooks/useUserDetails";
-import { useClientOnly } from "@/hooks/useClientOnly";
-import Loader from "@/components/Loader";
+import { useSession } from "@/context/SessionContext";
 import { Users } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { useGetHistoryyLogs } from "@/hooks/useTeacher";
-import { PaginationState } from "@tanstack/react-table";
-import { columns } from "./columns";
-import { HistoryTable } from "./HistoryTable";
+import { useHistoryLogs } from "@/hooks/useHistoryLogs";
+import { HistoryLogsTable } from "@/components/history-logs/HistoryLogsTable";
+import { extractHistoryLogs } from "@/lib/history-log";
 
 export default function TeacherHistory() {
-  const { token } = useAuth();
-  const isClient = useClientOnly();
-
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 5,
-  });
-
-  const {
-    data: history,
-    isLoading: isLoadingHistory,
-    refetch,
-  } = useGetHistoryyLogs(token as string);
-
-  const { isLoading: isLoadingUserDetails } = useUserDetails(token as string);
-
-  const historyLogs = useMemo(() => {
-    return history?.data?.historyLogs ?? [];
-  }, [history]);
-
-  if (!isClient || isLoadingUserDetails) {
-    return <Loader />;
-  }
+  const { token } = useSession();
+  const { data: history, isLoading: isLoadingHistory } = useHistoryLogs(token);
+  const historyLogs = extractHistoryLogs(history);
 
   return (
     <ProtectedRoute role={["1", "2"]}>
@@ -78,14 +54,10 @@ export default function TeacherHistory() {
             </div>
 
             <div className="mt-10">
-              <HistoryTable
-                columns={columns}
-                data={historyLogs}
-                pagination={pagination}
-                setPagination={setPagination}
-                totalRows={historyLogs.length}
+              <HistoryLogsTable
+                title="Teacher History Logs"
+                logs={historyLogs}
                 isLoading={isLoadingHistory}
-                onRefresh={() => refetch()}
               />
             </div>
           </div>
