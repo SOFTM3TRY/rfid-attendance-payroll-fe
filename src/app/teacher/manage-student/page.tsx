@@ -2,6 +2,7 @@
 
 import { useSession } from "@/context/SessionContext";
 import { useTeacherDetails } from "@/hooks/useTeacher";
+import { useStudentDetails } from "@/hooks/useStudentDetails";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/teacher-sidebar";
@@ -20,6 +21,11 @@ import TeacherStudentTable from "./student-table";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import DownloadAttendanceReportPdfModal from "@/components/DownloadAttendanceReportPdfModal";
+import {
+  getStudentsForTeacherSections,
+  getTeacherHandledSectionIds,
+  hasAdvisorySection,
+} from "@/lib/teacher";
 
 function ManageStudentSkeleton() {
   return (
@@ -88,8 +94,26 @@ export default function ManageStudent() {
     isLoading: isLoadingTeacher,
     error: teacherError,
   } = useTeacherDetails(token as string, { id: teacherId });
+  const {
+    data: allStudentsResponse,
+    isLoading: isLoadingAllStudents,
+  } = useStudentDetails(token as string);
 
-  const isLoading = isLoadingUserDetails || isLoadingTeacher;
+  const teacher = teacherDetails?.data?.teacher?.[0] ?? null;
+  const advisoryStudents = Array.isArray(teacherDetails?.data?.students)
+    ? teacherDetails.data.students
+    : [];
+  const allStudents = Array.isArray(allStudentsResponse?.data)
+    ? allStudentsResponse.data
+    : [];
+  const handledSectionIds = getTeacherHandledSectionIds(teacher);
+  const students = hasAdvisorySection(teacher)
+    ? advisoryStudents
+    : getStudentsForTeacherSections(allStudents, handledSectionIds);
+  const isLoading =
+    isLoadingUserDetails ||
+    isLoadingTeacher ||
+    (!hasAdvisorySection(teacher) && isLoadingAllStudents);
 
   if (userError) {
     return <div>Error loading user details.</div>;
@@ -175,7 +199,7 @@ export default function ManageStudent() {
                     />
                   ) : null}
                   <TeacherStudentTable
-                    students={teacherDetails?.data?.students || []}
+                    students={students}
                     isLoading={false}
                   />
                 </div>

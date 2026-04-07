@@ -270,14 +270,14 @@ export default function EditBasicInfo({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="gender">Gender</Label>
+            <Label htmlFor="gender">SEX</Label>
             <Select
               value={formData.gender || ""}
               onValueChange={(value) => handleChange("gender", value)}
               disabled={loading}
             >
               <SelectTrigger className="border  py-1 px-3 rounded-sm w-56">
-                <SelectValue placeholder="Select Gender" />
+                <SelectValue placeholder="Select SEX" />
               </SelectTrigger>
               <SelectContent>
                 {genderOptions.map((gender) => (

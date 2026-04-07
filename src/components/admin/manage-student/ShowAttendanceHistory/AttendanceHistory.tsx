@@ -64,6 +64,8 @@ export type AttendanceEntry = {
   remarks: string;
 };
 
+type AttendanceHistoryView = "admin" | "teacher";
+
 type RawAttendance = {
   user_id: number;
   lrn: string;
@@ -74,11 +76,16 @@ type RawAttendance = {
   remarks: string; // "LATE"
 };
 
+function extractDate(dateStr: string): string {
+  if (!dateStr) return "";
+  return dateStr.includes(" ") ? dateStr.split(" ")[0] : dateStr;
+}
+
 function formatDateMDY(dateStr: string): string {
-  // expected: "2026-01-24"
-  const d = parseISO(dateStr);
+  const safeDate = extractDate(dateStr);
+  const d = parseISO(safeDate);
   if (!isValid(d)) return dateStr;
-  return format(d, "MMM dd, yyyy"); // Jan 24, 2026
+  return format(d, "MMM dd, yyyy");
 }
 
 function normalizeDateSearch(q: string) {
@@ -87,8 +94,9 @@ function normalizeDateSearch(q: string) {
 
 // makes date searchable by BOTH raw and formatted
 function dateSearchableText(dateStr: string) {
-  const formatted = formatDateMDY(dateStr).toLowerCase(); // "jan 24, 2026"
-  const raw = dateStr.toLowerCase(); // "2026-01-24"
+  const rawDate = extractDate(dateStr);
+  const formatted = formatDateMDY(rawDate).toLowerCase();
+  const raw = rawDate.toLowerCase();
   return `${raw} ${formatted}`;
 }
 
@@ -99,18 +107,10 @@ function dateSearchableText(dateStr: string) {
 //   return "Present";
 // }
 
-function extractTime(timeIn: string | null): string {
-  // "2026-01-24 16:52:49" -> "16:52:49"
-  if (!timeIn) return "-";
-  const parts = timeIn.split(" ");
-  return parts.length === 2 ? parts[1] : timeIn;
-}
-
 function formatTime12h(timeStr: string | null): string {
   if (!timeStr) return "-";
 
-  // If format is "2026-01-24 16:52:49"
-  const raw = timeStr.includes(" ") ? timeStr.split(" ")[1] : timeStr;
+  const raw = timeStr.includes(" ") ? timeStr.split(" ").slice(-1)[0] : timeStr;
 
   const [hh, mm] = raw.split(":");
   if (!hh || !mm) return "-";
@@ -124,87 +124,102 @@ function formatTime12h(timeStr: string | null): string {
   return `${String(hour).padStart(2, "0")}:${mm} ${ampm}`;
 }
 
-const columns: ColumnDef<AttendanceEntry>[] = [
-  {
-    accessorKey: "lrn",
-    header: () => (
-      <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
-        <KeyRound className="text-blue-500 mr-1 size-3" /> LRN
-      </div>
-    ),
-  },
-  {
-    accessorKey: "grade",
-    header: () => (
-      <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
-        <GraduationCap className="text-teal-500 mr-1 size-3" /> Grade
-      </div>
-    ),
-    filterFn: (row, columnId, filterValue) => {
-      const grade = row.getValue(columnId) as string;
-      return grade.includes(filterValue);
-    },
-    enableColumnFilter: true,
-  },
-  {
-    accessorKey: "date",
-    header: () => (
-      <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
-        <CalendarDays className="text-violet-500 mr-1 size-3" /> Date
-      </div>
-    ),
+function buildColumns(view: AttendanceHistoryView): ColumnDef<AttendanceEntry>[] {
+  const columns: ColumnDef<AttendanceEntry>[] = [];
 
-    filterFn: (row, columnId, filterValue) => {
-      const date = row.getValue(columnId) as string;
-      const q = normalizeDateSearch(String(filterValue || ""));
-      if (!q) return true;
+  if (view === "admin") {
+    columns.push(
+      {
+        accessorKey: "lrn",
+        header: () => (
+          <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
+            <KeyRound className="text-blue-500 mr-1 size-3" /> LRN
+          </div>
+        ),
+      },
+      {
+        accessorKey: "grade",
+        header: () => (
+          <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
+            <GraduationCap className="text-teal-500 mr-1 size-3" /> Grade
+          </div>
+        ),
+        filterFn: (row, columnId, filterValue) => {
+          const grade = row.getValue(columnId) as string;
+          return grade.includes(filterValue);
+        },
+        enableColumnFilter: true,
+      },
+    );
+  }
 
-      return dateSearchableText(date).includes(q);
-    },
+  columns.push(
+    {
+      accessorKey: "date",
+      header: () => (
+        <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
+          <CalendarDays className="text-violet-500 mr-1 size-3" /> Date
+        </div>
+      ),
+      filterFn: (row, columnId, filterValue) => {
+        const date = row.getValue(columnId) as string;
+        const q = normalizeDateSearch(String(filterValue || ""));
+        if (!q) return true;
 
-    cell: ({ row }) => {
-      const raw = row.getValue("date") as string;
-      return <span>{formatDateMDY(raw)}</span>;
+        return dateSearchableText(date).includes(q);
+      },
+      cell: ({ row }) => {
+        const raw = row.getValue("date") as string;
+        return <span>{formatDateMDY(raw)}</span>;
+      },
     },
-  },
-  {
-    accessorKey: "time_in",
-    header: () => (
-      <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
-        <ClockArrowUp className="text-green-500 mr-1 size-3" /> Time In
-      </div>
-    ),
-  },
-  {
-    accessorKey: "time_out",
-    header: () => (
-      <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
-        <ClockArrowDown className="text-red-500 mr-1 size-3" /> Time Out
-      </div>
-    ),
-    cell: ({ row }) => {
-      const v = row.getValue("time_out") as string;
-      return <div className="text-center">{v || "-"}</div>;
+    {
+      accessorKey: "time_in",
+      header: () => (
+        <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
+          <ClockArrowUp className="text-green-500 mr-1 size-3" /> Time In
+        </div>
+      ),
     },
-  },
-  {
-    accessorKey: "remarks",
-    header: () => (
-      <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
-        <Stamp className="text-green-500 mr-1 size-3" /> Remarks
-      </div>
-    ),
-    cell: ({ row }) => {
-      const value = row.getValue("remarks") as string;
+    {
+      accessorKey: "time_out",
+      header: () => (
+        <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
+          <ClockArrowDown className="text-red-500 mr-1 size-3" /> Time Out
+        </div>
+      ),
+      cell: ({ row }) => {
+        const value = row.getValue("time_out") as string;
+        return <div className="text-center">{value || "-"}</div>;
+      },
+    },
+    {
+      accessorKey: "remarks",
+      header: () => (
+        <div className="flex items-center bg-accent/20 px-2 py-2 rounded-md justify-center">
+          <Stamp className="text-green-500 mr-1 size-3" /> Remarks
+        </div>
+      ),
+      cell: ({ row }) => {
+        const value = row.getValue("remarks") as string;
 
-      return (
-        <div className="text-[10px] text-center text-primary">{value}</div>
-      );
+        return (
+          <div className="text-[10px] text-center text-primary">{value}</div>
+        );
+      },
     },
-  },
-];
+  );
 
-export function AttendanceHistory({ id }: { id: string }) {
+  return columns;
+}
+
+export function AttendanceHistory({
+  id,
+  view = "admin",
+}: {
+  id: string;
+  view?: AttendanceHistoryView;
+}) {
   const { token } = useAuth();
 
   const [data, setData] = useState<AttendanceEntry[]>([]);
@@ -214,6 +229,7 @@ export function AttendanceHistory({ id }: { id: string }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const columns = useMemo(() => buildColumns(view), [view]);
 
   // ✅ Fetch Attendance
   const {
@@ -244,7 +260,7 @@ export function AttendanceHistory({ id }: { id: string }) {
     const converted: AttendanceEntry[] = raw.map((r) => ({
       lrn: r.lrn,
       grade: gradeMap.get(String(r.grade)) ?? `Grade ${r.grade}`,
-      date: r.created_at,
+      date: extractDate(r.created_at),
 
       time_in: formatTime12h(r.time_in),
       time_out: formatTime12h(r.time_out),
@@ -319,44 +335,46 @@ export function AttendanceHistory({ id }: { id: string }) {
           <FilterTable pagination={pagination} setPagination={setPagination} />
 
           {/* ✅ Dynamic Grade filter */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                Grade <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
+          {view === "admin" ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  Grade <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end">
-              <DropdownMenuCheckboxItem
-                checked={
-                  table.getColumn("grade")?.getFilterValue() === undefined
-                }
-                onCheckedChange={(value) =>
-                  value
-                    ? table.getColumn("grade")?.setFilterValue(undefined)
-                    : null
-                }
-              >
-                Show all
-              </DropdownMenuCheckboxItem>
-
-              {gradeOptions.map((g: any) => (
+              <DropdownMenuContent align="end">
                 <DropdownMenuCheckboxItem
-                  key={g.id}
                   checked={
-                    table.getColumn("grade")?.getFilterValue() === g.label
+                    table.getColumn("grade")?.getFilterValue() === undefined
                   }
                   onCheckedChange={(value) =>
                     value
-                      ? table.getColumn("grade")?.setFilterValue(g.label)
-                      : table.getColumn("grade")?.setFilterValue(undefined)
+                      ? table.getColumn("grade")?.setFilterValue(undefined)
+                      : null
                   }
                 >
-                  {g.label}
+                  Show all
                 </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+
+                {gradeOptions.map((g: any) => (
+                  <DropdownMenuCheckboxItem
+                    key={g.id}
+                    checked={
+                      table.getColumn("grade")?.getFilterValue() === g.label
+                    }
+                    onCheckedChange={(value) =>
+                      value
+                        ? table.getColumn("grade")?.setFilterValue(g.label)
+                        : table.getColumn("grade")?.setFilterValue(undefined)
+                    }
+                  >
+                    {g.label}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null}
         </div>
       </div>
 

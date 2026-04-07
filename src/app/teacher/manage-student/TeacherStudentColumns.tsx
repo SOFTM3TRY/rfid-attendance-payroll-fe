@@ -113,7 +113,7 @@ export const teacherStudentColumns = (): ColumnDef<Student>[] => [
     header: () => (
       <Button variant="outline" size="sm" className="text-xs font-normal">
         <CircleSmall className="text-green-500 size-4 mr-1" />
-        Gender
+        SEX
       </Button>
     ),
     cell: ({ row }) => (
@@ -208,6 +208,7 @@ export const teacherStudentColumns = (): ColumnDef<Student>[] => [
             open={openHistory}
             setOpen={setOpenHistory}
             row={row}
+            view="teacher"
           />
         </div>
       );

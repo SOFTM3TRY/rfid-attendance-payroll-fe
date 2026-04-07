@@ -83,7 +83,7 @@ export default function BasicInfo({ teacher }: { teacher: TeacherData }) {
           icon={<MapPinHouse className="size-3 text-muted-foreground" />}
         />
         <InputField
-          label="Gender"
+          label="SEX"
           value={additionalInfo.gender || ""}
           icon={<CircleSmall className="size-3 text-muted-foreground" />}
         />

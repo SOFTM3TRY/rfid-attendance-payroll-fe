@@ -233,7 +233,7 @@ export default function ShowProfile({
                 <div className="mt-2">
                   <Label htmlFor="gender">
                     <CircleSmall className="w-4 h-4 text-teal-500" />
-                    Gender
+                    SEX
                   </Label>
                   <Input id="gender" value={data.gender || ""} disabled />
                 </div>

@@ -146,7 +146,7 @@ export default function Step2({
 
       <div className="grid gap-2">
         <Label htmlFor="gender">
-          <span className="text-red-500 mr-[-0.3rem]">*</span>Gender
+          <span className="text-red-500 mr-[-0.3rem]">*</span>SEX
         </Label>
         <Select
           value={formData.gender}
@@ -160,7 +160,7 @@ export default function Step2({
                 : "border py-1 px-3 rounded-sm w-56"
             }
           >
-            <SelectValue placeholder="Select Gender" />
+            <SelectValue placeholder="Select SEX" />
           </SelectTrigger>
           <SelectContent>
             {genderOptions.map((gender) => (

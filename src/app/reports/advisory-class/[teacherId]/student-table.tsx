@@ -97,7 +97,7 @@ const columns: ColumnDef<Student>[] = [
     accessorKey: "gender",
     header: () => (
       <div className="flex items-center">
-        <CircleSmall className="text-green-500 mr-1 w-4 h-4" /> Gender
+        <CircleSmall className="text-green-500 mr-1 w-4 h-4" /> SEX
       </div>
     ),
   },

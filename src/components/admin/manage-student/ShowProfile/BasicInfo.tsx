@@ -111,7 +111,7 @@ export default function BasicInfo({ lrn }: { lrn: string }) {
         />
 
         <InputField
-          label="Gender"
+          label="SEX"
           value={student?.gender}
           icon={<CircleSmall className="text-teal-500 h-4 w-4" />}
         />

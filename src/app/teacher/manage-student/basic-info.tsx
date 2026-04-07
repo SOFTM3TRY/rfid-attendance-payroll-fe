@@ -133,7 +133,7 @@ export default function BasicInfo({ id }: { id: string }) {
           icon={<MapPinHouse className="text-red-500 h-4 w-4" />}
         />
         <InputField
-          label="Gender"
+          label="SEX"
           value={additional_info.gender || ""}
           icon={<CircleSmall className="text-teal-500 h-4 w-4" />}
         />

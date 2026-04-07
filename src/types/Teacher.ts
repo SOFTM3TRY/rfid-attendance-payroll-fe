@@ -34,7 +34,9 @@ export interface TeacherData {
 export interface TeacherSubjectAssignment {
   id: number | string;
   subject_name?: string | null;
+  grade_id?: number | string | null;
   grade_level?: string | null;
+  section_id?: number | string | null;
   section_name?: string | null;
   schedule_day?: string | null;
   schedule?: string | null;

@@ -39,10 +39,12 @@ export default function ShowAttendanceHistory({
   open,
   setOpen,
   row,
+  view = "admin",
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   row: any;
+  view?: "admin" | "teacher";
 }) {
   const data = row.original || {};
   const fullName = [
@@ -123,7 +125,7 @@ export default function ShowAttendanceHistory({
               </span>
             </div>
             <div className="mt-5">
-              <AttendanceHistory id={data.id} />
+              <AttendanceHistory id={data.id} view={view} />
             </div>
             
           </div>

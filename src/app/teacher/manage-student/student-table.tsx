@@ -153,7 +153,7 @@ export const teacherStudentColumns = (): ColumnDef<Student>[] => [
     header: () => (
       <Button variant="outline" size="sm" className="text-xs font-normal">
         <CircleSmall className="text-green-500 size-4 mr-1" />
-        Gender
+        SEX
       </Button>
     ),
     cell: ({ row }) => <span className="text-xs">{row.original.gender || "N/A"}</span>,
@@ -403,7 +403,12 @@ export default function TeacherStudentTable({
       </div>
 
       {selectedRow ? (
-        <ShowAttendanceHistory open={openHistory} setOpen={setOpenHistory} row={selectedRow} />
+        <ShowAttendanceHistory
+          open={openHistory}
+          setOpen={setOpenHistory}
+          row={selectedRow}
+          view="teacher"
+        />
       ) : null}
 
       <div className="flex items-center justify-between px-5 py-4 space-x-2">

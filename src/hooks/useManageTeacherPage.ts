@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useSession } from "@/context/SessionContext";
 import { useAllTeachers } from "@/hooks/useTeacher";
+import { compareTeachersAlphabetically } from "@/lib/teacher";
 import type { TeacherData } from "@/types/Teacher";
 
 function normalizeTeacher(rawTeacher: unknown): TeacherData | null {
@@ -46,7 +47,8 @@ export function useManageTeacherPage() {
 
     return teacherList
       .map((teacher) => normalizeTeacher(teacher))
-      .filter((teacher): teacher is TeacherData => teacher !== null);
+      .filter((teacher): teacher is TeacherData => teacher !== null)
+      .sort(compareTeachersAlphabetically);
   }, [teachersQuery.data]);
 
   const isLoading = isSessionLoading || teachersQuery.isLoading;

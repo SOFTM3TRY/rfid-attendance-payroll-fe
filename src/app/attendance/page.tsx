@@ -17,6 +17,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type FormData = { rfid_uid: string };
 
+function isWeekend(date = new Date()) {
+  const day = date.getDay();
+  return day === 0 || day === 6;
+}
+
 function pickTapType(resp: any): "TIME IN" | "TIME OUT" | "-" {
   const msg = String(resp?.message ?? "").toUpperCase();
   const remarks = String(resp?.remarks ?? "").toUpperCase();
@@ -94,6 +99,7 @@ export default function Attendance() {
     () => resolveAvatarUrl(studentJson, student),
     [studentJson, student],
   );
+  const weekendNoClass = useMemo(() => isWeekend(), []);
 
   const isReady = !attendanceJson && !isSubmitting && cooldown === 0;
 
@@ -279,6 +285,8 @@ export default function Attendance() {
                 "text-sm font-semibold px-3 py-1 rounded-full border",
                 isSubmitting
                   ? "bg-blue-500/10 text-blue-600 border-blue-500/30"
+                  : weekendNoClass
+                    ? "bg-amber-500/10 text-amber-600 border-amber-500/30"
                   : tapType === "TIME IN"
                     ? "bg-green-500/10 text-green-600 border-green-500/30"
                     : tapType === "TIME OUT"
@@ -286,7 +294,7 @@ export default function Attendance() {
                       : "bg-zinc-500/10 text-zinc-600 border-zinc-500/30",
               )}
             >
-              {isSubmitting ? "LOADING" : tapType}
+              {isSubmitting ? "LOADING" : weekendNoClass ? "NO CLASS" : tapType}
             </div>
           </div>
 
@@ -360,6 +368,11 @@ export default function Attendance() {
                   </span>
                   <span className="text-sm opacity-80">{tapTime || "-"}</span>
                 </div>
+                {weekendNoClass ? (
+                  <div className="mt-2 text-xs font-medium text-amber-600">
+                    Weekend schedule: No class
+                  </div>
+                ) : null}
               </div>
             </div>
           )}

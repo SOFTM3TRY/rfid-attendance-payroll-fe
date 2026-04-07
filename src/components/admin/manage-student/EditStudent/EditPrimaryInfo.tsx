@@ -161,7 +161,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
 
       <div className="grid gap-2">
         <Label htmlFor="gender">
-          <span className="text-red-500 mr-[-0.3rem]">*</span>Gender
+          <span className="text-red-500 mr-[-0.3rem]">*</span>SEX
         </Label>
         <select
           id="gender"
@@ -175,7 +175,7 @@ export default function ViewBasicInfo({ data }: { data: any }) {
           }
           disabled={loading}
         >
-          <option value="">Select Gender</option>
+          <option value="">Select SEX</option>
           {genderOptions.map((gender) => (
             <option key={gender} value={gender}>
               {gender}

@@ -106,7 +106,7 @@ export default function Step4({ formData }: any) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold">Gender :</span>
+            <span className="text-sm font-semibold">SEX :</span>
             <span className="text-sm font-light">{formData.gender || "-"}</span>
           </div>
 

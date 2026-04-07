@@ -91,7 +91,7 @@ export default function BasicInfo({ student }: { student: any }) {
           icon={<MapPinHouse className="size-3 text-muted-foreground" />}
         />
         <InputField
-          label="Gender"
+          label="SEX"
           value={student?.gender || ""}
           icon={<CircleSmall className="size-3 text-muted-foreground" />}
         />
